@@ -3,9 +3,26 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetworkListeners", "NetworkListeners", "{AA20C570-F9FF-4D29-956E-B0B5912866A6}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "FabricListener", "NetworkListeners\FabricListener\FabricListener.njsproj", "{865E85CD-2B81-4FC7-B677-03FFCB677AFB}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{865E85CD-2B81-4FC7-B677-03FFCB677AFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{865E85CD-2B81-4FC7-B677-03FFCB677AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{865E85CD-2B81-4FC7-B677-03FFCB677AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{865E85CD-2B81-4FC7-B677-03FFCB677AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{865E85CD-2B81-4FC7-B677-03FFCB677AFB} = {AA20C570-F9FF-4D29-956E-B0B5912866A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C1682D3-F1BA-46D0-8C3C-13EFEF321188}

@@ -1,0 +1,9 @@
+{
+  "name": "fabric-listener",
+  "version": "0.0.1",
+  "description": "FabricListener",
+  "main": "index.js",
+  "author": {
+    "name": "CertiPath"
+  }
+}
