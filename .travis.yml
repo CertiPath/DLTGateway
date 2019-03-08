@@ -1,0 +1,9 @@
+###
+### .travis.yml
+###
+language: node_js
+
+before_script:
+  - cd src\DLTGatewaySolution\NetworkListeners\FabricListener\
+
+script: npm test

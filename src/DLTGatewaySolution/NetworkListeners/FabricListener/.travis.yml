@@ -1,6 +1,0 @@
-###
-### src\DLTGatewaySolution\NetworkListeners\FabricListener\.travis.yml
-###
-language: node_js
-
-script: npm test
