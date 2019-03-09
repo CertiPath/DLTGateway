@@ -43,14 +43,6 @@ const createConsole = () => ({
 });
 
 describe('eventHub', function () {
-  it('should require a business network argument', function () {
-    try {
-      eventHub.create();
-    } catch (err) {
-      assert.ok(err);
-    }
-  });
-
   it('should create a new channel event hub', function (done) {
     const fakeEventHub = { 'someProp': 'some value' };
     eventHub.create({
