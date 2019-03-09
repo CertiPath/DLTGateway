@@ -1,31 +1,35 @@
-﻿'use strict';
+﻿/*
+ * DLTGateway\src\DLTGatewaySolution\NetworkListeners\FabricListener\fabric\eventHub.js
+ */
+'use strict';
 
 const path = require('path');
 const FabricClient = require('fabric-client');
 
 const createEventHub = ({
-  GUID,
-  Name,
-  ChannelName,
-  PeerAddress,
-  Username,
-  CryptoMaterialDirectory,
-  LastBlockProcessed
-}) => {
+  GUID: networkId,
+  Name: networkName,
+  ChannelName: channelName,
+  PeerAddress: peerAddress,
+  Username: username,
+  CryptoMaterialDirectory: cryptoMaterialDirectory,
+  LastBlockProcessed: lastBlockProcessed
+}, options = {}) => {
 
-  if (!businessNetwork) {
-    return Promise.reject('Argument exception: businessNetwork.');
-  }
+  const {
+    createFabricClient = () => new FabricClient(),
+    console = console
+  } = options;
 
   // Setup the fabric network
-  const client = new FabricClient();
-  const channel = client.newChannel(ChannelName);
-  const peer = client.newPeer(PeerAddress);
+  const client = createFabricClient();
+  const channel = client.newChannel(channelName);
+  const peer = client.newPeer(peerAddress);
   channel.addPeer(peer);
   const eventHub = channel.newChannelEventHub(peer);
-  console.info(`[${Name}] Created Fabric client with channel "${ChannelName}" and peer "${PeerAddress}".`);
+  console.info(`[${networkName}] Created Fabric client with channel "${channelName}" and peer "${peerAddress}".`);
 
-  const storePath = path.join(__dirname, '..', CryptoMaterialDirectory);
+  const storePath = path.join(__dirname, '..', cryptoMaterialDirectory);
   return FabricClient.newDefaultKeyValueStore({ path: storePath })
     .then(stateStore => {
       // Assign the store to the fabric client.
@@ -38,17 +42,17 @@ const createEventHub = ({
       client.setCryptoSuite(cryptoSuite);
 
       // Get the enrolled user from persistence, this user will sign all requests.
-      console.info(`[${Name}] Loading user context for '${Username}'`);
+      console.info(`[${networkName}] Loading user context for '${username}'`);
 
-      return client.getUserContext(Username, true);
+      return client.getUserContext(username, true);
     })
     .then(user => {
       if (user && user.isEnrolled()) {
-        console.info(`[${Name}] Verified enrollment for user "${Username}".`);
+        console.info(`[${networkName}] Verified enrollment for user "${username}".`);
 
-        return Promise.resolve({ eventHub, networkGUID: GUID, networkName: Name, startBlock: LastBlockProcessed });
+        return Promise.resolve({ eventHub, networkGUID: networkId, networkName: networkName, startBlock: lastBlockProcessed });
       }
-      return Promise.reject(`[${Name}] Failed to verify enrollment for user "${Username}".`);
+      return Promise.reject(`[${networkName}] Failed to verify enrollment for user "${username}".`);
     });
 };
 
