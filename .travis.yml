@@ -3,7 +3,8 @@
 ###
 language: node_js
 node_js:
-  - "10"
+  - "10" # gRPC sporadically doesn't build properly under node 11.
+         # https://github.com/grpc/grpc-node/issues/594
 
 before_script:
  - npm install -g mocha
