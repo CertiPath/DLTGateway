@@ -43,9 +43,9 @@ const createConsole = () => ({
 });
 
 describe('eventHub', function () {
-  it('should create a new channel event hub', function (done) {
+  it('should create a new channel event hub', function () {
     const fakeEventHub = { 'someProp': 'some value' };
-    eventHub.create({
+    return eventHub.create({
       GUID: '35838015-ad4d-4d25-ba4c-dbba6f2a0224',
       Name: 'network 2434897',
       CryptoMaterialDirectory: 'wallet'
@@ -54,9 +54,7 @@ describe('eventHub', function () {
           newChannelEventHub: () => fakeEventHub
         }),
         console: createConsole()
-      }).then(({ eventHub }) => {
-        assert.deepStrictEqual(eventHub, fakeEventHub);
-      }).finally(done);
+      }).then(({ eventHub }) => assert.deepStrictEqual(eventHub, fakeEventHub));
   });
 
   it('should verify user enrollment', function () {
@@ -68,8 +66,9 @@ describe('eventHub', function () {
     }, {
         createFabricClient: createFabricClient.bind(null, { isEnrolled: false }),
         console: createConsole()
-      }).
-      catch(err => assert.equal(err, '[network 2434897] Failed to verify enrollment for user \"user3123\".'));
+      })
+      .then(() => assert.fail('User enrollment verification should cause promise rejection.'),
+        err => assert.equal(err, '[network 2434897] Failed to verify enrollment for user \"user3123\".')
+      );
   });
-
 });
