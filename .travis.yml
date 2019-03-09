@@ -3,6 +3,8 @@
 ###
 language: node_js
 
-before_script: cd src/DLTGatewaySolution/NetworkListeners/FabricListener/
+before_script:
+ - npm install -g mocha
+ - cd src/DLTGatewaySolution/NetworkListeners/FabricListener/
 
 script: npm test
