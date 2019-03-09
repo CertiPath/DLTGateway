@@ -7,7 +7,7 @@ const path = require('path');
 const FabricClient = require('fabric-client');
 
 const createEventHub = ({
-  GUID: networkId,
+  GUID: networkGUID,
   Name: networkName,
   ChannelName: channelName,
   PeerAddress: peerAddress,
@@ -50,7 +50,7 @@ const createEventHub = ({
       if (user && user.isEnrolled()) {
         console.info(`[${networkName}] Verified enrollment for user "${username}".`);
 
-        return Promise.resolve({ eventHub, networkGUID: networkId, networkName: networkName, startBlock: lastBlockProcessed });
+        return Promise.resolve({ eventHub, networkGUID, networkName, startBlock: lastBlockProcessed });
       }
       return Promise.reject(`[${networkName}] Failed to verify enrollment for user "${username}".`);
     });
