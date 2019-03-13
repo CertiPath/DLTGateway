@@ -425,3 +425,8 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+
+
+#Fabric client key store
+hfc-key-store/
