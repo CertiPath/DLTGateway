@@ -56,7 +56,9 @@ describe('eventHub', function () {
         console: createConsole()
       }).then(({ eventHub }) => {
         assert.deepStrictEqual(eventHub, fakeEventHub);
-      }).finally(done);
+        done();
+      })
+      .catch(done);
   });
 
   it('should verify user enrollment', done => {
@@ -66,11 +68,14 @@ describe('eventHub', function () {
       CryptoMaterialDirectory: 'wallet',
       Username: 'user3123'
     }, {
-        createFabricClient: createFabricClient.bind(null, { isEnrolled: true }),
+        createFabricClient: createFabricClient.bind(null, { isEnrolled: false }),
         console: createConsole()
       })
-      .then(() => assert.fail('User enrollment verification should cause promise rejection.'),
-        err => assert.equal(err, '[network 2434897] Failed to verify enrollment for user \"user3123\".')
-      ).finally(done);
+      .then(() => Promise.resolve(), err => Promise.resolve(err))
+      .then(msg => {
+        assert.equal(msg, '[network 2434897] Failed to verify enrollment for user "user3123".');
+        done();
+      })
+      .catch(done);
   });
 });
