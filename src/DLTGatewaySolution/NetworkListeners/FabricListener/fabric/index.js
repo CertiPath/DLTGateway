@@ -4,12 +4,11 @@
 'use strict';
 
 const db = require('../dataAccess');
-const log = require('../eventLog');
 const eventHub = require('./eventHub');
 
 const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkName: 'HLF', networkName: targetNetworkName })
   .then(businessNetworks => {
-    log.info(`Found ${businessNetworks.length} HLF networks from database.`);
+    console.info(`Found ${businessNetworks.length} HLF networks from database.`);
     return Promise.all(businessNetworks.map(businessNetwork => eventHub.createEventHub(businessNetwork)));
   })
   .then(eventHubs => {
@@ -17,17 +16,17 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
       let lastStartBlock = -1;
       const step = (startBlock, count = 10) => {
         if (lastStartBlock === startBlock) {
-          log.info(`[${networkName}] Start block number is the same as previous step.`);
+          console.info(`[${networkName}] Start block number is the same as previous step.`);
           return Promise.resolve({ shouldContinue: false });
         }
-        log.info(`[${networkName}] Start block number is ${startBlock}.`);
+        console.info(`[${networkName}] Start block number is ${startBlock}.`);
         lastStartBlock = startBlock;
         const listen = new Promise((resolve) => {
           let blocks = [];
           let timer;
           const listenerId = eventHub.registerBlockEvent(eventHub, block => {
 
-            log.info(`[${networkName}] Block ${block.header.number} received.`);
+            console.info(`[${networkName}] Block ${block.header.number} received.`);
             blocks.push(block);
 
             const stop = () => {
@@ -42,7 +41,7 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
 
             if (blocks.length < count) {
               timer = setTimeout(() => {
-                log.warn(`[${networkName}] Timed out for block event.`);
+                console.warn(`[${networkName}] Timed out for block event.`);
                 stop();
               }, 6 * 1000);
               return;
@@ -66,7 +65,7 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
                 entirePayload: JSON.stringify(block),
               });
           })).then(() => {
-            log.info(`[${networkName}] Saved ${blocks.length} blocks to database.`);
+            console.info(`[${networkName}] Saved ${blocks.length} blocks to database.`);
             step(maxBlockNumber, count);
           });
         });

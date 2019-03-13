@@ -3,7 +3,6 @@
  */
 'use strict';
 
-const log = require('../eventLog');
 const db = require('./query');
 const records = require('./records');
 
@@ -25,7 +24,7 @@ WHERE  N.Deleted = 0
             return Promise.resolve(networks);
         }
 
-        log.error(`Business Networks not found. SQL: "${sql}"`);
+        console.error(`Business Networks not found. SQL: "${sql}"`);
         return Promise.reject(`Business Networks not found.`);
     });
 };

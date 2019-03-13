@@ -6,7 +6,6 @@
 const sql = require('mssql');
 const db = require('./query');
 const records = require('./records');
-const log = require('../eventLog');
 
 const add = ({
     networkName,
@@ -40,7 +39,7 @@ const add = ({
                             .input('version', sql.NVarChar(100), version)
                             .execute('AddTransaction')
                             .then(result => {
-                                log.info(`[${networkName}] Saved block ${blockNumber}, transaction [${tranIndex + 1}/${transactions.length}]: ${tranID.substring(0, 5)}..., action [${actionIndex + 1}/${actions.length}]: ${chaincodeName} v. ${version}.`);
+                                console.info(`[${networkName}] Saved block ${blockNumber}, transaction [${tranIndex + 1}/${transactions.length}]: ${tranID.substring(0, 5)}..., action [${actionIndex + 1}/${actions.length}]: ${chaincodeName} v. ${version}.`);
                                 return Promise.resolve(records.countAffected(result));
                             });
                     }));
