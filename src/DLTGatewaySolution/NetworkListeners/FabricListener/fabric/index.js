@@ -1,5 +1,5 @@
 ﻿/*
- * src\DLTGatewaySolution\NetworkListeners\FabricListener\fabric\index.js
+ * FabricListener\fabric\index.js
  */
 'use strict';
 

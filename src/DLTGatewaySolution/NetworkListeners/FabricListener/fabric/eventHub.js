@@ -1,5 +1,5 @@
 ﻿/*
- * DLTGateway\src\DLTGatewaySolution\NetworkListeners\FabricListener\fabric\eventHub.js
+ * FabricListener\fabric\eventHub.js
  */
 'use strict';
 

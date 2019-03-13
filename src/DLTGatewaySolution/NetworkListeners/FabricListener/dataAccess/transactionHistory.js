@@ -1,5 +1,5 @@
 /*
- * src\DLTGatewaySolution\NetworkListeners\FabricListener\dataAccess\transactionHistory.js
+ * FabricListener\dataAccess\transactionHistory.js
  */
 'use strict';
 

@@ -1,5 +1,5 @@
 /*
- * src\DLTGatewaySolution\NetworkListeners\FabricListener\dataAccess\records.js
+ * FabricListener\dataAccess\records.js
  */
 'use strict';
 
