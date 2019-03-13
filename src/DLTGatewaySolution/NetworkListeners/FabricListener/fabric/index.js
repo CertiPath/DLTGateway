@@ -9,7 +9,7 @@ const eventHub = require('./eventHub');
 const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkName: 'HLF', networkName: targetNetworkName })
   .then(businessNetworks => {
     console.info(`Found ${businessNetworks.length} HLF networks from database.`);
-    return Promise.all(businessNetworks.map(businessNetwork => eventHub.createEventHub(businessNetwork)));
+    return Promise.all(businessNetworks.map(businessNetwork => eventHub.create(businessNetwork)));
   })
   .then(eventHubs => {
     eventHubs.forEach(({ eventHub, networkGUID, networkName, startBlock }) => {
