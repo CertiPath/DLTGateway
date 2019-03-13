@@ -18,7 +18,7 @@ const createEventHub = ({
 
   const {
     createFabricClient = () => new FabricClient(),
-    console = console
+    log = console
   } = options;
 
   // Setup the fabric network
@@ -27,7 +27,7 @@ const createEventHub = ({
   const peer = client.newPeer(peerAddress);
   channel.addPeer(peer);
   const eventHub = channel.newChannelEventHub(peer);
-  console.info(`[${networkName}] Created Fabric client with channel "${channelName}" and peer "${peerAddress}".`);
+  log.info(`[${networkName}] Created Fabric client with channel "${channelName}" and peer "${peerAddress}".`);
 
   const storePath = path.join(__dirname, '..', cryptoMaterialDirectory);
   return FabricClient.newDefaultKeyValueStore({ path: storePath })
@@ -42,13 +42,13 @@ const createEventHub = ({
       client.setCryptoSuite(cryptoSuite);
 
       // Get the enrolled user from persistence, this user will sign all requests.
-      console.info(`[${networkName}] Loading user context for '${username}'`);
+      log.info(`[${networkName}] Loading user context for '${username}'`);
 
       return client.getUserContext(username, true);
     })
     .then(user => {
       if (user && user.isEnrolled()) {
-        console.info(`[${networkName}] Verified enrollment for user "${username}".`);
+        log.info(`[${networkName}] Verified enrollment for user "${username}".`);
 
         return Promise.resolve({ eventHub, networkGUID, networkName, startBlock: lastBlockProcessed });
       }
