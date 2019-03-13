@@ -1,3 +1,6 @@
+/*
+ * src\DLTGatewaySolution\NetworkListeners\FabricListener\dataAccess\settings.js
+ */
 'use strict';
 
 const db = require('./query');
