@@ -28,7 +28,16 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="dataAccess\businessNetworks.js" />
+    <Compile Include="dataAccess\index.js" />
+    <Compile Include="dataAccess\query.js" />
+    <Compile Include="dataAccess\records.js" />
+    <Compile Include="dataAccess\settings.js" />
+    <Compile Include="dataAccess\transactionHistory.js" />
     <Compile Include="fabric\eventHub.js">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="fabric\index.js">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="index.js" />
@@ -37,6 +46,7 @@
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="dataAccess\" />
     <Folder Include="fabric\" />
     <Folder Include="test\" />
   </ItemGroup>
