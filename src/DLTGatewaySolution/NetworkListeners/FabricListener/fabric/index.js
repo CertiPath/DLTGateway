@@ -4,12 +4,12 @@
 'use strict';
 
 const db = require('../dataAccess');
-const eventHub = require('./eventHub');
+const hub = require('./eventHub');
 
 const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkName: 'HLF', networkName: targetNetworkName })
   .then(businessNetworks => {
     console.info(`Found ${businessNetworks.length} HLF networks from database.`);
-    return Promise.all(businessNetworks.map(businessNetwork => eventHub.create(businessNetwork)));
+    return Promise.all(businessNetworks.map(businessNetwork => hub.create(businessNetwork)));
   })
   .then(eventHubs => {
     eventHubs.forEach(({ eventHub, networkGUID, networkName, startBlock }) => {
@@ -24,13 +24,13 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
         const listen = new Promise((resolve) => {
           let blocks = [];
           let timer;
-          const listenerId = eventHub.registerBlockEvent(eventHub, block => {
+          const listenerId = hub.registerBlockEvent(eventHub, block => {
 
             console.info(`[${networkName}] Block ${block.header.number} received.`);
             blocks.push(block);
 
             const stop = () => {
-              eventHub.unregisterBlockEvent(eventHub, listenerId, networkName);
+              hub.unregisterBlockEvent(eventHub, listenerId, networkName);
               resolve(blocks);
             };
 
@@ -77,7 +77,7 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
 
 
 
-exports.createEventHub = eventHub.create;
-exports.registerBlockEvent = eventHub.registerBlockEvent;
-exports.unregisterBlockEvent = eventHub.unregisterBlockEvent;
+exports.createEventHub = hub.create;
+exports.registerBlockEvent = hub.registerBlockEvent;
+exports.unregisterBlockEvent = hub.unregisterBlockEvent;
 exports.connect = connect;
