@@ -56,20 +56,30 @@ const createEventHub = ({
     });
 };
 
-const registerBlockEvent = (eventHub, listener, networkName, startBlock) => {
+const registerBlockEvent = ({
+  eventHub,
+  listener,
+  networkName,
+  startBlock
+}, options) => {
+  const {
+    log = console
+  } = options || {};
+
   const listenerId = eventHub.registerBlockEvent(
     listener,
     err => {
-      console.warn(`[${networkName}] ${err}`);
+      log.warn(`[${networkName}] ${err}`);
     },
     { startBlock }
   );
-  console.info(`[${networkName}] Registered block event listener.`);
+  log.info(`[${networkName}] Registered block event listener.`);
 
   eventHub.connect({ full_block: true });
-  console.info(`[${networkName}] Start listening to block events.`);
+  log.info(`[${networkName}] Start listening to block events.`);
   return listenerId;
 };
+
 const unregisterBlockEvent = (eventHub, listenerId, networkName) => {
   console.info(`[${networkName}] Unregister block event listener.`)
   eventHub.unregisterBlockEvent(listenerId);

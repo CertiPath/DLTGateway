@@ -24,7 +24,7 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
         const listen = new Promise((resolve) => {
           let blocks = [];
           let timer;
-          const listenerId = hub.registerBlockEvent(eventHub, block => {
+          const listener = block => {
 
             console.info(`[${networkName}] Block ${block.header.number} received.`);
             blocks.push(block);
@@ -47,7 +47,13 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
               return;
             }
             stop();
-          }, networkName, startBlock);
+          };
+          var listenerId = hub.registerBlockEvent({
+            eventHub,
+            listener,
+            networkName,
+            startBlock
+          });
         });
 
         return listen.then(blocks => {

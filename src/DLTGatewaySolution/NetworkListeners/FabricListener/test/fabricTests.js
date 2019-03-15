@@ -6,15 +6,21 @@
 const assert = require('assert');
 const eventHub = require('../fabric/eventHub.js');
 
+const testValues = {
+  networkName: 'network 2434897',
+  startBlock: 1873,
+  listenerId: 874,
+  block1: { [1]: 11 },
+  block2: { [2]: 22 },
+};
+const createEventHub = (peer, options) => ({ peer, ...options });
 const createFabricClient = options => {
   const {
     isEnrolled = true,
     getUserContext = () => Promise.resolve(/* user */ {
       isEnrolled: () => isEnrolled
     }),
-    newChannelEventHub = peer => ({
-      peer
-    })
+    newChannelEventHub = createEventHub
   } = options || {};
   return {
     newChannel: channelName => ({
@@ -48,7 +54,7 @@ describe('eventHub', function () {
     const fakeEventHub = { 'someProp': 'some value' };
     const businessNetwork = {
       GUID: '35838015-ad4d-4d25-ba4c-dbba6f2a0224',
-      Name: 'network 2434897',
+      Name: testValues.networkName,
       CryptoMaterialDirectory: 'wallet'
     };
     const options = {
@@ -67,7 +73,7 @@ describe('eventHub', function () {
   it('should catch un-enrolled user', done => {
     const businessNetwork = {
       GUID: '35838015-ad4d-4d25-ba4c-dbba6f2a0224',
-      Name: 'network 2434897',
+      Name: testValues.networkName,
       CryptoMaterialDirectory: 'wallet',
       Username: 'user3123'
     };
@@ -87,7 +93,7 @@ describe('eventHub', function () {
   it('should catch missing user context', done => {
     const businessNetwork = {
       GUID: '35838015-ad4d-4d25-ba4c-dbba6f2a0224',
-      Name: 'network 2434897',
+      Name: testValues.networkName,
       CryptoMaterialDirectory: 'wallet',
       Username: 'user3123'
     };
@@ -105,6 +111,46 @@ describe('eventHub', function () {
         done();
       })
       .catch(done);
+  });
+
+  it('should register block event listener', done => {
+
+    const blocks = [];
+    (new Promise((resolve) => {
+      let registeredListener = null;
+      const fakeEventHub = createEventHub({/* peer */ }, {
+        registerBlockEvent: listener => {
+          registeredListener = listener;
+          return testValues.listenerId;
+        },
+        connect: () => {
+          if (registeredListener) {
+            Promise.all(
+              [
+                Promise.resolve(testValues.block1),
+                Promise.resolve(testValues.block2)
+              ]
+            ).then(blocks => {
+              blocks.forEach(block => registeredListener(block));
+              resolve();
+            });
+          }
+        }
+      });
+      const options = {
+        log: createConsole()
+      };
+      eventHub.registerBlockEvent({
+        eventHub: fakeEventHub,
+        listener: block => blocks.push(block),
+        networkName: testValues.networkName,
+        startBlock: testValues.startBlock
+      }, options);
+    }).then(() => {
+      assert.equal(blocks.length, 2);
+      done();
+    })
+    .catch(done));
   });
 
 });
