@@ -11,7 +11,6 @@ const testValues = {
   listenerId: 874,
   block1: { 1: 11 },
   block2: { 2: 22 },
-  listenerId: 874,
 };
 const createEventHub = (peer, options) => ({ peer, ...options });
 const createFabricClient = (options) => {
