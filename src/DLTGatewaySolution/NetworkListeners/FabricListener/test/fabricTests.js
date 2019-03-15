@@ -88,7 +88,7 @@ describe('eventHub', () => {
       log: createConsole(),
     };
     EventHub.create(businessNetwork, options)
-      .then(() => Promise.resolve(), err => Promise.resolve(err))
+      .then(() => Promise.resolve(), err => Promise.resolve(err.message))
       .then((msg) => {
         assert.equal(msg, '[network 2434897] Failed to verify enrollment for user "user3123".');
         done();

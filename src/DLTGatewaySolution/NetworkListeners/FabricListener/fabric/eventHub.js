@@ -1,7 +1,6 @@
 ﻿/*
  * FabricListener\fabric\eventHub.js
  */
-'use strict';
 
 const path = require('path');
 const FabricClient = require('fabric-client');
@@ -13,12 +12,11 @@ const createEventHub = ({
   PeerAddress: peerAddress,
   Username: username,
   CryptoMaterialDirectory: cryptoMaterialDirectory,
-  LastBlockProcessed: lastBlockProcessed
+  LastBlockProcessed: lastBlockProcessed,
 }, options) => {
-
   const {
     createFabricClient = () => new FabricClient(),
-    log = console
+    log = console,
   } = options || {};
 
   // Setup the fabric network
@@ -31,7 +29,7 @@ const createEventHub = ({
 
   const storePath = path.join(__dirname, '..', cryptoMaterialDirectory);
   return FabricClient.newDefaultKeyValueStore({ path: storePath })
-    .then(stateStore => {
+    .then((stateStore) => {
       // Assign the store to the fabric client.
       client.setStateStore(stateStore);
       const cryptoSuite = FabricClient.newCryptoSuite();
@@ -46,13 +44,18 @@ const createEventHub = ({
 
       return client.getUserContext(username, true);
     })
-    .then(user => {
+    .then((user) => {
       if (user && user.isEnrolled()) {
         log.info(`[${networkName}] Verified enrollment for user "${username}".`);
 
-        return Promise.resolve({ eventHub, networkGUID, networkName, startBlock: lastBlockProcessed });
+        return Promise.resolve({
+          eventHub, networkGUID, networkName, startBlock: lastBlockProcessed,
+        });
       }
-      return Promise.reject(`[${networkName}] Failed to verify enrollment for user "${username}".`);
+
+      return Promise.reject(
+        new Error(`[${networkName}] Failed to verify enrollment for user "${username}".`),
+      );
     });
 };
 
@@ -60,18 +63,18 @@ const registerBlockEvent = ({
   eventHub,
   listener,
   networkName,
-  startBlock
+  startBlock,
 }, options) => {
   const {
-    log = console
+    log = console,
   } = options || {};
 
   const listenerId = eventHub.registerBlockEvent(
     listener,
-    err => {
+    (err) => {
       log.warn(`[${networkName}] ${err}`);
     },
-    { startBlock }
+    { startBlock },
   );
   log.info(`[${networkName}] Registered block event listener.`);
 
@@ -81,7 +84,7 @@ const registerBlockEvent = ({
 };
 
 const unregisterBlockEvent = (eventHub, listenerId, networkName) => {
-  console.info(`[${networkName}] Unregister block event listener.`)
+  console.info(`[${networkName}] Unregister block event listener.`);
   eventHub.unregisterBlockEvent(listenerId);
   eventHub.disconnect();
   console.info(`[${networkName}] Stopped listening to block events.`);
