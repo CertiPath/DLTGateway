@@ -11,6 +11,7 @@ const testValues = {
   listenerId: 874,
   block1: { 1: 11 },
   block2: { 2: 22 },
+  listenerId: 874,
 };
 const createEventHub = (peer, options) => ({ peer, ...options });
 const createFabricClient = (options) => {
@@ -156,5 +157,29 @@ describe('eventHub', () => {
       done();
     })
       .catch(done));
+  });
+
+  it('should disconnect after unregistering block event listener', () => {
+    let unregisteredListenerId = -1;
+    let disconnected = false;
+
+    const fakeEventHub = createEventHub({/* peer */ }, {
+      unregisterBlockEvent: (listenerId) => {
+        unregisteredListenerId = listenerId;
+      },
+      disconnect: () => {
+        disconnected = true;
+      },
+    });
+    const options = {
+      log: createConsole(),
+    };
+    EventHub.unregisterBlockEvent({
+      eventHub: fakeEventHub,
+      listenerId: testValues.listenerId,
+      networkName: testValues.networkName,
+    }, options);
+    assert.equal(unregisteredListenerId, testValues.listenerId);
+    assert.ok(disconnected);
   });
 });

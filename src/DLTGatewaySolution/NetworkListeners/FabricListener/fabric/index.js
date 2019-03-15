@@ -1,36 +1,37 @@
 ﻿/*
  * FabricListener\fabric\index.js
  */
-'use strict';
 
 const db = require('../dataAccess');
 const hub = require('./eventHub');
 
-const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkName: 'HLF', networkName: targetNetworkName })
-  .then(businessNetworks => {
+const connect = targetNetworkName => db.businessNetworks.search({ frameworkName: 'HLF', networkName: targetNetworkName })
+  .then((businessNetworks) => {
     console.info(`Found ${businessNetworks.length} HLF networks from database.`);
     return Promise.all(businessNetworks.map(businessNetwork => hub.create(businessNetwork)));
   })
-  .then(eventHubs => {
-    eventHubs.forEach(({ eventHub, networkGUID, networkName, startBlock }) => {
+  .then((eventHubs) => {
+    eventHubs.forEach(({
+      eventHub, networkGUID, networkName, startBlock,
+    }) => {
       let lastStartBlock = -1;
-      const step = (startBlock, count = 10) => {
-        if (lastStartBlock === startBlock) {
+      const step = (stepStart, count = 10) => {
+        if (lastStartBlock === stepStart) {
           console.info(`[${networkName}] Start block number is the same as previous step.`);
           return Promise.resolve({ shouldContinue: false });
         }
-        console.info(`[${networkName}] Start block number is ${startBlock}.`);
-        lastStartBlock = startBlock;
+        console.info(`[${networkName}] Start block number is ${stepStart}.`);
+        lastStartBlock = stepStart;
+        let listenerId = -1;
         const listen = new Promise((resolve) => {
-          let blocks = [];
+          const blocks = [];
           let timer;
-          const listener = block => {
-
+          const listener = (block) => {
             console.info(`[${networkName}] Block ${block.header.number} received.`);
             blocks.push(block);
 
             const stop = () => {
-              hub.unregisterBlockEvent(eventHub, listenerId, networkName);
+              hub.unregisterBlockEvent({ eventHub, listenerId, networkName });
               resolve(blocks);
             };
 
@@ -48,26 +49,26 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
             }
             stop();
           };
-          var listenerId = hub.registerBlockEvent({
+          listenerId = hub.registerBlockEvent({
             eventHub,
             listener,
             networkName,
-            startBlock
+            startBlock: stepStart,
           });
         });
 
-        return listen.then(blocks => {
-          const numbers = blocks.map(block => Number.parseInt(block.header.number));
+        return listen.then((blocks) => {
+          const numbers = blocks.map(block => Number.parseInt(block.header.number, 10));
           const maxBlockNumber = Math.max(...numbers);
-          Promise.all(blocks.map(block => {
+          Promise.all(blocks.map((block) => {
             const blockNumber = block.header.number;
             const transactions = block.data.data;
             return db.transactionHistory
               .add({
-                networkName: networkName,
-                networkGUID: networkGUID,
-                blockNumber: blockNumber,
-                transactions: transactions,
+                networkName,
+                networkGUID,
+                blockNumber,
+                transactions,
                 entirePayload: JSON.stringify(block),
               });
           })).then(() => {
@@ -75,12 +76,10 @@ const connect = (targetNetworkName) => db.businessNetworks.search({ frameworkNam
             step(maxBlockNumber, count);
           });
         });
-
       };
       step(startBlock);
     });
   });
-
 
 
 exports.createEventHub = hub.create;

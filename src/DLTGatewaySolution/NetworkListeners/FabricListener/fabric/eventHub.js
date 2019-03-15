@@ -83,11 +83,15 @@ const registerBlockEvent = ({
   return listenerId;
 };
 
-const unregisterBlockEvent = (eventHub, listenerId, networkName) => {
-  console.info(`[${networkName}] Unregister block event listener.`);
+const unregisterBlockEvent = ({ eventHub, listenerId, networkName }, options) => {
+  const {
+    log = console,
+  } = options || {};
+
+  log.info(`[${networkName}] Unregister block event listener.`);
   eventHub.unregisterBlockEvent(listenerId);
   eventHub.disconnect();
-  console.info(`[${networkName}] Stopped listening to block events.`);
+  log.info(`[${networkName}] Stopped listening to block events.`);
 };
 
 
