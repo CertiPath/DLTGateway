@@ -14,12 +14,12 @@ const createEventHub = ({
   Username: username,
   CryptoMaterialDirectory: cryptoMaterialDirectory,
   LastBlockProcessed: lastBlockProcessed
-}, options = {}) => {
+}, options) => {
 
   const {
     createFabricClient = () => new FabricClient(),
     log = console
-  } = options;
+  } = options || {};
 
   // Setup the fabric network
   const client = createFabricClient();
