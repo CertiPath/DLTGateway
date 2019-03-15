@@ -1,7 +1,8 @@
 /*
  * FabricListener\test\fabricTests.js
  */
-'use strict';
+
+
 
 const assert = require('assert');
 const eventHub = require('../fabric/eventHub.js');
@@ -10,46 +11,46 @@ const testValues = {
   networkName: 'network 2434897',
   startBlock: 1873,
   listenerId: 874,
-  block1: { [1]: 11 },
-  block2: { [2]: 22 },
+  block1: { 1: 11 },
+  block2: { 2: 22 },
 };
 const createEventHub = (peer, options) => ({ peer, ...options });
-const createFabricClient = options => {
+const createFabricClient = (options) => {
   const {
     isEnrolled = true,
     getUserContext = () => Promise.resolve(/* user */ {
-      isEnrolled: () => isEnrolled
+      isEnrolled: () => isEnrolled,
     }),
-    newChannelEventHub = createEventHub
+    newChannelEventHub = createEventHub,
   } = options || {};
   return {
     newChannel: channelName => ({
-      channelName: channelName,
+      channelName,
       addPeer: peer => this.peer = peer,
-      newChannelEventHub
+      newChannelEventHub,
     }),
     newPeer: peerAddress => ({
-      peerAddress
+      peerAddress,
     }),
     newCryptoKeyStore: ({ path }) => ({ path }),
     newCryptoSuite: () => ({
-      setCryptoKeyStore: keyStore => this.keyStore = keyStore
+      setCryptoKeyStore: keyStore => this.keyStore = keyStore,
     }),
     newDefaultKeyValueStore: () => Promise.resolve(/* stateStore */ {}),
 
     setStateStore: stateStore => this.stateStore = stateStore,
     setCryptoSuite: cryptoSuite => this.cryptoSuite = cryptoSuite,
 
-    getUserContext
+    getUserContext,
   };
 };
 
 // Create a fake console object to keep the real console clear.
 const createConsole = () => ({
-  info: () => { /* Discard the info. */ }
+  info: () => { /* Discard the info. */ },
 });
 
-describe('eventHub', function () {
+describe('eventHub', () => {
   it('should create a new channel event hub', done => {
     const fakeEventHub = { 'someProp': 'some value' };
     const businessNetwork = {

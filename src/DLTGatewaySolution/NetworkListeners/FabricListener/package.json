@@ -1,23 +1,23 @@
 {
-  "name": "fabric-listener",
-  "version": "0.0.1",
-  "description": "FabricListener",
-  "main": "index.js",
-  "author": {
-    "name": "CertiPath"
-  },
-  "dependencies": {
-    "dotenv": "^6.2.0",
-    "fabric-client": "^1.4.0",
-    "mssql": "^4.3.0"
-  },
-  "devDependencies": {
-    "eslint": "^5.15.1",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "mocha": "^6.0.2"
-  },
-  "scripts": {
-    "test": "mocha --harmony"
-  }
+    "name": "fabric-listener",
+    "version": "0.0.1",
+    "description": "FabricListener",
+    "main": "index.js",
+    "author": {
+        "name": "CertiPath"
+    },
+    "dependencies": {
+        "dotenv": "^6.2.0",
+        "fabric-client": "^1.4.0",
+        "mssql": "^4.3.0"
+    },
+    "devDependencies": {
+        "eslint": "^5.15.1",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-plugin-import": "^2.16.0",
+        "mocha": "^6.0.2"
+    },
+    "scripts": {
+        "test": "mocha --harmony"
+    }
 }
