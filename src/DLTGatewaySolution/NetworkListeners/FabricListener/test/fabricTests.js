@@ -2,10 +2,8 @@
  * FabricListener\test\fabricTests.js
  */
 
-
-
 const assert = require('assert');
-const eventHub = require('../fabric/eventHub.js');
+const EventHub = require('../fabric/eventHub.js');
 
 const testValues = {
   networkName: 'network 2434897',
@@ -26,7 +24,9 @@ const createFabricClient = (options) => {
   return {
     newChannel: channelName => ({
       channelName,
-      addPeer: peer => this.peer = peer,
+      addPeer: (peer) => {
+        this.peer = peer;
+      },
       newChannelEventHub,
     }),
     newPeer: peerAddress => ({
@@ -34,13 +34,18 @@ const createFabricClient = (options) => {
     }),
     newCryptoKeyStore: ({ path }) => ({ path }),
     newCryptoSuite: () => ({
-      setCryptoKeyStore: keyStore => this.keyStore = keyStore,
+      setCryptoKeyStore: (keyStore) => {
+        this.keyStore = keyStore;
+      },
     }),
     newDefaultKeyValueStore: () => Promise.resolve(/* stateStore */ {}),
 
-    setStateStore: stateStore => this.stateStore = stateStore,
-    setCryptoSuite: cryptoSuite => this.cryptoSuite = cryptoSuite,
-
+    setStateStore: (stateStore) => {
+      this.stateStore = stateStore;
+    },
+    setCryptoSuite: (cryptoSuite) => {
+      this.cryptoSuite = cryptoSuite;
+    },
     getUserContext,
   };
 };
@@ -51,76 +56,75 @@ const createConsole = () => ({
 });
 
 describe('eventHub', () => {
-  it('should create a new channel event hub', done => {
-    const fakeEventHub = { 'someProp': 'some value' };
+  it('should create a new channel event hub', (done) => {
+    const fakeEventHub = { someProp: 'some value' };
     const businessNetwork = {
       GUID: '35838015-ad4d-4d25-ba4c-dbba6f2a0224',
       Name: testValues.networkName,
-      CryptoMaterialDirectory: 'wallet'
+      CryptoMaterialDirectory: 'wallet',
     };
     const options = {
       createFabricClient: createFabricClient.bind(null, {
-        newChannelEventHub: () => fakeEventHub
+        newChannelEventHub: () => fakeEventHub,
       }),
-      log: createConsole()
+      log: createConsole(),
     };
-    eventHub.create(businessNetwork, options).then(({ eventHub }) => {
+    EventHub.create(businessNetwork, options).then(({ eventHub }) => {
       assert.deepStrictEqual(eventHub, fakeEventHub);
       done();
     })
       .catch(done);
   });
 
-  it('should catch un-enrolled user', done => {
+  it('should catch un-enrolled user', (done) => {
     const businessNetwork = {
       GUID: '35838015-ad4d-4d25-ba4c-dbba6f2a0224',
       Name: testValues.networkName,
       CryptoMaterialDirectory: 'wallet',
-      Username: 'user3123'
+      Username: 'user3123',
     };
     const options = {
       createFabricClient: createFabricClient.bind(null, { isEnrolled: false }),
-      log: createConsole()
+      log: createConsole(),
     };
-    eventHub.create(businessNetwork, options)
+    EventHub.create(businessNetwork, options)
       .then(() => Promise.resolve(), err => Promise.resolve(err))
-      .then(msg => {
+      .then((msg) => {
         assert.equal(msg, '[network 2434897] Failed to verify enrollment for user "user3123".');
         done();
       })
       .catch(done);
   });
 
-  it('should catch missing user context', done => {
+  it('should catch missing user context', (done) => {
     const businessNetwork = {
       GUID: '35838015-ad4d-4d25-ba4c-dbba6f2a0224',
       Name: testValues.networkName,
       CryptoMaterialDirectory: 'wallet',
-      Username: 'user3123'
+      Username: 'user3123',
     };
-    const err = 'Failed to get user context.';
+    const errorMessage = 'Failed to get user context.';
     const options = {
       createFabricClient: createFabricClient.bind(null, {
-        getUserContext: () => Promise.reject(err)
+        getUserContext: () => Promise.reject(errorMessage),
       }),
-      log: createConsole()
+      log: createConsole(),
     };
-    eventHub.create(businessNetwork, options)
+    EventHub.create(businessNetwork, options)
       .then(() => Promise.resolve(), err => Promise.resolve(err))
-      .then(msg => {
-        assert.equal(msg, err);
+      .then((msg) => {
+        assert.equal(msg, errorMessage);
         done();
       })
       .catch(done);
   });
 
-  it('should register block event listener', done => {
-
+  it('should register block event listener', (done) => {
     const blocks = [];
     (new Promise((resolve) => {
       let registeredListener = null;
       const fakeEventHub = createEventHub({/* peer */ }, {
-        registerBlockEvent: listener => {
+        registerBlockEvent: (listener) => {
           registeredListener = listener;
           return testValues.listenerId;
         },
@@ -129,29 +133,28 @@ describe('eventHub', () => {
             Promise.all(
               [
                 Promise.resolve(testValues.block1),
-                Promise.resolve(testValues.block2)
-              ]
-            ).then(blocks => {
-              blocks.forEach(block => registeredListener(block));
+                Promise.resolve(testValues.block2),
+              ],
+            ).then((results) => {
+              results.forEach(result => registeredListener(result));
               resolve();
             });
           }
-        }
+        },
       });
       const options = {
-        log: createConsole()
+        log: createConsole(),
       };
-      eventHub.registerBlockEvent({
+      EventHub.registerBlockEvent({
         eventHub: fakeEventHub,
         listener: block => blocks.push(block),
         networkName: testValues.networkName,
-        startBlock: testValues.startBlock
+        startBlock: testValues.startBlock,
       }, options);
     }).then(() => {
       assert.equal(blocks.length, 2);
       done();
     })
-    .catch(done));
+      .catch(done));
   });
-
 });
