@@ -1,32 +1,45 @@
 /*
  * FabricListener\dataAccess\businessNetworks.js
  */
-'use strict';
 
+const promiseRetry = require('promise-retry');
 const db = require('./query');
 const records = require('./records');
 
-const search = ({ frameworkName, networkName }) => {
-    const andNetworkNameCondition = networkName ? `AND N.Name ='${networkName}'` : '';
-    const sql = `
-SELECT * 
+const search = ({ frameworkName, networkName }, options) => {
+  if (!frameworkName) {
+    throw Error('Argument excception: frameworkName is required but missing.');
+  }
+  const { query = db.query, logger = console } = options || {};
+  const andNetworkNameCondition = networkName ? `AND N.Name ='${networkName}'` : '';
+  const sql = `
+SELECT N.GUID,
+       N.Name,
+       N.LastBlockProcessed
 FROM   BusinessNetwork AS N 
        INNER JOIN BlockchainFramework AS F 
                ON N.BlockchainFrameworkGUID = F.GUID 
 WHERE  N.Deleted = 0 
-       AND F.Deleted = 0
-       AND F.Name = '${frameworkName}'
+AND F.Deleted = 0
+AND F.Name = '${frameworkName}'
        ${andNetworkNameCondition}
 `;
-    return db.query(sql).then(result => {
-        const networks = records.fromRecordset(result.recordset);
-        if (networks.length) {
-            return Promise.resolve(networks);
-        }
 
-        console.error(`Business Networks not found. SQL: "${sql}"`);
-        return Promise.reject(`Business Networks not found.`);
-    });
+  return promiseRetry({
+    retries: 1,
+  }, (retry, number) => {
+    logger.log('attempt number', number);
+
+    return query(sql).catch(retry);
+  }).then((result) => {
+    const networks = records.fromRecordset(result.recordset);
+    if (networks.length) {
+      return Promise.resolve(networks);
+    }
+
+    logger.error('Business Networks not found.');
+    return Promise.reject(new Error('Business Networks not found.'));
+  });
 };
 
 exports.search = search;
