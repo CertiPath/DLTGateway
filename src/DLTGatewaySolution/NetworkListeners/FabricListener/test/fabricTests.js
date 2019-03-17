@@ -3,9 +3,10 @@
  */
 
 const assert = require('assert');
-const EventHub = require('../fabric/eventHub.js');
+const EventHub = require('../fabric');
 
 const testValues = {
+  networkGUID: '35838015-ad4d-4d25-ba4c-dbba6f2a0224',
   networkName: 'network 2434897',
   startBlock: 1873,
   listenerId: 874,
@@ -69,7 +70,7 @@ describe('eventHub', () => {
       }),
       log: createConsole(),
     };
-    EventHub.create(businessNetwork, options).then(({ eventHub }) => {
+    EventHub.createEventHub(businessNetwork, options).then(({ eventHub }) => {
       assert.deepStrictEqual(eventHub, fakeEventHub);
       done();
     })
@@ -87,7 +88,7 @@ describe('eventHub', () => {
       createFabricClient: createFabricClient.bind(null, { isEnrolled: false }),
       log: createConsole(),
     };
-    EventHub.create(businessNetwork, options)
+    EventHub.createEventHub(businessNetwork, options)
       .then(() => Promise.resolve(), err => Promise.resolve(err.message))
       .then((msg) => {
         assert.equal(msg, '[network 2434897] Failed to verify enrollment for user "user3123".');
@@ -110,7 +111,7 @@ describe('eventHub', () => {
       }),
       log: createConsole(),
     };
-    EventHub.create(businessNetwork, options)
+    EventHub.createEventHub(businessNetwork, options)
       .then(() => Promise.resolve(), err => Promise.resolve(err))
       .then((msg) => {
         assert.equal(msg, errorMessage);
