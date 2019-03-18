@@ -426,6 +426,12 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 
 # Fabric client key store
