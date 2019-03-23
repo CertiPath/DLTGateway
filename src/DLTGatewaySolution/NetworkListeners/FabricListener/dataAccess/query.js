@@ -9,7 +9,11 @@ mssql.on('error', (err) => {
   console.error(`SQL error: ${err}`);
 });
 
-require('dotenv').config();
+const loadResult = require('dotenv').config();
+
+if (loadResult.error) {
+  throw loadResult.error;
+}
 
 const dbConfig = {
   user: process.env.USER,
