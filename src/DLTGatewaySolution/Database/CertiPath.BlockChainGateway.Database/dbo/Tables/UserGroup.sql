@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[UserGroup]
+(
+	[GUID] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Name] NVARCHAR(250) NOT NULL, 
+    [SID] NVARCHAR(100) NOT NULL, 
+    [Deleted] BIT NOT NULL, 
+    [IsActiveDirectory] BIT NOT NULL DEFAULT 0
+)

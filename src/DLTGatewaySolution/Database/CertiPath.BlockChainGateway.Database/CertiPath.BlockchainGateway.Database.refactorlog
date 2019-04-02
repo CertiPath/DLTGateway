@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="0ea0a075-8c07-48b9-ba64-88dabdcf4cae" ChangeDateTime="12/07/2018 13:47:52">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetworkObject].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetworkObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b4765c24-3833-4320-9efb-7a4b2dfe4561" ChangeDateTime="12/07/2018 13:48:22">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetworkObject].[ClassName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetworkObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="BusinessNetworkGUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1bb010b4-6b88-4d07-9120-af8f1f8a0ac2" ChangeDateTime="12/07/2018 14:09:25">
+    <Property Name="ElementName" Value="[dbo].[FK_TransactionHistory_ToTable]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[TransactionHistory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_TransactionHistory_BusinessNetwork]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fa979e88-e8bc-4d08-b916-e1c55226da72" ChangeDateTime="12/07/2018 14:45:01">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetworkNamespace].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetworkNamespace]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="eae5d19d-97af-4c45-9c0f-0a8b5da05a0c" ChangeDateTime="12/07/2018 14:46:07">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetworkObject].[BusinessNetworkGUID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetworkObject]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="BusinessNetworkNamespaceGUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fbc5f499-3b85-4803-9c5c-26cf62f06fed" ChangeDateTime="03/07/2019 18:41:09">
+    <Property Name="ElementName" Value="[dbo].[Role].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Role]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="dbb73d66-a25c-4de2-a2c9-98693788557e" ChangeDateTime="03/07/2019 18:45:32">
+    <Property Name="ElementName" Value="[dbo].[PolicyType].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PolicyType]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bdce1d0b-9297-470c-b630-4deb8539ac94" ChangeDateTime="03/07/2019 18:46:36">
+    <Property Name="ElementName" Value="[dbo].[Policy].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Policy]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6936b60d-ff53-4b0b-8b63-1236ac475151" ChangeDateTime="03/07/2019 18:58:39">
+    <Property Name="ElementName" Value="[dbo].[Role_Policy].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Role_Policy]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="276a4795-2354-436b-a2c6-c4b1baf6d08f" ChangeDateTime="03/07/2019 19:12:28">
+    <Property Name="ElementName" Value="[dbo].[ADGroup].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ADGroup]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6a3b3678-e0b7-4fbf-bcc1-95a8f5eb8569" ChangeDateTime="03/07/2019 19:13:39">
+    <Property Name="ElementName" Value="[dbo].[ADGroup].[SIV]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ADGroup]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d7d233f8-889b-4116-818d-c5b735631a64" ChangeDateTime="03/07/2019 19:17:11">
+    <Property Name="ElementName" Value="[dbo].[Role_ADGroup].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Role_ADGroup]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1dd7d794-bdfc-43dc-8c44-66900cd14150" ChangeDateTime="03/08/2019 12:39:21">
+    <Property Name="ElementName" Value="[dbo].[User_UserGroup].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[User_UserGroup]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="06e31876-b587-4eba-9232-d846fc6d4f40" ChangeDateTime="03/11/2019 11:33:22">
+    <Property Name="ElementName" Value="[dbo].[Role_UserGroup].[ADGroup]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Role_UserGroup]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserGroupGUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5ec0cdee-6147-4fd0-b5e2-753419eb48e2" ChangeDateTime="03/29/2019 01:21:45">
+    <Property Name="ElementName" Value="[dbo].[FileUpload].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[FileUpload]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a7c0b284-7228-49a7-bc02-515e0c3a48e1" ChangeDateTime="03/29/2019 01:25:38">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetwork_FileUpload].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetwork_FileUpload]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="733396f1-9552-4d4e-aee7-8a8954a23479" ChangeDateTime="03/29/2019 01:26:34">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetwork_FileUpload].[FileUpload]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetwork_FileUpload]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FileUploadGUID" />
+  </Operation>
+</Operations>

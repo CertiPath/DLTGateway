@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[Policy]
+(
+	[GUID] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Name] NVARCHAR(50) NOT NULL, 
+	[Code] NVARCHAR(50) NULL,
+    [PolicyTypeGUID] UNIQUEIDENTIFIER NOT NULL, 
+    [SortOrder] INT NOT NULL DEFAULT 0, 
+    [Deleted ] BIT NOT NULL, 
+    CONSTRAINT [FK_Policy_PolicyType] FOREIGN KEY ([PolicyTypeGUID]) REFERENCES [PolicyType]([GUID]),
+)

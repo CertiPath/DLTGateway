@@ -1,0 +1,1604 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AuditLog">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="OperationType" Type="nvarchar" MaxLength="50" />
+          <Property Name="PrimaryObjectName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PrimaryObjectGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SecondaryObjectName" Type="nvarchar" MaxLength="50" />
+          <Property Name="SecondaryObjectGUID" Type="uniqueidentifier" />
+          <Property Name="OldRecordValue" Type="nvarchar(max)" />
+          <Property Name="NewRecordValue" Type="nvarchar(max)" />
+          <Property Name="TransactionSequence" Type="int" Nullable="false" />
+          <Property Name="ServerName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ServerUTC" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="UserGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BlockchainFramework">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BusinessNetwork">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BlockchainFrameworkGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="ChannelName" Type="nvarchar" MaxLength="100" />
+          <Property Name="PeerAddress" Type="nvarchar" MaxLength="100" />
+          <Property Name="CryptoMaterialDirectory" Type="nvarchar" MaxLength="100" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="LastBlockProcessed" Type="int" />
+          <Property Name="Disabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BusinessNetwork_FileUpload">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FileUploadGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BusinessNetworkNamespace">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SingleObjectNamespace" Type="bit" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BusinessNetworkObject">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ClassName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DataStore">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkObjectGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SourceID" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TransactionHistoryGUID" Type="uniqueidentifier" />
+          <Property Name="LastUpdatedOn" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="FileUpload">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="TypeExtension" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FileContent" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="PolicyTypeGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SortOrder" Type="int" Nullable="false" />
+          <Property Name="Deleted " Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PolicyType">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="IsSystemRole" Type="bit" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role_Policy">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoleGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PolicyGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Allow" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role_UserGroup">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoleGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserGroupGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Setting">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DisplayName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SettingTypeGUID" Type="uniqueidentifier" />
+          <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ValueType" Type="nvarchar" MaxLength="50" />
+          <Property Name="ValueReference" Type="nvarchar(max)" />
+          <Property Name="TooltipText" Type="nvarchar" MaxLength="250" />
+          <Property Name="Order" Type="int" />
+          <Property Name="UserEditable" Type="bit" Nullable="false" />
+          <Property Name="Required" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SettingType">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserEditable" Type="bit" Nullable="false" />
+          <Property Name="Order" Type="int" />
+        </EntityType>
+        <EntityType Name="TransactionHistory">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TransactionID" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Data" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ChannelName" Type="nvarchar" MaxLength="100" />
+          <Property Name="ChaincodeName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Version" Type="nvarchar" MaxLength="100" />
+          <Property Name="MspID" Type="nvarchar" MaxLength="100" />
+          <Property Name="Method" Type="nvarchar" MaxLength="100" />
+          <Property Name="Arguments" Type="nvarchar" MaxLength="250" />
+          <Property Name="CreatedOn" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="IsProcessed" Type="bit" Nullable="false" />
+          <Property Name="ProcessedOn" Type="datetime2" Precision="7" />
+          <Property Name="ProcessedNote" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_UserGroup">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserGroupGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserGUID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vBusinessNetworkFile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vBusinessNetworkFile">
+          <Key>
+            <PropertyRef Name="BusinessNetworkGUID" />
+            <PropertyRef Name="BusinessNetworkName" />
+            <PropertyRef Name="FileUploadGUID" />
+            <PropertyRef Name="FileUploadName" />
+            <PropertyRef Name="FileUploadContent" />
+            <PropertyRef Name="FileUploadTypeExtension" />
+            <PropertyRef Name="FileUploadFileName" />
+          </Key>
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="FileUploadGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FileUploadName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="FileUploadContent" Type="varbinary(max)" Nullable="false" />
+          <Property Name="FileUploadTypeExtension" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FileUploadFileName" Type="nvarchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vBusinessNetworkNamespace' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vBusinessNetworkNamespace">
+          <Key>
+            <PropertyRef Name="BusinessNetworkGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceName" />
+          </Key>
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ObjectCount" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vBusinessNetworkObject' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vBusinessNetworkObject">
+          <Key>
+            <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            <PropertyRef Name="BusinessNetworkObjectGUID" />
+            <PropertyRef Name="BusinessNetworkObjectClassName" />
+            <PropertyRef Name="BusinessNetworkObjectName" />
+          </Key>
+          <Property Name="BusinessNetworkNamespaceGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkObjectGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkObjectClassName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="BusinessNetworkObjectName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ObjectCount" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vDataStore' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vDataStore">
+          <Key>
+            <PropertyRef Name="BusinessNetworkGUID" />
+            <PropertyRef Name="BusinessNetworkName" />
+            <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceName" />
+            <PropertyRef Name="BusinessNetworkObjectGUID" />
+            <PropertyRef Name="BusinessNetworkObjectClassName" />
+            <PropertyRef Name="BusinessNetworkObjectName" />
+            <PropertyRef Name="DataStoreGUID" />
+            <PropertyRef Name="DataStoreIsDeleted" />
+            <PropertyRef Name="DataStoreSourceID" />
+            <PropertyRef Name="DataStoreValue" />
+          </Key>
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BusinessNetworkObjectGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkObjectClassName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="BusinessNetworkObjectName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DataStoreGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DataStoreIsDeleted" Type="bit" Nullable="false" />
+          <Property Name="DataStoreSourceID" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DataStoreValue" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="DataStoreLastUpdatedOn" Type="datetime2" Precision="7" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespaceAndObjectTree' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vNamespaceAndObjectTree">
+          <Key>
+            <PropertyRef Name="BusinessNetworkGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceName" />
+          </Key>
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="BusinessNetworkObjectGUID" Type="uniqueidentifier" />
+          <Property Name="BusinessNetworkObjectClassName" Type="nvarchar" MaxLength="250" />
+          <Property Name="BusinessNetworkObjectName" Type="nvarchar" MaxLength="100" />
+          <Property Name="ObjectCount" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespaceTransactionsPerDay' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vNamespaceTransactionsPerDay">
+          <Key>
+            <PropertyRef Name="NamespaceGUID" />
+            <PropertyRef Name="NamespaceName" />
+            <PropertyRef Name="KeyGUID" />
+          </Key>
+          <Property Name="KeyGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="NamespaceGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="NamespaceName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TransactionDate" Type="date" />
+          <Property Name="TransactionDayName" Type="nvarchar" MaxLength="30" />
+          <Property Name="TransactionCount" Type="int" />
+        </EntityType>
+        <Association Name="FK_AuditLog_CreatedBy">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="AuditLog" Type="Self.AuditLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="AuditLog">
+              <PropertyRef Name="UserGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetwork_BlockchainFramework">
+          <End Role="BlockchainFramework" Type="Self.BlockchainFramework" Multiplicity="1" />
+          <End Role="BusinessNetwork" Type="Self.BusinessNetwork" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BlockchainFramework">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetwork">
+              <PropertyRef Name="BlockchainFrameworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetwork_FileUpload_BusinessNetwork">
+          <End Role="BusinessNetwork" Type="Self.BusinessNetwork" Multiplicity="1" />
+          <End Role="BusinessNetwork_FileUpload" Type="Self.BusinessNetwork_FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetwork">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetwork_FileUpload">
+              <PropertyRef Name="BusinessNetworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetwork_FileUpload_FileUpload">
+          <End Role="FileUpload" Type="Self.FileUpload" Multiplicity="1" />
+          <End Role="BusinessNetwork_FileUpload" Type="Self.BusinessNetwork_FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileUpload">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetwork_FileUpload">
+              <PropertyRef Name="FileUploadGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetworkNamespace_BusinessNetwork">
+          <End Role="BusinessNetwork" Type="Self.BusinessNetwork" Multiplicity="1" />
+          <End Role="BusinessNetworkNamespace" Type="Self.BusinessNetworkNamespace" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetwork">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkNamespace">
+              <PropertyRef Name="BusinessNetworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetworkObject_BusinessNetworkNamespace">
+          <End Role="BusinessNetworkNamespace" Type="Self.BusinessNetworkNamespace" Multiplicity="1" />
+          <End Role="BusinessNetworkObject" Type="Self.BusinessNetworkObject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetworkNamespace">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObject">
+              <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataStore_BusinessNetworkObject">
+          <End Role="BusinessNetworkObject" Type="Self.BusinessNetworkObject" Multiplicity="1" />
+          <End Role="DataStore" Type="Self.DataStore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetworkObject">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="DataStore">
+              <PropertyRef Name="BusinessNetworkObjectGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataStore_TransactionHistoryGUID">
+          <End Role="TransactionHistory" Type="Self.TransactionHistory" Multiplicity="0..1" />
+          <End Role="DataStore" Type="Self.DataStore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionHistory">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="DataStore">
+              <PropertyRef Name="TransactionHistoryGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Policy_PolicyType">
+          <End Role="PolicyType" Type="Self.PolicyType" Multiplicity="1" />
+          <End Role="Policy" Type="Self.Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PolicyType">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Policy">
+              <PropertyRef Name="PolicyTypeGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_Policy_Policy">
+          <End Role="Policy" Type="Self.Policy" Multiplicity="1" />
+          <End Role="Role_Policy" Type="Self.Role_Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_Policy">
+              <PropertyRef Name="PolicyGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_Policy_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Role_Policy" Type="Self.Role_Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_Policy">
+              <PropertyRef Name="RoleGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_UserGroup_RoleGUID">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Role_UserGroup" Type="Self.Role_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_UserGroup">
+              <PropertyRef Name="RoleGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Setting_SettingType">
+          <End Role="SettingType" Type="Self.SettingType" Multiplicity="0..1" />
+          <End Role="Setting" Type="Self.Setting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettingType">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Setting">
+              <PropertyRef Name="SettingTypeGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionHistory_BusinessNetwork">
+          <End Role="BusinessNetwork" Type="Self.BusinessNetwork" Multiplicity="1" />
+          <End Role="TransactionHistory" Type="Self.TransactionHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetwork">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="TransactionHistory">
+              <PropertyRef Name="BusinessNetworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_UserGroup_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="User_UserGroup" Type="Self.User_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="User_UserGroup">
+              <PropertyRef Name="UserGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetSystemStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="offsetHours" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="DataModelStoreContainer">
+          <EntitySet Name="AuditLog" EntityType="Self.AuditLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BlockchainFramework" EntityType="Self.BlockchainFramework" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BusinessNetwork" EntityType="Self.BusinessNetwork" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BusinessNetwork_FileUpload" EntityType="Self.BusinessNetwork_FileUpload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BusinessNetworkNamespace" EntityType="Self.BusinessNetworkNamespace" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BusinessNetworkObject" EntityType="Self.BusinessNetworkObject" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataStore" EntityType="Self.DataStore" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FileUpload" EntityType="Self.FileUpload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Policy" EntityType="Self.Policy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PolicyType" EntityType="Self.PolicyType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role_Policy" EntityType="Self.Role_Policy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role_UserGroup" EntityType="Self.Role_UserGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SettingType" EntityType="Self.SettingType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionHistory" EntityType="Self.TransactionHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_UserGroup" EntityType="Self.User_UserGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vBusinessNetworkFile" EntityType="Self.vBusinessNetworkFile" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vBusinessNetworkFile].[BusinessNetworkGUID] AS [BusinessNetworkGUID], 
+    [vBusinessNetworkFile].[BusinessNetworkName] AS [BusinessNetworkName], 
+    [vBusinessNetworkFile].[FileUploadGUID] AS [FileUploadGUID], 
+    [vBusinessNetworkFile].[FileUploadName] AS [FileUploadName], 
+    [vBusinessNetworkFile].[FileUploadContent] AS [FileUploadContent], 
+    [vBusinessNetworkFile].[FileUploadTypeExtension] AS [FileUploadTypeExtension], 
+    [vBusinessNetworkFile].[FileUploadFileName] AS [FileUploadFileName]
+    FROM [dbo].[vBusinessNetworkFile] AS [vBusinessNetworkFile]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vBusinessNetworkNamespace" EntityType="Self.vBusinessNetworkNamespace" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vBusinessNetworkNamespace].[BusinessNetworkGUID] AS [BusinessNetworkGUID], 
+    [vBusinessNetworkNamespace].[BusinessNetworkNamespaceGUID] AS [BusinessNetworkNamespaceGUID], 
+    [vBusinessNetworkNamespace].[BusinessNetworkNamespaceName] AS [BusinessNetworkNamespaceName], 
+    [vBusinessNetworkNamespace].[ObjectCount] AS [ObjectCount]
+    FROM [dbo].[vBusinessNetworkNamespace] AS [vBusinessNetworkNamespace]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vBusinessNetworkObject" EntityType="Self.vBusinessNetworkObject" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vBusinessNetworkObject].[BusinessNetworkNamespaceGUID] AS [BusinessNetworkNamespaceGUID], 
+    [vBusinessNetworkObject].[BusinessNetworkObjectGUID] AS [BusinessNetworkObjectGUID], 
+    [vBusinessNetworkObject].[BusinessNetworkObjectClassName] AS [BusinessNetworkObjectClassName], 
+    [vBusinessNetworkObject].[BusinessNetworkObjectName] AS [BusinessNetworkObjectName], 
+    [vBusinessNetworkObject].[ObjectCount] AS [ObjectCount]
+    FROM [dbo].[vBusinessNetworkObject] AS [vBusinessNetworkObject]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vDataStore" EntityType="Self.vDataStore" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vDataStore].[BusinessNetworkGUID] AS [BusinessNetworkGUID], 
+    [vDataStore].[BusinessNetworkName] AS [BusinessNetworkName], 
+    [vDataStore].[BusinessNetworkNamespaceGUID] AS [BusinessNetworkNamespaceGUID], 
+    [vDataStore].[BusinessNetworkNamespaceName] AS [BusinessNetworkNamespaceName], 
+    [vDataStore].[BusinessNetworkObjectGUID] AS [BusinessNetworkObjectGUID], 
+    [vDataStore].[BusinessNetworkObjectClassName] AS [BusinessNetworkObjectClassName], 
+    [vDataStore].[BusinessNetworkObjectName] AS [BusinessNetworkObjectName], 
+    [vDataStore].[DataStoreGUID] AS [DataStoreGUID], 
+    [vDataStore].[DataStoreIsDeleted] AS [DataStoreIsDeleted], 
+    [vDataStore].[DataStoreSourceID] AS [DataStoreSourceID], 
+    [vDataStore].[DataStoreValue] AS [DataStoreValue], 
+    [vDataStore].[DataStoreLastUpdatedOn] AS [DataStoreLastUpdatedOn]
+    FROM [dbo].[vDataStore] AS [vDataStore]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vNamespaceAndObjectTree" EntityType="Self.vNamespaceAndObjectTree" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vNamespaceAndObjectTree].[BusinessNetworkGUID] AS [BusinessNetworkGUID], 
+    [vNamespaceAndObjectTree].[BusinessNetworkNamespaceGUID] AS [BusinessNetworkNamespaceGUID], 
+    [vNamespaceAndObjectTree].[BusinessNetworkNamespaceName] AS [BusinessNetworkNamespaceName], 
+    [vNamespaceAndObjectTree].[BusinessNetworkObjectGUID] AS [BusinessNetworkObjectGUID], 
+    [vNamespaceAndObjectTree].[BusinessNetworkObjectClassName] AS [BusinessNetworkObjectClassName], 
+    [vNamespaceAndObjectTree].[BusinessNetworkObjectName] AS [BusinessNetworkObjectName], 
+    [vNamespaceAndObjectTree].[ObjectCount] AS [ObjectCount]
+    FROM [dbo].[vNamespaceAndObjectTree] AS [vNamespaceAndObjectTree]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vNamespaceTransactionsPerDay" EntityType="Self.vNamespaceTransactionsPerDay" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vNamespaceTransactionsPerDay].[KeyGUID] AS [KeyGUID], 
+    [vNamespaceTransactionsPerDay].[NamespaceGUID] AS [NamespaceGUID], 
+    [vNamespaceTransactionsPerDay].[NamespaceName] AS [NamespaceName], 
+    [vNamespaceTransactionsPerDay].[TransactionDate] AS [TransactionDate], 
+    [vNamespaceTransactionsPerDay].[TransactionDayName] AS [TransactionDayName], 
+    [vNamespaceTransactionsPerDay].[TransactionCount] AS [TransactionCount]
+    FROM [dbo].[vNamespaceTransactionsPerDay] AS [vNamespaceTransactionsPerDay]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_AuditLog_CreatedBy" Association="Self.FK_AuditLog_CreatedBy">
+            <End Role="User" EntitySet="User" />
+            <End Role="AuditLog" EntitySet="AuditLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetwork_BlockchainFramework" Association="Self.FK_BusinessNetwork_BlockchainFramework">
+            <End Role="BlockchainFramework" EntitySet="BlockchainFramework" />
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetwork_FileUpload_BusinessNetwork" Association="Self.FK_BusinessNetwork_FileUpload_BusinessNetwork">
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+            <End Role="BusinessNetwork_FileUpload" EntitySet="BusinessNetwork_FileUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetwork_FileUpload_FileUpload" Association="Self.FK_BusinessNetwork_FileUpload_FileUpload">
+            <End Role="FileUpload" EntitySet="FileUpload" />
+            <End Role="BusinessNetwork_FileUpload" EntitySet="BusinessNetwork_FileUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkNamespace_BusinessNetwork" Association="Self.FK_BusinessNetworkNamespace_BusinessNetwork">
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+            <End Role="BusinessNetworkNamespace" EntitySet="BusinessNetworkNamespace" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkObject_BusinessNetworkNamespace" Association="Self.FK_BusinessNetworkObject_BusinessNetworkNamespace">
+            <End Role="BusinessNetworkNamespace" EntitySet="BusinessNetworkNamespace" />
+            <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataStore_BusinessNetworkObject" Association="Self.FK_DataStore_BusinessNetworkObject">
+            <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+            <End Role="DataStore" EntitySet="DataStore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataStore_TransactionHistoryGUID" Association="Self.FK_DataStore_TransactionHistoryGUID">
+            <End Role="TransactionHistory" EntitySet="TransactionHistory" />
+            <End Role="DataStore" EntitySet="DataStore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Policy_PolicyType" Association="Self.FK_Policy_PolicyType">
+            <End Role="PolicyType" EntitySet="PolicyType" />
+            <End Role="Policy" EntitySet="Policy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_Policy_Policy" Association="Self.FK_Role_Policy_Policy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="Role_Policy" EntitySet="Role_Policy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_Policy_Role" Association="Self.FK_Role_Policy_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Role_Policy" EntitySet="Role_Policy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_UserGroup_RoleGUID" Association="Self.FK_Role_UserGroup_RoleGUID">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Setting_SettingType" Association="Self.FK_Setting_SettingType">
+            <End Role="SettingType" EntitySet="SettingType" />
+            <End Role="Setting" EntitySet="Setting" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionHistory_BusinessNetwork" Association="Self.FK_TransactionHistory_BusinessNetwork">
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+            <End Role="TransactionHistory" EntitySet="TransactionHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_UserGroup_User" Association="Self.FK_User_UserGroup_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="User_UserGroup" EntitySet="User_UserGroup" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="DataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="DataModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BlockchainFramework" EntityType="DataModel.BlockchainFramework" />
+          <EntitySet Name="BusinessNetwork" EntityType="DataModel.BusinessNetwork" />
+          <EntitySet Name="BusinessNetworkNamespace" EntityType="DataModel.BusinessNetworkNamespace" />
+          <EntitySet Name="BusinessNetworkObject" EntityType="DataModel.BusinessNetworkObject" />
+          <AssociationSet Name="FK_BusinessNetwork_BlockchainFramework" Association="DataModel.FK_BusinessNetwork_BlockchainFramework">
+            <End Role="BlockchainFramework" EntitySet="BlockchainFramework" />
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkNamespace_BusinessNetwork" Association="DataModel.FK_BusinessNetworkNamespace_BusinessNetwork">
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+            <End Role="BusinessNetworkNamespace" EntitySet="BusinessNetworkNamespace" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkObject_BusinessNetworkNamespace" Association="DataModel.FK_BusinessNetworkObject_BusinessNetworkNamespace">
+            <End Role="BusinessNetworkNamespace" EntitySet="BusinessNetworkNamespace" />
+            <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+          </AssociationSet>
+          <EntitySet Name="TransactionHistory" EntityType="DataModel.TransactionHistory" />
+          <AssociationSet Name="FK_TransactionHistory_BusinessNetwork" Association="DataModel.FK_TransactionHistory_BusinessNetwork">
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+            <End Role="TransactionHistory" EntitySet="TransactionHistory" />
+          </AssociationSet>
+          <EntitySet Name="DataStore" EntityType="DataModel.DataStore" />
+          <AssociationSet Name="FK_DataStore_BusinessNetworkObject" Association="DataModel.FK_DataStore_BusinessNetworkObject">
+            <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+            <End Role="DataStore" EntitySet="DataStore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataStore_TransactionHistoryGUID" Association="DataModel.FK_DataStore_TransactionHistoryGUID">
+            <End Role="TransactionHistory" EntitySet="TransactionHistory" />
+            <End Role="DataStore" EntitySet="DataStore" />
+          </AssociationSet>
+          <EntitySet Name="AuditLog" EntityType="DataModel.AuditLog" />
+          <FunctionImport Name="GetSystemStats" ReturnType="Collection(DataModel.GetSystemStats_Result)" >
+          <Parameter Name="offsetHours" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="vDataStore" EntityType="DataModel.vDataStore" />
+          <EntitySet Name="vNamespaceTransactionsPerDay" EntityType="DataModel.vNamespaceTransactionsPerDay" />
+          <EntitySet Name="vBusinessNetworkNamespace" EntityType="DataModel.vBusinessNetworkNamespace" />
+          <EntitySet Name="vBusinessNetworkObject" EntityType="DataModel.vBusinessNetworkObject" />
+          <EntitySet Name="vNamespaceAndObjectTree" EntityType="DataModel.vNamespaceAndObjectTree" />
+          <EntitySet Name="Setting" EntityType="DataModel.Setting" />
+          <EntitySet Name="SettingType" EntityType="DataModel.SettingType" />
+          <AssociationSet Name="FK_Setting_SettingType" Association="DataModel.FK_Setting_SettingType">
+            <End Role="SettingType" EntitySet="SettingType" />
+            <End Role="Setting" EntitySet="Setting" />
+          </AssociationSet>
+          <EntitySet Name="User" EntityType="DataModel.User" />
+          <AssociationSet Name="FK_AuditLog_CreatedBy" Association="DataModel.FK_AuditLog_CreatedBy">
+            <End Role="User" EntitySet="User" />
+            <End Role="AuditLog" EntitySet="AuditLog" />
+          </AssociationSet>
+          <EntitySet Name="Policy" EntityType="DataModel.Policy" />
+          <EntitySet Name="PolicyType" EntityType="DataModel.PolicyType" />
+          <EntitySet Name="Role" EntityType="DataModel.Role" />
+          <EntitySet Name="Role_Policy" EntityType="DataModel.Role_Policy" />
+          <EntitySet Name="Role_UserGroup" EntityType="DataModel.Role_UserGroup" />
+          <EntitySet Name="User_UserGroup" EntityType="DataModel.User_UserGroup" />
+          <AssociationSet Name="FK_Policy_PolicyType" Association="DataModel.FK_Policy_PolicyType">
+            <End Role="PolicyType" EntitySet="PolicyType" />
+            <End Role="Policy" EntitySet="Policy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_Policy_Policy" Association="DataModel.FK_Role_Policy_Policy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="Role_Policy" EntitySet="Role_Policy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_Policy_Role" Association="DataModel.FK_Role_Policy_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Role_Policy" EntitySet="Role_Policy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_UserGroup_RoleGUID" Association="DataModel.FK_Role_UserGroup_RoleGUID">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_UserGroup_User" Association="DataModel.FK_User_UserGroup_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="User_UserGroup" EntitySet="User_UserGroup" />
+          </AssociationSet>
+          <EntitySet Name="BusinessNetwork_FileUpload" EntityType="DataModel.BusinessNetwork_FileUpload" />
+          <EntitySet Name="FileUpload" EntityType="DataModel.FileUpload" />
+          <EntitySet Name="vBusinessNetworkFile" EntityType="DataModel.vBusinessNetworkFile" />
+          <AssociationSet Name="FK_BusinessNetwork_FileUpload_BusinessNetwork" Association="DataModel.FK_BusinessNetwork_FileUpload_BusinessNetwork">
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+            <End Role="BusinessNetwork_FileUpload" EntitySet="BusinessNetwork_FileUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetwork_FileUpload_FileUpload" Association="DataModel.FK_BusinessNetwork_FileUpload_FileUpload">
+            <End Role="FileUpload" EntitySet="FileUpload" />
+            <End Role="BusinessNetwork_FileUpload" EntitySet="BusinessNetwork_FileUpload" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="BlockchainFramework">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="BusinessNetwork" Relationship="DataModel.FK_BusinessNetwork_BlockchainFramework" FromRole="BlockchainFramework" ToRole="BusinessNetwork" />
+        </EntityType>
+        <EntityType Name="BusinessNetwork">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="BlockchainFrameworkGUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ChannelName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PeerAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CryptoMaterialDirectory" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="LastBlockProcessed" Type="Int32" />
+          <NavigationProperty Name="BlockchainFramework" Relationship="DataModel.FK_BusinessNetwork_BlockchainFramework" FromRole="BusinessNetwork" ToRole="BlockchainFramework" />
+          <NavigationProperty Name="BusinessNetworkNamespace" Relationship="DataModel.FK_BusinessNetworkNamespace_BusinessNetwork" FromRole="BusinessNetwork" ToRole="BusinessNetworkNamespace" />
+          <NavigationProperty Name="TransactionHistory" Relationship="DataModel.FK_TransactionHistory_BusinessNetwork" FromRole="BusinessNetwork" ToRole="TransactionHistory" />
+          <Property Name="Disabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="BusinessNetwork_FileUpload" Relationship="DataModel.FK_BusinessNetwork_FileUpload_BusinessNetwork" FromRole="BusinessNetwork" ToRole="BusinessNetwork_FileUpload" />
+        </EntityType>
+        <EntityType Name="BusinessNetworkNamespace">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessNetworkGUID" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="BusinessNetwork" Relationship="DataModel.FK_BusinessNetworkNamespace_BusinessNetwork" FromRole="BusinessNetworkNamespace" ToRole="BusinessNetwork" />
+          <NavigationProperty Name="BusinessNetworkObject" Relationship="DataModel.FK_BusinessNetworkObject_BusinessNetworkNamespace" FromRole="BusinessNetworkNamespace" ToRole="BusinessNetworkObject" />
+          <Property Name="SingleObjectNamespace" Type="Boolean" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BusinessNetworkObject">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceGUID" Type="Guid" Nullable="false" />
+          <Property Name="ClassName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BusinessNetworkNamespace" Relationship="DataModel.FK_BusinessNetworkObject_BusinessNetworkNamespace" FromRole="BusinessNetworkObject" ToRole="BusinessNetworkNamespace" />
+          <NavigationProperty Name="DataStore" Relationship="DataModel.FK_DataStore_BusinessNetworkObject" FromRole="BusinessNetworkObject" ToRole="DataStore" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_BusinessNetwork_BlockchainFramework">
+          <End Type="DataModel.BlockchainFramework" Role="BlockchainFramework" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetwork" Role="BusinessNetwork" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BlockchainFramework">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetwork">
+              <PropertyRef Name="BlockchainFrameworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetworkNamespace_BusinessNetwork">
+          <End Type="DataModel.BusinessNetwork" Role="BusinessNetwork" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetworkNamespace" Role="BusinessNetworkNamespace" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetwork">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkNamespace">
+              <PropertyRef Name="BusinessNetworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetworkObject_BusinessNetworkNamespace">
+          <End Type="DataModel.BusinessNetworkNamespace" Role="BusinessNetworkNamespace" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetworkObject" Role="BusinessNetworkObject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetworkNamespace">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObject">
+              <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TransactionHistory">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkGUID" Type="Guid" Nullable="false" />
+          <Property Name="TransactionID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Data" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ChannelName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ChaincodeName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MspID" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Method" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Arguments" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="IsProcessed" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="BusinessNetwork" Relationship="DataModel.FK_TransactionHistory_BusinessNetwork" FromRole="TransactionHistory" ToRole="BusinessNetwork" />
+          <Property Name="ProcessedOn" Type="DateTime" Precision="7" />
+          <Property Name="ProcessedNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DataStore" Relationship="DataModel.FK_DataStore_TransactionHistoryGUID" FromRole="TransactionHistory" ToRole="DataStore" />
+        </EntityType>
+        <Association Name="FK_TransactionHistory_BusinessNetwork">
+          <End Type="DataModel.BusinessNetwork" Role="BusinessNetwork" Multiplicity="1" />
+          <End Type="DataModel.TransactionHistory" Role="TransactionHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetwork">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="TransactionHistory">
+              <PropertyRef Name="BusinessNetworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DataStore">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkObjectGUID" Type="Guid" Nullable="false" />
+          <Property Name="SourceID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BusinessNetworkObject" Relationship="DataModel.FK_DataStore_BusinessNetworkObject" FromRole="DataStore" ToRole="BusinessNetworkObject" />
+          <Property Name="TransactionHistoryGUID" Type="Guid" />
+          <Property Name="LastUpdatedOn" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="TransactionHistory" Relationship="DataModel.FK_DataStore_TransactionHistoryGUID" FromRole="DataStore" ToRole="TransactionHistory" />
+        </EntityType>
+        <Association Name="FK_DataStore_BusinessNetworkObject">
+          <End Type="DataModel.BusinessNetworkObject" Role="BusinessNetworkObject" Multiplicity="1" />
+          <End Type="DataModel.DataStore" Role="DataStore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetworkObject">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="DataStore">
+              <PropertyRef Name="BusinessNetworkObjectGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataStore_TransactionHistoryGUID">
+          <End Type="DataModel.TransactionHistory" Role="TransactionHistory" Multiplicity="0..1" />
+          <End Type="DataModel.DataStore" Role="DataStore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionHistory">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="DataStore">
+              <PropertyRef Name="TransactionHistoryGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AuditLog">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="OperationType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PrimaryObjectName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PrimaryObjectGUID" Type="Guid" Nullable="false" />
+          <Property Name="SecondaryObjectName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SecondaryObjectGUID" Type="Guid" />
+          <Property Name="OldRecordValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NewRecordValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionSequence" Type="Int32" Nullable="false" />
+          <Property Name="ServerName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ServerUTC" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="UserGUID" Type="Guid" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="User" Relationship="DataModel.FK_AuditLog_CreatedBy" FromRole="AuditLog" ToRole="User" />
+        </EntityType>
+        <ComplexType Name="GetSystemStats_Result">
+          <Property Type="Int32" Name="CountAllTransactions" Nullable="true" />
+          <Property Type="Int32" Name="CountTransactionsToday" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfNetworks" Nullable="true" />
+          <Property Type="Int32" Name="NumberOfObjectsTracked" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="vDataStore">
+          <Key>
+            <PropertyRef Name="BusinessNetworkGUID" />
+            <PropertyRef Name="BusinessNetworkName" />
+            <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceName" />
+            <PropertyRef Name="BusinessNetworkObjectGUID" />
+            <PropertyRef Name="BusinessNetworkObjectClassName" />
+            <PropertyRef Name="BusinessNetworkObjectName" />
+            <PropertyRef Name="DataStoreGUID" />
+            <PropertyRef Name="DataStoreIsDeleted" />
+            <PropertyRef Name="DataStoreSourceID" />
+            <PropertyRef Name="DataStoreValue" />
+          </Key>
+          <Property Name="BusinessNetworkGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessNetworkNamespaceGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessNetworkObjectGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkObjectClassName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessNetworkObjectName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DataStoreGUID" Type="Guid" Nullable="false" />
+          <Property Name="DataStoreIsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="DataStoreSourceID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DataStoreValue" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DataStoreLastUpdatedOn" Type="DateTime" Precision="7" />
+        </EntityType>
+        <EntityType Name="vNamespaceTransactionsPerDay">
+          <Key>
+            <PropertyRef Name="NamespaceGUID" />
+            <PropertyRef Name="NamespaceName" />
+            <PropertyRef Name="KeyGUID" />
+          </Key>
+          <Property Name="NamespaceGUID" Type="Guid" Nullable="false" />
+          <Property Name="NamespaceName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionDate" Type="DateTime" Precision="0" />
+          <Property Name="TransactionDayName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionCount" Type="Int32" />
+          <Property Name="KeyGUID" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vBusinessNetworkNamespace">
+          <Key>
+            <PropertyRef Name="BusinessNetworkGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceName" />
+          </Key>
+          <Property Name="BusinessNetworkGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ObjectCount" Type="Int32" />
+        </EntityType>
+        <EntityType Name="vBusinessNetworkObject">
+          <Key>
+            <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            <PropertyRef Name="BusinessNetworkObjectGUID" />
+            <PropertyRef Name="BusinessNetworkObjectClassName" />
+            <PropertyRef Name="BusinessNetworkObjectName" />
+          </Key>
+          <Property Name="BusinessNetworkNamespaceGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkObjectGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkObjectClassName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessNetworkObjectName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ObjectCount" Type="Int32" />
+        </EntityType>
+        <EntityType Name="vNamespaceAndObjectTree">
+          <Key>
+            <PropertyRef Name="BusinessNetworkGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceGUID" />
+            <PropertyRef Name="BusinessNetworkNamespaceName" />
+          </Key>
+          <Property Name="BusinessNetworkGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkNamespaceName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessNetworkObjectGUID" Type="Guid" />
+          <Property Name="BusinessNetworkObjectClassName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessNetworkObjectName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ObjectCount" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Setting">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SettingTypeGUID" Type="Guid" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ValueType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ValueReference" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TooltipText" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Order" Type="Int32" />
+          <Property Name="UserEditable" Type="Boolean" Nullable="false" />
+          <Property Name="Required" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="SettingType" Relationship="DataModel.FK_Setting_SettingType" FromRole="Setting" ToRole="SettingType" />
+        </EntityType>
+        <EntityType Name="SettingType">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserEditable" Type="Boolean" Nullable="false" />
+          <Property Name="Order" Type="Int32" />
+          <NavigationProperty Name="Setting" Relationship="DataModel.FK_Setting_SettingType" FromRole="SettingType" ToRole="Setting" />
+        </EntityType>
+        <Association Name="FK_Setting_SettingType">
+          <End Type="DataModel.SettingType" Role="SettingType" Multiplicity="0..1" />
+          <End Type="DataModel.Setting" Role="Setting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettingType">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Setting">
+              <PropertyRef Name="SettingTypeGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AuditLog" Relationship="DataModel.FK_AuditLog_CreatedBy" FromRole="User" ToRole="AuditLog" />
+          <NavigationProperty Name="User_UserGroup" Relationship="DataModel.FK_User_UserGroup_User" FromRole="User" ToRole="User_UserGroup" />
+        </EntityType>
+        <Association Name="FK_AuditLog_CreatedBy">
+          <End Type="DataModel.User" Role="User" Multiplicity="1" />
+          <End Type="DataModel.AuditLog" Role="AuditLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="AuditLog">
+              <PropertyRef Name="UserGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PolicyTypeGUID" Type="Guid" Nullable="false" />
+          <Property Name="SortOrder" Type="Int32" Nullable="false" />
+          <Property Name="Deleted_" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PolicyType" Relationship="DataModel.FK_Policy_PolicyType" FromRole="Policy" ToRole="PolicyType" />
+          <NavigationProperty Name="Role_Policy" Relationship="DataModel.FK_Role_Policy_Policy" FromRole="Policy" ToRole="Role_Policy" />
+        </EntityType>
+        <EntityType Name="PolicyType">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Policy" Relationship="DataModel.FK_Policy_PolicyType" FromRole="PolicyType" ToRole="Policy" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="IsSystemRole" Type="Boolean" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Role_Policy" Relationship="DataModel.FK_Role_Policy_Role" FromRole="Role" ToRole="Role_Policy" />
+          <NavigationProperty Name="Role_UserGroup" Relationship="DataModel.FK_Role_UserGroup_RoleGUID" FromRole="Role" ToRole="Role_UserGroup" />
+        </EntityType>
+        <EntityType Name="Role_Policy">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="RoleGUID" Type="Guid" Nullable="false" />
+          <Property Name="PolicyGUID" Type="Guid" Nullable="false" />
+          <Property Name="Allow" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Policy" Relationship="DataModel.FK_Role_Policy_Policy" FromRole="Role_Policy" ToRole="Policy" />
+          <NavigationProperty Name="Role" Relationship="DataModel.FK_Role_Policy_Role" FromRole="Role_Policy" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="Role_UserGroup">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="RoleGUID" Type="Guid" Nullable="false" />
+          <Property Name="UserGroupGUID" Type="Guid" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="DataModel.FK_Role_UserGroup_RoleGUID" FromRole="Role_UserGroup" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="User_UserGroup">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="UserGroupGUID" Type="Guid" Nullable="false" />
+          <Property Name="UserGUID" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="DataModel.FK_User_UserGroup_User" FromRole="User_UserGroup" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Policy_PolicyType">
+          <End Type="DataModel.PolicyType" Role="PolicyType" Multiplicity="1" />
+          <End Type="DataModel.Policy" Role="Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PolicyType">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Policy">
+              <PropertyRef Name="PolicyTypeGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_Policy_Policy">
+          <End Type="DataModel.Policy" Role="Policy" Multiplicity="1" />
+          <End Type="DataModel.Role_Policy" Role="Role_Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_Policy">
+              <PropertyRef Name="PolicyGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_Policy_Role">
+          <End Type="DataModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="DataModel.Role_Policy" Role="Role_Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_Policy">
+              <PropertyRef Name="RoleGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_UserGroup_RoleGUID">
+          <End Type="DataModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="DataModel.Role_UserGroup" Role="Role_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_UserGroup">
+              <PropertyRef Name="RoleGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_UserGroup_User">
+          <End Type="DataModel.User" Role="User" Multiplicity="1" />
+          <End Type="DataModel.User_UserGroup" Role="User_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="User_UserGroup">
+              <PropertyRef Name="UserGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BusinessNetwork_FileUpload">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkGUID" Type="Guid" Nullable="false" />
+          <Property Name="FileUploadGUID" Type="Guid" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="BusinessNetwork" Relationship="DataModel.FK_BusinessNetwork_FileUpload_BusinessNetwork" FromRole="BusinessNetwork_FileUpload" ToRole="BusinessNetwork" />
+          <NavigationProperty Name="FileUpload" Relationship="DataModel.FK_BusinessNetwork_FileUpload_FileUpload" FromRole="BusinessNetwork_FileUpload" ToRole="FileUpload" />
+        </EntityType>
+        <EntityType Name="FileUpload">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="TypeExtension" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FileContent" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="BusinessNetwork_FileUpload" Relationship="DataModel.FK_BusinessNetwork_FileUpload_FileUpload" FromRole="FileUpload" ToRole="BusinessNetwork_FileUpload" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="vBusinessNetworkFile">
+          <Key>
+            <PropertyRef Name="BusinessNetworkGUID" />
+            <PropertyRef Name="BusinessNetworkName" />
+            <PropertyRef Name="FileUploadGUID" />
+            <PropertyRef Name="FileUploadName" />
+            <PropertyRef Name="FileUploadContent" />
+            <PropertyRef Name="FileUploadTypeExtension" />
+            <PropertyRef Name="FileUploadFileName" />
+          </Key>
+          <Property Name="BusinessNetworkGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FileUploadGUID" Type="Guid" Nullable="false" />
+          <Property Name="FileUploadName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FileUploadContent" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="FileUploadTypeExtension" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FileUploadFileName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_BusinessNetwork_FileUpload_BusinessNetwork">
+          <End Type="DataModel.BusinessNetwork" Role="BusinessNetwork" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetwork_FileUpload" Role="BusinessNetwork_FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetwork">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetwork_FileUpload">
+              <PropertyRef Name="BusinessNetworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetwork_FileUpload_FileUpload">
+          <End Type="DataModel.FileUpload" Role="FileUpload" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetwork_FileUpload" Role="BusinessNetwork_FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileUpload">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetwork_FileUpload">
+              <PropertyRef Name="FileUploadGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="DataModel" />
+        <Alias Key="Target" Value="DataModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="DataModelContainer" StorageEntityContainer="DataModelStoreContainer">
+          <EntitySetMapping Name="BlockchainFramework">
+            <EntityTypeMapping TypeName="DataModel.BlockchainFramework">
+              <MappingFragment StoreEntitySet="BlockchainFramework">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BusinessNetwork">
+            <EntityTypeMapping TypeName="DataModel.BusinessNetwork">
+              <MappingFragment StoreEntitySet="BusinessNetwork">
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="LastBlockProcessed" ColumnName="LastBlockProcessed" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="CryptoMaterialDirectory" ColumnName="CryptoMaterialDirectory" />
+                <ScalarProperty Name="PeerAddress" ColumnName="PeerAddress" />
+                <ScalarProperty Name="ChannelName" ColumnName="ChannelName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="BlockchainFrameworkGUID" ColumnName="BlockchainFrameworkGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BusinessNetworkNamespace">
+            <EntityTypeMapping TypeName="DataModel.BusinessNetworkNamespace">
+              <MappingFragment StoreEntitySet="BusinessNetworkNamespace">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="SingleObjectNamespace" ColumnName="SingleObjectNamespace" />
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BusinessNetworkObject">
+            <EntityTypeMapping TypeName="DataModel.BusinessNetworkObject">
+              <MappingFragment StoreEntitySet="BusinessNetworkObject">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ClassName" ColumnName="ClassName" />
+                <ScalarProperty Name="BusinessNetworkNamespaceGUID" ColumnName="BusinessNetworkNamespaceGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionHistory">
+            <EntityTypeMapping TypeName="DataModel.TransactionHistory">
+              <MappingFragment StoreEntitySet="TransactionHistory">
+                <ScalarProperty Name="ProcessedNote" ColumnName="ProcessedNote" />
+                <ScalarProperty Name="ProcessedOn" ColumnName="ProcessedOn" />
+                <ScalarProperty Name="IsProcessed" ColumnName="IsProcessed" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="Arguments" ColumnName="Arguments" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
+                <ScalarProperty Name="MspID" ColumnName="MspID" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="ChaincodeName" ColumnName="ChaincodeName" />
+                <ScalarProperty Name="ChannelName" ColumnName="ChannelName" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="TransactionID" ColumnName="TransactionID" />
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataStore">
+            <EntityTypeMapping TypeName="DataModel.DataStore">
+              <MappingFragment StoreEntitySet="DataStore">
+                <ScalarProperty Name="LastUpdatedOn" ColumnName="LastUpdatedOn" />
+                <ScalarProperty Name="TransactionHistoryGUID" ColumnName="TransactionHistoryGUID" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="SourceID" ColumnName="SourceID" />
+                <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AuditLog">
+            <EntityTypeMapping TypeName="DataModel.AuditLog">
+              <MappingFragment StoreEntitySet="AuditLog">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserGUID" ColumnName="UserGUID" />
+                <ScalarProperty Name="ServerUTC" ColumnName="ServerUTC" />
+                <ScalarProperty Name="ServerName" ColumnName="ServerName" />
+                <ScalarProperty Name="TransactionSequence" ColumnName="TransactionSequence" />
+                <ScalarProperty Name="NewRecordValue" ColumnName="NewRecordValue" />
+                <ScalarProperty Name="OldRecordValue" ColumnName="OldRecordValue" />
+                <ScalarProperty Name="SecondaryObjectGUID" ColumnName="SecondaryObjectGUID" />
+                <ScalarProperty Name="SecondaryObjectName" ColumnName="SecondaryObjectName" />
+                <ScalarProperty Name="PrimaryObjectGUID" ColumnName="PrimaryObjectGUID" />
+                <ScalarProperty Name="PrimaryObjectName" ColumnName="PrimaryObjectName" />
+                <ScalarProperty Name="OperationType" ColumnName="OperationType" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetSystemStats" FunctionName="DataModel.Store.GetSystemStats">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataModel.GetSystemStats_Result">
+                <ScalarProperty Name="CountAllTransactions" ColumnName="CountAllTransactions" />
+                <ScalarProperty Name="CountTransactionsToday" ColumnName="CountTransactionsToday" />
+                <ScalarProperty Name="NumberOfNetworks" ColumnName="NumberOfNetworks" />
+                <ScalarProperty Name="NumberOfObjectsTracked" ColumnName="NumberOfObjectsTracked" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="vDataStore">
+            <EntityTypeMapping TypeName="DataModel.vDataStore">
+              <MappingFragment StoreEntitySet="vDataStore">
+                <ScalarProperty Name="DataStoreLastUpdatedOn" ColumnName="DataStoreLastUpdatedOn" />
+                <ScalarProperty Name="DataStoreValue" ColumnName="DataStoreValue" />
+                <ScalarProperty Name="DataStoreSourceID" ColumnName="DataStoreSourceID" />
+                <ScalarProperty Name="DataStoreIsDeleted" ColumnName="DataStoreIsDeleted" />
+                <ScalarProperty Name="DataStoreGUID" ColumnName="DataStoreGUID" />
+                <ScalarProperty Name="BusinessNetworkObjectName" ColumnName="BusinessNetworkObjectName" />
+                <ScalarProperty Name="BusinessNetworkObjectClassName" ColumnName="BusinessNetworkObjectClassName" />
+                <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
+                <ScalarProperty Name="BusinessNetworkNamespaceName" ColumnName="BusinessNetworkNamespaceName" />
+                <ScalarProperty Name="BusinessNetworkNamespaceGUID" ColumnName="BusinessNetworkNamespaceGUID" />
+                <ScalarProperty Name="BusinessNetworkName" ColumnName="BusinessNetworkName" />
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vNamespaceTransactionsPerDay">
+            <EntityTypeMapping TypeName="DataModel.vNamespaceTransactionsPerDay">
+              <MappingFragment StoreEntitySet="vNamespaceTransactionsPerDay">
+                <ScalarProperty Name="KeyGUID" ColumnName="KeyGUID" />
+                <ScalarProperty Name="TransactionCount" ColumnName="TransactionCount" />
+                <ScalarProperty Name="TransactionDayName" ColumnName="TransactionDayName" />
+                <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
+                <ScalarProperty Name="NamespaceName" ColumnName="NamespaceName" />
+                <ScalarProperty Name="NamespaceGUID" ColumnName="NamespaceGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vBusinessNetworkNamespace">
+            <EntityTypeMapping TypeName="DataModel.vBusinessNetworkNamespace">
+              <MappingFragment StoreEntitySet="vBusinessNetworkNamespace">
+                <ScalarProperty Name="ObjectCount" ColumnName="ObjectCount" />
+                <ScalarProperty Name="BusinessNetworkNamespaceName" ColumnName="BusinessNetworkNamespaceName" />
+                <ScalarProperty Name="BusinessNetworkNamespaceGUID" ColumnName="BusinessNetworkNamespaceGUID" />
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vBusinessNetworkObject">
+            <EntityTypeMapping TypeName="DataModel.vBusinessNetworkObject">
+              <MappingFragment StoreEntitySet="vBusinessNetworkObject">
+                <ScalarProperty Name="ObjectCount" ColumnName="ObjectCount" />
+                <ScalarProperty Name="BusinessNetworkObjectName" ColumnName="BusinessNetworkObjectName" />
+                <ScalarProperty Name="BusinessNetworkObjectClassName" ColumnName="BusinessNetworkObjectClassName" />
+                <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
+                <ScalarProperty Name="BusinessNetworkNamespaceGUID" ColumnName="BusinessNetworkNamespaceGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vNamespaceAndObjectTree">
+            <EntityTypeMapping TypeName="DataModel.vNamespaceAndObjectTree">
+              <MappingFragment StoreEntitySet="vNamespaceAndObjectTree">
+                <ScalarProperty Name="ObjectCount" ColumnName="ObjectCount" />
+                <ScalarProperty Name="BusinessNetworkObjectName" ColumnName="BusinessNetworkObjectName" />
+                <ScalarProperty Name="BusinessNetworkObjectClassName" ColumnName="BusinessNetworkObjectClassName" />
+                <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
+                <ScalarProperty Name="BusinessNetworkNamespaceName" ColumnName="BusinessNetworkNamespaceName" />
+                <ScalarProperty Name="BusinessNetworkNamespaceGUID" ColumnName="BusinessNetworkNamespaceGUID" />
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Setting">
+            <EntityTypeMapping TypeName="DataModel.Setting">
+              <MappingFragment StoreEntitySet="Setting">
+                <ScalarProperty Name="Required" ColumnName="Required" />
+                <ScalarProperty Name="UserEditable" ColumnName="UserEditable" />
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="TooltipText" ColumnName="TooltipText" />
+                <ScalarProperty Name="ValueReference" ColumnName="ValueReference" />
+                <ScalarProperty Name="ValueType" ColumnName="ValueType" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="SettingTypeGUID" ColumnName="SettingTypeGUID" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SettingType">
+            <EntityTypeMapping TypeName="DataModel.SettingType">
+              <MappingFragment StoreEntitySet="SettingType">
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="UserEditable" ColumnName="UserEditable" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="DataModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Policy">
+            <EntityTypeMapping TypeName="DataModel.Policy">
+              <MappingFragment StoreEntitySet="Policy">
+                <ScalarProperty Name="Deleted_" ColumnName="Deleted " />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="PolicyTypeGUID" ColumnName="PolicyTypeGUID" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PolicyType">
+            <EntityTypeMapping TypeName="DataModel.PolicyType">
+              <MappingFragment StoreEntitySet="PolicyType">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role">
+            <EntityTypeMapping TypeName="DataModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="IsSystemRole" ColumnName="IsSystemRole" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role_Policy">
+            <EntityTypeMapping TypeName="DataModel.Role_Policy">
+              <MappingFragment StoreEntitySet="Role_Policy">
+                <ScalarProperty Name="Allow" ColumnName="Allow" />
+                <ScalarProperty Name="PolicyGUID" ColumnName="PolicyGUID" />
+                <ScalarProperty Name="RoleGUID" ColumnName="RoleGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role_UserGroup">
+            <EntityTypeMapping TypeName="DataModel.Role_UserGroup">
+              <MappingFragment StoreEntitySet="Role_UserGroup">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="UserGroupGUID" ColumnName="UserGroupGUID" />
+                <ScalarProperty Name="RoleGUID" ColumnName="RoleGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User_UserGroup">
+            <EntityTypeMapping TypeName="DataModel.User_UserGroup">
+              <MappingFragment StoreEntitySet="User_UserGroup">
+                <ScalarProperty Name="UserGUID" ColumnName="UserGUID" />
+                <ScalarProperty Name="UserGroupGUID" ColumnName="UserGroupGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BusinessNetwork_FileUpload">
+            <EntityTypeMapping TypeName="DataModel.BusinessNetwork_FileUpload">
+              <MappingFragment StoreEntitySet="BusinessNetwork_FileUpload">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="FileUploadGUID" ColumnName="FileUploadGUID" />
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FileUpload">
+            <EntityTypeMapping TypeName="DataModel.FileUpload">
+              <MappingFragment StoreEntitySet="FileUpload">
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="FileContent" ColumnName="FileContent" />
+                <ScalarProperty Name="TypeExtension" ColumnName="TypeExtension" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vBusinessNetworkFile">
+            <EntityTypeMapping TypeName="DataModel.vBusinessNetworkFile">
+              <MappingFragment StoreEntitySet="vBusinessNetworkFile">
+                <ScalarProperty Name="FileUploadFileName" ColumnName="FileUploadFileName" />
+                <ScalarProperty Name="FileUploadTypeExtension" ColumnName="FileUploadTypeExtension" />
+                <ScalarProperty Name="FileUploadContent" ColumnName="FileUploadContent" />
+                <ScalarProperty Name="FileUploadName" ColumnName="FileUploadName" />
+                <ScalarProperty Name="FileUploadGUID" ColumnName="FileUploadGUID" />
+                <ScalarProperty Name="BusinessNetworkName" ColumnName="BusinessNetworkName" />
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
