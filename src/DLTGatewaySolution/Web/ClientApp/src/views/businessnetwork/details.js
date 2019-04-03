@@ -264,22 +264,24 @@ class BusinessNetworkDetails extends Component {
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col md="4">
+                                                    <Col md="6">
                                                         <FormGroup>
                                                             <Label for="txtChannelName">Channel Name</Label>
                                                             <Input type="text" id="txtChannelName" value={this.state.businessNetworkData.ChannelName} onChange={this.onChannelNameChange.bind(this)} className="border-primary" name="channelname" />
                                                         </FormGroup>
                                                     </Col>
-                                                    <Col md="4">
-                                                        <FormGroup>
-                                                            <Label for="txtPeerAddress">Peer Address</Label>
-                                                            <Input type="text" id="txtPeerAddress" value={this.state.businessNetworkData.PeerAddress} onChange={this.onPeerAddressChange.bind(this)} className="border-primary" name="peeraddress" />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col md="4">
+                                                    <Col md="6">
                                                         <FormGroup>
                                                             <Label for="txtUsername">Username</Label>
                                                             <Input type="text" id="txtUsername" value={this.state.businessNetworkData.Username} onChange={this.onUsernameChange.bind(this)} className="border-primary" name="peeraddress" />
+                                                        </FormGroup>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col md="12">
+                                                        <FormGroup>
+                                                            <Label for="txtPeerAddress">Peer Address</Label>
+                                                            <Input type="text" id="txtPeerAddress" value={this.state.businessNetworkData.PeerAddress} onChange={this.onPeerAddressChange.bind(this)} className="border-primary" name="peeraddress" />
                                                         </FormGroup>
                                                     </Col>
                                                 </Row>
@@ -288,7 +290,7 @@ class BusinessNetworkDetails extends Component {
                                                     <div className="float-right">
                                                         <Button color="primary" onClick={this.saveBasicInformation}>
                                                             <CheckSquare size={16} color="#FFF" /> Save
-                                                </Button>
+                                                        </Button>
                                                     </div>
                                                 </div>
 

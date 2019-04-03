@@ -47,7 +47,7 @@ export default class BusinessNetworkConnectionFilesCard extends React.Component 
                     <div className="px-3">
                         <Form className="form-horizontal">
                             <div className="form-body">
-                                <h4 className="form-section"><Globe size={20} color="#212529" /> Connection Files
+                                <h4 className="form-section"><Globe size={20} color="#212529" /> Credential Files
                                 {
                                     this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? '' :
                                         (
@@ -66,7 +66,7 @@ export default class BusinessNetworkConnectionFilesCard extends React.Component 
                                     this.state.FileList == null || this.state.FileList.length === 0 ?
                                         (
                                             <Alert color="dark">
-                                                There are no uploaded connection files. You will not be able to connect to the network. Click on the upload file icon in order to upload files.
+                                                There are no uploaded credential files. You will not be able to connect to the network. Click on the upload file icon in order to upload files.
                                             </Alert>
                                         ) :
                                         (
