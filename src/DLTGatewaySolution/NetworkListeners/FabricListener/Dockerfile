@@ -9,4 +9,4 @@ RUN apk add --no-cache make gcc g++ python
 # npm will not install modules listed in devDependencies
 RUN npm install --prod
 
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
