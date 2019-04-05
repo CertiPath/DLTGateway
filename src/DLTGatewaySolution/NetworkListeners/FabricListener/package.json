@@ -8,6 +8,7 @@
     },
     "dependencies": {
         "array.prototype.flat": "^1.2.1",
+        "dotenv": "^7.0.0",
         "fabric-client": "^1.4.0",
         "mssql": "^4.3.0",
         "promise-retry": "^1.1.1",
@@ -17,10 +18,11 @@
         "eslint": "^5.15.1",
         "eslint-config-airbnb-base": "^13.1.0",
         "eslint-plugin-import": "^2.16.0",
-        "mocha": "^6.0.2"
+        "mocha": "^6.0.2",
+        "nyc": "^13.3.0"
     },
     "scripts": {
         "start": "node index.js",
-        "test": "mocha --harmony"
+        "test": "nyc mocha --harmony"
     }
 }
