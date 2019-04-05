@@ -4,35 +4,26 @@
 
 // https://github.com/tediousjs/node-mssql
 const mssql = require('mssql');
+const config = require('./config');
 
 mssql.on('error', (err) => {
   console.error(`SQL error: ${err}`);
 });
 
-const loadResult = require('dotenv').config();
-
-if (loadResult.error) {
-  throw loadResult.error;
-}
-
-const dbConfig = {
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  server: process.env.SERVER,
-  database: process.env.DATABASE,
-  pool: {
-    max: 10,
-    min: 0,
-    idleTimeoutMillis: 30000,
-  },
+let connectionPool = null;
+const createAppConnectionPool = (dbConfig) => {
+  // The app should use only this pool, not the global one.
+  connectionPool = new mssql.ConnectionPool(dbConfig);
+  connectionPool.on('error', console.error);
 };
-console.debug(`Database config: ${dbConfig.server}/${dbConfig.database}/${dbConfig.user}`);
 
-// The app should use only this pool, not the global one.
-const connectionPool = new mssql.ConnectionPool(dbConfig);
-connectionPool.on('error', console.error);
+let dbConfig = null;
 let connected = false;
 const connect = () => {
+  if (!dbConfig) {
+    dbConfig = config.load();
+    createAppConnectionPool(dbConfig);
+  }
   if (!connected) {
     connected = true;
     return connectionPool.connect().then(() => Promise.resolve('SQL connection created.'));

@@ -23,6 +23,7 @@
     },
     "scripts": {
         "start": "node index.js",
-        "test": "nyc mocha --harmony"
+        "test": "mocha --harmony",
+        "cover": "nyc mocha --harmony"
     }
 }
