@@ -1,0 +1,8 @@
+# The variables used in this Compose file are read from the .env file at the same directory.
+version: '3'
+
+services:
+  dlt-fabric-listener:
+    image: dlt-fabric-listener-img
+    env_file:
+      - node-variables.env
