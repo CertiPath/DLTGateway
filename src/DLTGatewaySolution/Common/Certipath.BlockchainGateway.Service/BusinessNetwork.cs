@@ -210,7 +210,6 @@ namespace CertiPath.BlockchainGateway.Service
             {
                 network.GUID = Guid.NewGuid();
                 network.Deleted = false;
-                network.Username = "";
                 network.CryptoMaterialDirectory = "";
                 context.BusinessNetwork.Add(network);
             }
@@ -303,6 +302,7 @@ namespace CertiPath.BlockchainGateway.Service
             res.ChannelName = "";
             res.PeerAddress = "";
             res.BlockchainFrameworkName = "";
+            res.Username = "";
 
             // get frameworks
             List<SelectModel> frameworkList = new List<SelectModel>();

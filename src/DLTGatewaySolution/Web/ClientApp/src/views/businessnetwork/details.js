@@ -1,10 +1,15 @@
 ﻿import { Box, CheckSquare, FileText, Edit, Trash2 } from "react-feather";
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
-import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { Button, Card, CardBody, Col, FormGroup, Input, Label, Row } from "reactstrap";
 import { toastr } from 'react-redux-toastr';
 import React, { Component, Fragment } from "react";
 import Select from "react-select";
 import { NavLink } from "react-router-dom";
+
+import { Formik, Field, Form } from "formik";
+import * as Yup from "yup";
+
+
 import Spinner from "../../components/spinner/spinner";
 import apiClient from "../../utility/apiClient";
 
@@ -12,6 +17,23 @@ import ConfirmEnableDisable from "../../components/businessnetwork/modalConfirmE
 import NamespaceTable  from "../../views/businessnetwork/namespaceTable";
 import ConfirmDelete from "../../components/common/modal/ConfirmDialog";
 import ConnectionFilesCard from "../../components/cards/businessNetwork/connectionFilesCard";
+
+const formBasicDetailsSchema = Yup.object().shape({
+    Name: Yup.string()
+        .required()
+        .max(50),
+    ChannelName: Yup.string()
+        .required()
+        .max(100),
+    Username: Yup.string()
+        .required()
+        .max(100),
+    PeerAddress: Yup.string()
+        .required()
+        .max(100),
+    BlockchainFrameworkGUID: Yup.string()
+        .required()
+});
 
 class BusinessNetworkDetails extends Component {
     constructor(props) {
@@ -28,7 +50,8 @@ class BusinessNetworkDetails extends Component {
     state = {
         BusinessNetworkGUID: 'New',
         businessNetworkDetails: null,
-        businessNetworkData: null
+        businessNetworkData: null,
+        FormikTest: null
     }
 
     componentDidMount() {
@@ -41,14 +64,15 @@ class BusinessNetworkDetails extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //if (nextProps.BusinessNetworkGUID != this.props.BusinessNetworkGUID) {
+        this.setState({
+            BusinessNetworkGUID: nextProps.match.params.id
+        })
         if (nextProps.match.params.id.toUpperCase() == 'NEW') {
-                this.loadMetadata();
-            }
-            else {
-                this.reloadPage();
-            }
-        //}
+            this.loadMetadata();
+        }
+        else {
+            this.reloadPage();
+        }
     }
 
     reloadPage() {
@@ -67,6 +91,7 @@ class BusinessNetworkDetails extends Component {
         });
         apiClient.get('BusinessNetwork/GetMetadata', {})
             .then(res => {
+                res.data.BlockchainFrameworkGUID = '';
                 this.setState({
                     businessNetworkData: res.data
                 });
@@ -79,65 +104,39 @@ class BusinessNetworkDetails extends Component {
         data.Name = inputName;
         this.setState({
             businessNetworkData: data
-        })
-    }
-
-    onChannelNameChange(event) {
-        const inputName = event.target.value;
-        let data = this.state.businessNetworkData;
-        data.ChannelName = inputName;
-        this.setState({
-            businessNetworkData: data
-        })
-    }
-
-    onPeerAddressChange(event) {
-        const inputName = event.target.value;
-        let data = this.state.businessNetworkData;
-        data.PeerAddress = inputName;
-        this.setState({
-            businessNetworkData: data
-        })
-    }
-
-    onFrameworkTypeChange(event) {
-        const inputName = event.value;
-        let data = this.state.businessNetworkData;
-        data.BlockchainFrameworkGUID = inputName;
-        this.setState({
-            businessNetworkData: data
-        })
-    }
-
-    onUsernameChange(event) {
-        const inputName = event.target.value;
-        let data = this.state.businessNetworkData;
-        data.Username = inputName;
-        this.setState({
-            businessNetworkData: data
-        })
-    }
-
-    saveBasicInformation() {
-        const details = this.state.businessNetworkData;
-        apiClient.post('BusinessNetwork/Save', {
-            GUID: this.props.match.params.id.toUpperCase() == 'NEW' ? null : this.props.match.params.id,
-            Name: details.Name,
-            ChannelName: details.ChannelName,
-            PeerAddress: details.PeerAddress,
-            BlockchainFrameworkGUID: details.BlockchainFrameworkGUID,
-            Username: details.Username
-
-        })
-        .then(res => {
-            this.setState({
-                BusinessNetworkGUID: res.data.Key
-            })
-            toastr.success('Success', 'Business network successfully saved.', { position: 'top-right' });
-        })
-        .catch(function (error) {
-            toastr.error('Error', 'There was an error trying to save business network.', { position: 'top-right' });
         });
+    }
+
+    saveBasicInformation(details) {
+        
+        const page = this;
+        
+        // validate first
+        formBasicDetailsSchema
+            .isValid(details)
+            .then(function (valid) {
+                if (valid) {
+                    apiClient.post('BusinessNetwork/Save', {
+                        GUID: page.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? null : page.state.BusinessNetworkGUID,
+                        //this.props.match.params.id.toUpperCase() == 'NEW' ? null : this.props.match.params.id,
+                        Name: details.Name,
+                        ChannelName: details.ChannelName,
+                        PeerAddress: details.PeerAddress,
+                        BlockchainFrameworkGUID: details.BlockchainFrameworkGUID,
+                        Username: details.Username
+
+                    })
+                        .then(res => {
+                            page.setState({
+                                BusinessNetworkGUID: res.data.Key
+                            })
+                            toastr.success('Success', 'Business network successfully saved.', { position: 'top-right' });
+                        })
+                        .catch(function (error) {
+                            toastr.error('Error', 'There was an error trying to save business network.', { position: 'top-right' });
+                        });
+                }
+            });
     }
 
     handleClickDelete = (networkGUID) => {
@@ -198,9 +197,9 @@ class BusinessNetworkDetails extends Component {
                 }
             }
         }
-
+    
         return (
-            this.state.businessNetworkData != null ? (
+             this.state.businessNetworkData != null ? (
                 <Fragment>
                     <Breadcrumb>
                         <BreadcrumbItem>
@@ -214,88 +213,114 @@ class BusinessNetworkDetails extends Component {
                             <Card>
                                 <CardBody>
                                     <div className="px-3">
-                                        <Form className="form-horizontal">
-                                            <div className="form-body">
-                                                <h4 className="form-section"><Box size={20} color="#212529" /> Basic Details
+                                        <Formik
+                                            enableReinitialize
+                                            initialValues={this.state.businessNetworkData}
+                                            validationSchema={formBasicDetailsSchema}
+                                            onSubmit={values => {
+                                                this.saveBasicInformation(values);
+                                            }}
+                                        >
+                                            {props =>(
+                                                <Form className="form-horizontal">
+                                                    <div className="form-body">
+                                                        <h4 className="form-section"><Box size={20} color="#212529" /> Basic Details
                                                 {
-                                                        this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? '' :
-                                                            (
-                                                                <Row className="float-right">
-                                                                    <Col md="6">
-                                                                        <ConfirmEnableDisable
-                                                                            Name={this.state.businessNetworkData.Name}
-                                                                            YesButtonAction={() => this.state.businessNetworkData.Disabled == false ? this.handleDisable(this.state.businessNetworkData.GUID) : this.handleEnable(this.state.businessNetworkData.GUID)}
-                                                                            Disabled={this.state.businessNetworkData.Disabled}
-                                                                        />
-                                                                    </Col>
-                                                                    <Col md="6">
-                                                                        <ConfirmDelete
-                                                                            Title={"Delete network " + this.state.businessNetworkData.Name + "?"}
-                                                                            Text={"You are about to delete network " + this.state.businessNetworkData.Name + ". All associated namespaces and tracked objects will be deleted with it. Are you sure you want to continue?"}
-                                                                            YesButtonText="Delete"
-                                                                            YesButtonAction={() => this.handleClickDelete(this.state.businessNetworkData.GUID)}
-                                                                            IconSize={24}
-                                                                        />
-                                                                    </Col>
-                                                                </Row>
-                                                            )
-                                                    }
-                                                </h4>
+                                                                this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? '' :
+                                                                    (
+                                                                        <Row className="float-right">
+                                                                            <Col md="6">
+                                                                                <ConfirmEnableDisable
+                                                                                    Name={props.values.Name}
+                                                                                    YesButtonAction={() => this.state.businessNetworkData.Disabled == false ? this.handleDisable(this.state.businessNetworkData.GUID) : this.handleEnable(this.state.businessNetworkData.GUID)}
+                                                                                    Disabled={this.state.businessNetworkData.Disabled}
+                                                                                />
+                                                                            </Col>
+                                                                            <Col md="6">
+                                                                                <ConfirmDelete
+                                                                                    Title={"Delete network " + props.values.Name + "?"}
+                                                                                    Text={"You are about to delete network " + props.values.Name + ". All associated namespaces and tracked objects will be deleted with it. Are you sure you want to continue?"}
+                                                                                    YesButtonText="Delete"
+                                                                                    YesButtonAction={() => this.handleClickDelete(this.state.businessNetworkData.GUID)}
+                                                                                    IconSize={24}
+                                                                                />
+                                                                            </Col>
+                                                                        </Row>
+                                                                    )
+                                                            }
+                                                        </h4>
 
-                                                <Row>
-                                                    <Col md="6">
-                                                        <FormGroup>
-                                                            <Label for="txtName">Name</Label>
-                                                            <Input type="text" id="txtName" value={this.state.businessNetworkData.Name} onChange={this.onNameChange.bind(this)} className="border-primary" name="name" />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col md="6">
-                                                        <FormGroup>
-                                                            <Label for="ddlFrameworkType">Framework Type</Label>
-                                                            <Select onChange={this.onFrameworkTypeChange.bind(this)}
-                                                                className="basic-single"
-                                                                classNamePrefix="select"
-                                                                defaultValue={this.state.businessNetworkData.BlockchainFrameworkList[selectedIndexBlockchainFramework]}
-                                                                name="BlockchainFrameworkType"
-                                                                options={this.state.businessNetworkData.BlockchainFrameworkList}
-                                                            />
+                                                        <Row>
+                                                            <Col md="6">
+                                                                <FormGroup>
+                                                                    <Label for="Name">Name</Label>
+                                                                    <Field type="text" id="Name" value={props.values.Name}
+                                                                        onChange={e => {
+                                                                            props.handleChange(e);
+                                                                            this.onNameChange(e);
+                                                                        }}  name="Name" className={`form-control ${props.errors.Name && props.touched.Name && 'is-invalid'}`} />
+                                                                    {props.errors.Name && props.touched.Name ? <div className="invalid-feedback">{props.errors.Name}</div> : null}
+                                                                </FormGroup>
+                                                            </Col>
+                                                            <Col md="6">
+                                                                <FormGroup>
+                                                                    <Label for="BlockchainFrameworkGUID">Framework Type</Label>
+                                                                    <Field component="select" onChange={props.handleChange}
+                                                                        className={`form-control ${props.errors.BlockchainFrameworkGUID && props.touched.BlockchainFrameworkGUID && 'is-invalid'}`}
+                                                                        value={props.values.BlockchainFrameworkGUID}
+                                                                        name="BlockchainFrameworkGUID"
+                                                                        id="BlockchainFrameworkGUID"
+                                                                    >
+                                                                        <option key='' value=''>
+                                                                        </option>
+                                                                        {this.state.businessNetworkData.BlockchainFrameworkList.map(option => (
+                                                                            <option key={`basic-${option.value}`} value={option.value}>
+                                                                                {option.label}
+                                                                            </option>
+                                                                        ))}
+                                                                    </Field>
+                                                                    {props.errors.BlockchainFrameworkGUID && props.touched.BlockchainFrameworkGUID ? <div className="invalid-feedback">{props.errors.BlockchainFrameworkGUID}</div> : null}
+                                                                </FormGroup>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col md="6">
+                                                                <FormGroup>
+                                                                    <Label for="ChannelName">Channel Name</Label>
+                                                                    <Field type="text" id="ChannelName" value={props.values.ChannelName} onChange={props.handleChange}  name="ChannelName" className={`form-control ${props.errors.ChannelName && props.touched.ChannelName && 'is-invalid'}`} />
+                                                                    {props.errors.ChannelName && props.touched.ChannelName ? <div className="invalid-feedback">{props.errors.ChannelName}</div> : null}
+                                                                </FormGroup>
+                                                            </Col>
+                                                            <Col md="6">
+                                                                <FormGroup>
+                                                                    <Label for="Username">Username</Label>
+                                                                    <Field type="text" id="Username" value={props.values.Username} onChange={props.handleChange}  name="Username" className={`form-control ${props.errors.Username && props.touched.Username && 'is-invalid'}`} />
+                                                                    {props.errors.Username && props.touched.Username ? <div className="invalid-feedback">{props.errors.Username}</div> : null}
+                                                                </FormGroup>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row>
+                                                            <Col md="12">
+                                                                <FormGroup>
+                                                                    <Label for="PeerAddress">Peer Address</Label>
+                                                                    <Field type="text" id="PeerAddress" value={props.values.PeerAddress} onChange={props.handleChange} name="PeerAddress" className={`form-control ${props.errors.PeerAddress && props.touched.PeerAddress && 'is-invalid'}`} />
+                                                                    {props.errors.PeerAddress && props.touched.PeerAddress ? <div className="invalid-feedback">{props.errors.PeerAddress}</div> : null}
+                                                                </FormGroup>
+                                                            </Col>
+                                                        </Row>
 
-                                                        </FormGroup>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col md="6">
-                                                        <FormGroup>
-                                                            <Label for="txtChannelName">Channel Name</Label>
-                                                            <Input type="text" id="txtChannelName" value={this.state.businessNetworkData.ChannelName} onChange={this.onChannelNameChange.bind(this)} className="border-primary" name="channelname" />
-                                                        </FormGroup>
-                                                    </Col>
-                                                    <Col md="6">
-                                                        <FormGroup>
-                                                            <Label for="txtUsername">Username</Label>
-                                                            <Input type="text" id="txtUsername" value={this.state.businessNetworkData.Username} onChange={this.onUsernameChange.bind(this)} className="border-primary" name="peeraddress" />
-                                                        </FormGroup>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col md="12">
-                                                        <FormGroup>
-                                                            <Label for="txtPeerAddress">Peer Address</Label>
-                                                            <Input type="text" id="txtPeerAddress" value={this.state.businessNetworkData.PeerAddress} onChange={this.onPeerAddressChange.bind(this)} className="border-primary" name="peeraddress" />
-                                                        </FormGroup>
-                                                    </Col>
-                                                </Row>
+                                                        <div className="form-actions bottom clearfix">
+                                                            <div className="float-right">
+                                                                <Button type="submit" color="primary">
+                                                                    <CheckSquare size={16} color="#FFF" /> Save
+                                                                </Button>
+                                                            </div>
+                                                        </div>
 
-                                                <div className="form-actions bottom clearfix">
-                                                    <div className="float-right">
-                                                        <Button color="primary" onClick={this.saveBasicInformation}>
-                                                            <CheckSquare size={16} color="#FFF" /> Save
-                                                        </Button>
                                                     </div>
-                                                </div>
-
-                                            </div>
-                                        </Form>
+                                                </Form>
+                                            )}
+                                        </Formik>
                                     </div>
                                 </CardBody>
                             </Card>

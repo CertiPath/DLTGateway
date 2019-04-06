@@ -60,7 +60,7 @@ class BusinessNetworkNamespace extends React.Component {
                 </Breadcrumb>
 
                 <Row>
-                    <Col sm="12" md="6">
+                    <Col sm="12" md="5">
                         <Card>
                             <CardBody>
                                 <div className="px-3">
@@ -90,7 +90,7 @@ class BusinessNetworkNamespace extends React.Component {
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col sm="12" md="6">
+                    <Col sm="12" md="7">
                         <Card>
                             <CardBody>
                                 <div className="px-3">
