@@ -1,27 +1,20 @@
 /**
  * FabricListener\dataAccess\config.js
  */
+const fs = require('fs');
 const DotEnv = require('dotenv');
 
-const pack = (dotEnvLoadResult) => {
+const readProcessEnv = (dotEnvLoadResult) => {
   if (dotEnvLoadResult && dotEnvLoadResult.error) {
     throw dotEnvLoadResult.error;
   }
 
   const {
-    SQL_LOGIN_ID: user,
-    SQL_LOGIN_PWD: password,
     SQL_SERVER_NAME_OR_IP: server,
     SQL_DB_NAME: database,
+    SQL_LOGIN_ID: user,
+    SQL_LOGIN_PWD: password,
   } = process.env;
-
-  if (!user) {
-    throw Error('SQL Login ID not found');
-  }
-
-  if (!password) {
-    throw Error('SQL Login password not found');
-  }
 
   if (!server) {
     throw Error('SQL server name or IP address not found');
@@ -31,12 +24,16 @@ const pack = (dotEnvLoadResult) => {
     throw Error('SQL database name not found');
   }
 
+  if (!user) {
+    throw Error('SQL Login ID not found');
+  }
+
   console.debug(`Database config: ${server}/${database}/${user}`);
   return {
-    user,
-    password,
     server,
     database,
+    user,
+    password,
     pool: {
       max: 10,
       min: 0,
@@ -45,20 +42,39 @@ const pack = (dotEnvLoadResult) => {
   };
 };
 
+const readSecret = (key) => {
+  return fs.readFileSync(`/run/secrets/${key}`, 'utf8');
+};
+
 const load = () => {
   let dbConfig = null;
 
   try {
-    console.debug('Loading database config from environment variables...');
-    dbConfig = pack();
-    console.debug('Database config loaded from environment variables.');
-  } catch (_) {
-    console.debug('Loading database config from .env file...');
-    dbConfig = pack(DotEnv.config());
-    console.debug('Database config loaded from .env file.');
+    dbConfig = readProcessEnv();
+  } catch (readingError) {
+    console.debug(`Cannot read database config from environment variables. ${readingError}`);
   }
 
-  return dbConfig;
+  if (!dbConfig) {
+    // This application can run without using Docker container.
+    // In that case, a `.env` file can be used to load database config.
+    try {
+      dbConfig = readProcessEnv(DotEnv.config());
+    } catch (readingError) {
+      console.debug(`Cannot read database config from .env file. ${readingError}`);
+    }
+  }
+
+  let { password } = dbConfig;
+  if (!password) {
+    try {
+      password = readSecret('SQL_LOGIN_PWD');
+    } catch (readingSecretError) {
+      console.debug(`Cannot read SQL login password from secrets. ${readingError}`);
+    }
+  }
+
+  return { password, ...dbConfig };
 };
 
 exports.load = load;
