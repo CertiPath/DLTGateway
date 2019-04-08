@@ -42,7 +42,7 @@ const readProcessEnv = (dotEnvLoadResult) => {
   };
 };
 
-const readSecret = (key) => {
+const readDockerSecret = (key) => {
   return fs.readFileSync(`/run/secrets/${key}`, 'utf8');
 };
 
@@ -60,17 +60,20 @@ const load = () => {
     // In that case, a `.env` file can be used to load database config.
     try {
       dbConfig = readProcessEnv(DotEnv.config());
-    } catch (readingError) {
-      console.debug(`Cannot read database config from .env file. ${readingError}`);
+    } catch (readingProcessEnvError) {
+      console.debug(`Cannot read database config from .env file. ${readingProcessEnvError}`);
     }
   }
 
   let { password } = dbConfig;
+  // The password could be loaded from a .env file.
+  // However, when running Docker container, there is no .env file available.
+  // In the case of Docker, the password could be passed in as a secret.
   if (!password) {
     try {
-      password = readSecret('SQL_LOGIN_PWD');
-    } catch (readingSecretError) {
-      console.debug(`Cannot read SQL login password from secrets. ${readingError}`);
+      password = readDockerSecret('SQL_LOGIN_PWD');
+    } catch (readingDockerSecretError) {
+      console.debug(`Cannot read SQL login password from Docker secrets. ${readingDockerSecretError}`);
     }
   }
 
