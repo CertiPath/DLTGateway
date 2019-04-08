@@ -44,6 +44,10 @@
         <EntityTypeShape EntityType="DataModel.vBusinessNetworkFile" Width="1.5" PointX="5.375" PointY="15.75" />
         <AssociationConnector Association="DataModel.FK_BusinessNetwork_FileUpload_BusinessNetwork" />
         <AssociationConnector Association="DataModel.FK_BusinessNetwork_FileUpload_FileUpload" />
+        <EntityTypeShape EntityType="DataModel.BusinessNetworkObjectProperty" Width="1.5" PointX="16.625" PointY="1" />
+        <EntityTypeShape EntityType="DataModel.ObjectPropertyType" Width="1.5" PointX="14.375" PointY="1.25" />
+        <AssociationConnector Association="DataModel.FK_BusinessNetworkObjectProperty_ObjectPropertyType" />
+        <AssociationConnector Association="DataModel.FK_BusinessNetworkObjectProperty_BusinessNetworkObject" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

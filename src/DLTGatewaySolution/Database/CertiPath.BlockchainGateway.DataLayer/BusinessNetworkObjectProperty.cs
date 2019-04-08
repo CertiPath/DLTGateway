@@ -12,23 +12,18 @@ namespace CertiPath.BlockchainGateway.DataLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class BusinessNetworkNamespace
+    public partial class BusinessNetworkObjectProperty
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public BusinessNetworkNamespace()
-        {
-            this.BusinessNetworkObject = new HashSet<BusinessNetworkObject>();
-        }
-    
         public System.Guid GUID { get; set; }
+        public System.Guid ObjectPropertyTypeGUID { get; set; }
         public string Name { get; set; }
-        public System.Guid BusinessNetworkGUID { get; set; }
-        public bool SingleObjectNamespace { get; set; }
+        public bool Visible { get; set; }
+        public bool Disabled { get; set; }
         public bool Deleted { get; set; }
+        public System.Guid BusinessNetworkObjectGUID { get; set; }
         public bool IsImported { get; set; }
     
-        public virtual BusinessNetwork BusinessNetwork { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BusinessNetworkObject> BusinessNetworkObject { get; set; }
+        public virtual ObjectPropertyType ObjectPropertyType { get; set; }
+        public virtual BusinessNetworkObject BusinessNetworkObject { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace CertiPath.BlockchainGateway.Service
         {
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
             DataModelContainer context = DataModelContainer.Builder().Build();
-            
+
             DataLayer.BusinessNetworkObject bno = new DataLayer.BusinessNetworkObject();
             bool lAddNew = true;
             string originalObject = "";
@@ -67,5 +67,82 @@ namespace CertiPath.BlockchainGateway.Service
             alm.OldRecordValue = originalObject;
             alo.Save(alm);
         }
+        
+        public BusinessNetworkObjectDetailsModel GetDetails(Guid businessNetworkObjectGUID)
+        {
+            DataModelContainer context = DataModelContainer.Builder().Build();
+            BusinessNetworkObjectDetailsModel res = new BusinessNetworkObjectDetailsModel();
+
+            res.GUID = businessNetworkObjectGUID;
+            
+            // property list
+            res.PropertyList = new List<BusinessNetworkObjectPropertyModel>();
+            var properties = context.BusinessNetworkObjectProperty
+                                            .Where(w => w.Deleted == false)
+                                            .Where(w => w.BusinessNetworkObjectGUID == businessNetworkObjectGUID)
+                                            .ToList();
+
+            foreach (var prop in properties)
+            {
+                res.PropertyList.Add(new BusinessNetworkObjectPropertyModel()
+                {
+                    GUID = prop.GUID,
+                    IsImported = prop.IsImported,
+                    Disabled = prop.Disabled,
+                    Visible = prop.Visible,
+                    Name = prop.Name,
+                    PropertyTypeCode = prop.ObjectPropertyType.Code,
+                    PropertyTypeName = prop.ObjectPropertyType.Name
+                });
+            }
+            return res;
+        }
+        public void SaveProperty(BusinessNetworkObjectPropertyModel obj)
+        {
+            Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
+            DataModelContainer context = DataModelContainer.Builder().Build();
+
+            DataLayer.BusinessNetworkObjectProperty bnop = new DataLayer.BusinessNetworkObjectProperty();
+            bool lAddNew = true;
+            string originalObject = "";
+            if (obj.GUID != null && obj.GUID != Guid.Empty)
+            {
+                lAddNew = false;
+                bnop = context.BusinessNetworkObjectProperty.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+            }
+            originalObject = converter.GetJson(bnop);
+
+            bnop.Name = obj.Name;
+            bnop.Disabled = obj.Disabled;
+            bnop.Visible = obj.Visible;
+
+            Helper.BusinessNetworkObject.ObjectPropertyType opt = new Helper.BusinessNetworkObject.ObjectPropertyType();
+            var propTypeGUID = opt.GetByCode(obj.PropertyTypeCode);
+            bnop.ObjectPropertyTypeGUID = propTypeGUID;
+
+            if (lAddNew)
+            {
+                bnop.GUID = Guid.NewGuid();
+                bnop.BusinessNetworkObjectGUID = obj.BusinessNetworkObjectGUID;
+                bnop.IsImported = false;
+                bnop.BusinessNetworkObjectGUID = obj.BusinessNetworkObjectGUID;
+                context.BusinessNetworkObjectProperty.Add(bnop);
+            }
+            context.SaveChanges();
+
+            // Audit Log
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            AuditLogModel alm = new AuditLogModel();
+
+            alm.OperationType = lAddNew ? AuditLogOperationType.Create : AuditLogOperationType.Update;
+            alm.PrimaryObjectGUID = bnop.GUID;
+            alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectPropety;
+            alm.SecondaryObjectGUID = bnop.BusinessNetworkObjectGUID;
+            alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkObject;
+            alm.NewRecordValue = converter.GetJson(bnop);
+            alm.OldRecordValue = originalObject;
+            alo.Save(alm);
+        }
+
     }
 }

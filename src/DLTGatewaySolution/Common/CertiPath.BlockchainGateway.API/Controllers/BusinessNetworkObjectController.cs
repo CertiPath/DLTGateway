@@ -20,6 +20,21 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject();
             bno.Save(obj);
         }
+
+        public BusinessNetworkObjectDetailsModel GetDetails(Guid BusinessNetworkObjectGUID)
+        {
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject();
+            var res = bno.GetDetails(BusinessNetworkObjectGUID);
+            return res;
+        }
+
+        [HttpPost]
+        public void SaveProperty(BusinessNetworkObjectPropertyModel obj)
+        {
+            // TODO: Deal with response object and do error handling
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject();
+            bno.SaveProperty(obj);
+        }
     }
 
 }

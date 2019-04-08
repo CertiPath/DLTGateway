@@ -65,6 +65,7 @@
           <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="SingleObjectNamespace" Type="bit" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="IsImported" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="BusinessNetworkObject">
           <Key>
@@ -75,6 +76,20 @@
           <Property Name="ClassName" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="IsImported" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BusinessNetworkObjectProperty">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ObjectPropertyTypeGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BusinessNetworkObjectGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Visible" Type="bit" Nullable="false" />
+          <Property Name="Disabled" Type="bit" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="IsImported" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="DataStore">
           <Key>
@@ -98,6 +113,14 @@
           <Property Name="TypeExtension" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="FileContent" Type="varbinary(max)" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ObjectPropertyType">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Policy">
           <Key>
@@ -391,6 +414,30 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_BusinessNetworkObjectProperty_BusinessNetworkObject">
+          <End Role="BusinessNetworkObject" Type="Self.BusinessNetworkObject" Multiplicity="1" />
+          <End Role="BusinessNetworkObjectProperty" Type="Self.BusinessNetworkObjectProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetworkObject">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObjectProperty">
+              <PropertyRef Name="BusinessNetworkObjectGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetworkObjectProperty_ObjectPropertyType">
+          <End Role="ObjectPropertyType" Type="Self.ObjectPropertyType" Multiplicity="1" />
+          <End Role="BusinessNetworkObjectProperty" Type="Self.BusinessNetworkObjectProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectPropertyType">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObjectProperty">
+              <PropertyRef Name="ObjectPropertyTypeGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DataStore_BusinessNetworkObject">
           <End Role="BusinessNetworkObject" Type="Self.BusinessNetworkObject" Multiplicity="1" />
           <End Role="DataStore" Type="Self.DataStore" Multiplicity="*" />
@@ -509,8 +556,10 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySet Name="BusinessNetwork_FileUpload" EntityType="Self.BusinessNetwork_FileUpload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BusinessNetworkNamespace" EntityType="Self.BusinessNetworkNamespace" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BusinessNetworkObject" EntityType="Self.BusinessNetworkObject" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BusinessNetworkObjectProperty" EntityType="Self.BusinessNetworkObjectProperty" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DataStore" EntityType="Self.DataStore" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileUpload" EntityType="Self.FileUpload" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ObjectPropertyType" EntityType="Self.ObjectPropertyType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Policy" EntityType="Self.Policy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PolicyType" EntityType="Self.PolicyType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
@@ -609,6 +658,14 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <AssociationSet Name="FK_BusinessNetworkObject_BusinessNetworkNamespace" Association="Self.FK_BusinessNetworkObject_BusinessNetworkNamespace">
             <End Role="BusinessNetworkNamespace" EntitySet="BusinessNetworkNamespace" />
             <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkObjectProperty_BusinessNetworkObject" Association="Self.FK_BusinessNetworkObjectProperty_BusinessNetworkObject">
+            <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+            <End Role="BusinessNetworkObjectProperty" EntitySet="BusinessNetworkObjectProperty" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkObjectProperty_ObjectPropertyType" Association="Self.FK_BusinessNetworkObjectProperty_ObjectPropertyType">
+            <End Role="ObjectPropertyType" EntitySet="ObjectPropertyType" />
+            <End Role="BusinessNetworkObjectProperty" EntitySet="BusinessNetworkObjectProperty" />
           </AssociationSet>
           <AssociationSet Name="FK_DataStore_BusinessNetworkObject" Association="Self.FK_DataStore_BusinessNetworkObject">
             <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
@@ -739,6 +796,16 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="FileUpload" EntitySet="FileUpload" />
             <End Role="BusinessNetwork_FileUpload" EntitySet="BusinessNetwork_FileUpload" />
           </AssociationSet>
+          <EntitySet Name="BusinessNetworkObjectProperty" EntityType="DataModel.BusinessNetworkObjectProperty" />
+          <EntitySet Name="ObjectPropertyType" EntityType="DataModel.ObjectPropertyType" />
+          <AssociationSet Name="FK_BusinessNetworkObjectProperty_ObjectPropertyType" Association="DataModel.FK_BusinessNetworkObjectProperty_ObjectPropertyType">
+            <End Role="ObjectPropertyType" EntitySet="ObjectPropertyType" />
+            <End Role="BusinessNetworkObjectProperty" EntitySet="BusinessNetworkObjectProperty" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkObjectProperty_BusinessNetworkObject" Association="DataModel.FK_BusinessNetworkObjectProperty_BusinessNetworkObject">
+            <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+            <End Role="BusinessNetworkObjectProperty" EntitySet="BusinessNetworkObjectProperty" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="BlockchainFramework">
           <Key>
@@ -780,6 +847,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <NavigationProperty Name="BusinessNetworkObject" Relationship="DataModel.FK_BusinessNetworkObject_BusinessNetworkNamespace" FromRole="BusinessNetworkNamespace" ToRole="BusinessNetworkObject" />
           <Property Name="SingleObjectNamespace" Type="Boolean" Nullable="false" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="IsImported" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="BusinessNetworkObject">
           <Key>
@@ -792,6 +860,8 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <NavigationProperty Name="BusinessNetworkNamespace" Relationship="DataModel.FK_BusinessNetworkObject_BusinessNetworkNamespace" FromRole="BusinessNetworkObject" ToRole="BusinessNetworkNamespace" />
           <NavigationProperty Name="DataStore" Relationship="DataModel.FK_DataStore_BusinessNetworkObject" FromRole="BusinessNetworkObject" ToRole="DataStore" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="BusinessNetworkObjectProperty" Relationship="DataModel.FK_BusinessNetworkObjectProperty_BusinessNetworkObject" FromRole="BusinessNetworkObject" ToRole="BusinessNetworkObjectProperty" />
+          <Property Name="IsImported" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_BusinessNetwork_BlockchainFramework">
           <End Type="DataModel.BlockchainFramework" Role="BlockchainFramework" Multiplicity="1" />
@@ -1258,6 +1328,54 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="BusinessNetworkObjectProperty">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="ObjectPropertyTypeGUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Visible" Type="Boolean" Nullable="false" />
+          <Property Name="Disabled" Type="Boolean" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ObjectPropertyType" Relationship="DataModel.FK_BusinessNetworkObjectProperty_ObjectPropertyType" FromRole="BusinessNetworkObjectProperty" ToRole="ObjectPropertyType" />
+          <Property Name="BusinessNetworkObjectGUID" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="BusinessNetworkObject" Relationship="DataModel.FK_BusinessNetworkObjectProperty_BusinessNetworkObject" FromRole="BusinessNetworkObjectProperty" ToRole="BusinessNetworkObject" />
+          <Property Name="IsImported" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ObjectPropertyType">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BusinessNetworkObjectProperty" Relationship="DataModel.FK_BusinessNetworkObjectProperty_ObjectPropertyType" FromRole="ObjectPropertyType" ToRole="BusinessNetworkObjectProperty" />
+        </EntityType>
+        <Association Name="FK_BusinessNetworkObjectProperty_ObjectPropertyType">
+          <End Type="DataModel.ObjectPropertyType" Role="ObjectPropertyType" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetworkObjectProperty" Role="BusinessNetworkObjectProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectPropertyType">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObjectProperty">
+              <PropertyRef Name="ObjectPropertyTypeGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetworkObjectProperty_BusinessNetworkObject">
+          <End Type="DataModel.BusinessNetworkObject" Role="BusinessNetworkObject" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetworkObjectProperty" Role="BusinessNetworkObjectProperty" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetworkObject">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObjectProperty">
+              <PropertyRef Name="BusinessNetworkObjectGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1295,6 +1413,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySetMapping Name="BusinessNetworkNamespace">
             <EntityTypeMapping TypeName="DataModel.BusinessNetworkNamespace">
               <MappingFragment StoreEntitySet="BusinessNetworkNamespace">
+                <ScalarProperty Name="IsImported" ColumnName="IsImported" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="SingleObjectNamespace" ColumnName="SingleObjectNamespace" />
                 <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
@@ -1306,6 +1425,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySetMapping Name="BusinessNetworkObject">
             <EntityTypeMapping TypeName="DataModel.BusinessNetworkObject">
               <MappingFragment StoreEntitySet="BusinessNetworkObject">
+                <ScalarProperty Name="IsImported" ColumnName="IsImported" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ClassName" ColumnName="ClassName" />
@@ -1574,6 +1694,29 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
                 <ScalarProperty Name="FileUploadGUID" ColumnName="FileUploadGUID" />
                 <ScalarProperty Name="BusinessNetworkName" ColumnName="BusinessNetworkName" />
                 <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BusinessNetworkObjectProperty">
+            <EntityTypeMapping TypeName="DataModel.BusinessNetworkObjectProperty">
+              <MappingFragment StoreEntitySet="BusinessNetworkObjectProperty">
+                <ScalarProperty Name="IsImported" ColumnName="IsImported" />
+                <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ObjectPropertyTypeGUID" ColumnName="ObjectPropertyTypeGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ObjectPropertyType">
+            <EntityTypeMapping TypeName="DataModel.ObjectPropertyType">
+              <MappingFragment StoreEntitySet="ObjectPropertyType">
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
