@@ -25,6 +25,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertiPath.BlockchainGateway
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertiPath.BlockchainGateway.Model", "Common\CertiPath.BlockchainGateway.Model\CertiPath.BlockchainGateway.Model.csproj", "{C1CA53D6-8DE9-45FE-BA7C-7B59DBCF3C57}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{421287CD-E6EC-4F61-A18B-2F6B618C2F38}"
+	ProjectSection(SolutionItems) = preProject
+		Database\Scripts\IIS_APPPOOL_DefaultAppPool.sql = Database\Scripts\IIS_APPPOOL_DefaultAppPool.sql
+		Database\Scripts\StandUp.sql = Database\Scripts\StandUp.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +79,7 @@ Global
 		{F3DD36AF-2C7C-40C4-9F6C-51513CC514A1} = {66829CD4-DFEF-42F3-A0D7-667AC277B4D5}
 		{3530DD53-7B66-4592-8DF5-FB063723815C} = {66829CD4-DFEF-42F3-A0D7-667AC277B4D5}
 		{C1CA53D6-8DE9-45FE-BA7C-7B59DBCF3C57} = {4A42B75D-0979-4EC6-825E-3BD9CB22B83C}
+		{421287CD-E6EC-4F61-A18B-2F6B618C2F38} = {66829CD4-DFEF-42F3-A0D7-667AC277B4D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C1682D3-F1BA-46D0-8C3C-13EFEF321188}

@@ -119,4 +119,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="FileUploadGUID" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a4c97c28-f05a-47f5-bb2f-937855190831" ChangeDateTime="04/06/2019 17:03:22">
+    <Property Name="ElementName" Value="[dbo].[ObjectPropertyType].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ObjectPropertyType]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a56ebf97-81ea-4189-bd97-9783b1383018" ChangeDateTime="04/06/2019 17:05:23">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetworkObjectProperty].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetworkObjectProperty]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="78fa5880-34f8-4b04-9370-4bf2010e1a87" ChangeDateTime="04/06/2019 17:07:38">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetworkObjectProperty].[Enabled]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetworkObjectProperty]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Disabled" />
+  </Operation>
 </Operations>

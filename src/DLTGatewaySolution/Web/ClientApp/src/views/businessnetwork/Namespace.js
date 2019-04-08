@@ -13,6 +13,7 @@ import apiClient from "../../utility/apiClient";
 import { NavLink } from "react-router-dom";
 
 import TrackedObjectList from "../../components/businessNetworkNamespace/trackedObjectList";
+import TrackedObjectDetails from "../../components/businessNetworkNamespace/trackedObjectDetails";
 
 class BusinessNetworkNamespace extends React.Component {
 
@@ -20,11 +21,13 @@ class BusinessNetworkNamespace extends React.Component {
         super(props);
         // Bind the this context to the handler function
         //this.onEditNetworkClick = this.onEditNetworkClick.bind(this);
-        //this.handleClickDelete = this.handleClickDelete.bind(this);
+        this.handleObjectSelected = this.handleObjectSelected.bind(this);
         this.loadData = this.loadData.bind(this);
 
         this.state = {
-            NamespaceDetails: null
+            NamespaceDetails: null,
+            SelectedObjectGUID: null,
+            SelectedObjectName: ''
         };
     }
 
@@ -41,10 +44,17 @@ class BusinessNetworkNamespace extends React.Component {
             });
     }
 
+    handleObjectSelected(selectedObjectGUID, selectedObjectName) {
+        this.setState({
+            SelectedObjectGUID: selectedObjectGUID,
+            SelectedObjectName: selectedObjectName
+        });
+    }
+
     render() {
         
         return (
-            this.state.NamespaceDetails == null ? (
+            this.state.SelectedObjectGUID == null && this.state.NamespaceDetails == null ? (
                 <Spinner></Spinner>  
             ) :
             (
@@ -60,29 +70,17 @@ class BusinessNetworkNamespace extends React.Component {
                 </Breadcrumb>
 
                 <Row>
-                    <Col sm="12" md="5">
+                        <Col sm="12" md={this.state.SelectedObjectGUID == null ? "12" : "5"}>
                         <Card>
                             <CardBody>
                                 <div className="px-3">
                                     <Form className="form-horizontal">
                                         <div className="form-body">
-                                            <h4 className="form-section"><FileText size={20} color="#212529" /> Namespace Details</h4>
-
-                                            <Row>
-                                                <Col md="6">
-                                                    <FormGroup>
-                                                        <Label for="txtName">Name</Label>
-                                                        <Input type="text" id="txtName" value='' className="border-primary" name="name" />
-                                                    </FormGroup>
-                                                </Col>
-                                                <Col md="6">
-                                                            
-                                                </Col>
-                                            </Row>
                                             <h4 className="form-section"><Box size={20} color="#212529" /> Tracked Objects
                                             </h4>
                                             <TrackedObjectList
                                                 BusinessNetworkNamespaceGUID={this.state.NamespaceDetails.NamespaceGUID}
+                                                OnObjectSelectedClick={this.handleObjectSelected}
                                             />
                                         </div>
                                     </Form>
@@ -90,19 +88,11 @@ class BusinessNetworkNamespace extends React.Component {
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col sm="12" md="7">
-                        <Card>
-                            <CardBody>
-                                <div className="px-3">
-                                    <Form className="form-horizontal">
-                                        <div className="form-body">
-                                            <h4 className="form-section"><FileText size={20} color="#212529" /> Object Details</h4>
-                                                    
-                                        </div>
-                                    </Form>
-                                </div>
-                            </CardBody>
-                        </Card> 
+                    <Col sm="12" md="7" style={this.state.SelectedObjectGUID == null ? { display: 'none' } : {}}>
+                        <TrackedObjectDetails
+                            SelectedObjectGUID={this.state.SelectedObjectGUID}
+                            SelectedObjectName={this.state.SelectedObjectName}
+                        />
                     </Col>
                 </Row>
             </Fragment>

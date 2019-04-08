@@ -65,6 +65,9 @@
     <Compile Include="BusinessNetworkObject.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="BusinessNetworkObjectProperty.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="BusinessNetwork_FileUpload.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -91,6 +94,9 @@
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="GetSystemStats_Result.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectPropertyType.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Policy.cs">

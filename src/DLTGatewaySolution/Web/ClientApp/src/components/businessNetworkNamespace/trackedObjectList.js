@@ -6,7 +6,7 @@ import { File, Edit, Trash2, CheckSquare } from 'react-feather';
 import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row, Table } from "reactstrap";
 import Spinner from "../../components/spinner/spinner";
 import { Alert } from "reactstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import apiClient from "../../utility/apiClient";
 import ConfirmDelete from "../../components/common/modal/ConfirmDialog";
@@ -18,8 +18,7 @@ export default class TrackedObjectList extends React.Component {
         super();
 
         // Bind the this context to the handler function
-        //this.handleClickDelete = this.handleClickDelete.bind(this);
-        //this.onFinishedAddEdit = this.onFinishedAddEdit.bind(this);
+        this.handleClickSelected = this.handleClickSelected.bind(this);
         
         this.state = {
             ObjectList: null,
@@ -39,16 +38,17 @@ export default class TrackedObjectList extends React.Component {
                 });
             });
     }
+
+    handleClickSelected = (objGUID, objName) => {
+        this.props.OnObjectSelectedClick(objGUID, objName);
+    }
     
     render() {
         let rows = this.state.ObjectList == null ? '<div></div>' : this.state.ObjectList.map(obj => {
             return (
                 <tr>
-                    <td><NavLink to={"/BusinessNetwork/Namespace/" + obj.BusinessNetworkObjectGUID}>{obj.BusinessNetworkObjectName}</NavLink></td>
+                    <td><Link to="#" onClick={() => this.handleClickSelected(obj.BusinessNetworkObjectGUID, obj.BusinessNetworkObjectName)}>{obj.BusinessNetworkObjectName}</Link></td>
                     <td>{obj.ObjectCount}</td>
-                    <td style={{ paddingLeft: 0, paddingRight: 0, cursor: 'pointer' }} title="Edit Namespace">
-                        E
-                    </td>
                     <td style={{ paddingLeft: 0, paddingRight: 0, cursor: 'pointer' }} title="Delete Namespace">
                         <ConfirmDelete
                             Title={"Delete Object " + obj.BusinessNetworkObjectName + "?"}
@@ -94,7 +94,6 @@ export default class TrackedObjectList extends React.Component {
                                 <tr>
                                     <th>Name</th>
                                     <th>Count</th>
-                                    <th width="18"></th>
                                     <th width="40"></th>
                                 </tr>
                             </thead>

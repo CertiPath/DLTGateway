@@ -11,6 +11,7 @@ namespace CertiPath.BlockchainGateway.Model
         BusinessNetwork,
         BusinessNetworkObject,
         BusinessNetworkNamespace,
+        BusinessNetworkObjectPropety,
         TransactionHistory,
         DataStore,
         LedgerServer,

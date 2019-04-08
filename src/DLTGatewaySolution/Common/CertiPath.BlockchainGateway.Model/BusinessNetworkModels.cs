@@ -58,6 +58,26 @@ namespace CertiPath.BlockchainGateway.Model
         public Nullable<int> ObjectCount { get; set; }
     }
 
+    public class BusinessNetworkObjectDetailsModel
+    {
+        public Guid GUID { get; set; }
+        public string Name { get; set; }
+
+        public List<BusinessNetworkObjectPropertyModel> PropertyList { get; set; }
+    }
+
+    public class BusinessNetworkObjectPropertyModel
+    {
+        public Guid GUID { get; set; }
+        public Guid BusinessNetworkObjectGUID { get; set; }
+        public string Name { get; set; }
+        public bool Visible { get; set; }
+        public bool Disabled { get; set; }
+        public string PropertyTypeCode { get; set; }
+        public string PropertyTypeName { get; set; }
+        public bool IsImported { get; set; }
+    }
+
     public class BusinessNetworkNamespaceModel
     {
         public System.Guid NamespaceGUID { get; set; }

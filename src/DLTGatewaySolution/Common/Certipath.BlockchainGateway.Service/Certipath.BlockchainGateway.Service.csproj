@@ -70,6 +70,7 @@
     <Compile Include="Dashboard.cs" />
     <Compile Include="DataStore.cs" />
     <Compile Include="Helper\Audit\AuditLog.cs" />
+    <Compile Include="Helper\BusinessNetworkObject\ObjectPropertyType.cs" />
     <Compile Include="Helper\BusinessNetwork\DataStore.cs" />
     <Compile Include="Helper\BusinessNetwork\FileUpload.cs" />
     <Compile Include="Helper\Chart\ColorHelper.cs" />
