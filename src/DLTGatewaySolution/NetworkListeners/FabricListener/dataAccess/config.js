@@ -11,7 +11,7 @@ const readProcessEnv = (dotEnvLoadResult) => {
 
   const {
     SQL_SERVER_NAME_OR_IP: server,
-    SQL_DB_NAME: database,
+    SQL_DATABASE_NAME: database,
     SQL_LOGIN_ID: user,
     SQL_LOGIN_PWD: password,
   } = process.env;
@@ -28,7 +28,7 @@ const readProcessEnv = (dotEnvLoadResult) => {
     throw Error('SQL Login ID not found');
   }
 
-  console.debug(`Database config: ${server}/${database}/${user}`);
+  console.debug(`Successfully read database config: ${server}/${database}/${user}`);
   return {
     server,
     database,
@@ -43,6 +43,7 @@ const readProcessEnv = (dotEnvLoadResult) => {
 };
 
 const readDockerSecret = (key) => {
+  console.debug('Reading Docker secrets..');
   return fs.readFileSync(`/run/secrets/${key}`, 'utf8');
 };
 
@@ -52,7 +53,7 @@ const load = () => {
   try {
     dbConfig = readProcessEnv();
   } catch (readingError) {
-    console.debug(`Cannot read database config from environment variables. ${readingError}`);
+    console.debug(`Failed read database config from environment variables. ${readingError}`);
   }
 
   if (!dbConfig) {
@@ -61,7 +62,7 @@ const load = () => {
     try {
       dbConfig = readProcessEnv(DotEnv.config());
     } catch (readingProcessEnvError) {
-      console.debug(`Cannot read database config from .env file. ${readingProcessEnvError}`);
+      console.debug(`Failed to read database config from .env file. ${readingProcessEnvError}`);
     }
   }
 
@@ -73,7 +74,7 @@ const load = () => {
     try {
       password = readDockerSecret('SQL_LOGIN_PWD');
     } catch (readingDockerSecretError) {
-      console.debug(`Cannot read SQL login password from Docker secrets. ${readingDockerSecretError}`);
+      console.debug(`Failed to read SQL login password from Docker secrets. ${readingDockerSecretError}`);
     }
   }
 

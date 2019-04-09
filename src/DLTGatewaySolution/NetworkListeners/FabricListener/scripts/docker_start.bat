@@ -7,5 +7,6 @@ docker build --no-cache -t dlt-fabric-listener-img .
 docker-compose up --force-recreate
 
 @echo off
+rm -rf *.secret
 popd
 @echo on
