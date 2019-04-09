@@ -11,6 +11,14 @@ class ModalAddEditObjectProperty extends Component {
         Data: this.props.Data
     };
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.Data.Name == '') {
+            this.setState({
+                Data: nextProps.Data
+            });
+        }
+    }
+
     toggle = () => {
         this.setState({
             modal: !this.state.modal
@@ -75,11 +83,11 @@ class ModalAddEditObjectProperty extends Component {
                 {
                     this.state.Data.GUID == null ? (
                     <Button onClick={this.toggle}>
-                        <FilePlus size={16} color="#FFF" /> Add New Object Property
+                        Add New Object Property
                     </Button>
                     ) :
                     (
-                        <Edit size={18} className="mr-2" onClick={this.toggle} />
+                        <Edit size={18} className="mr-2" onClick={this.toggle} style={{ cursor: 'pointer' }} />
                     )
                 }
                 <Modal
@@ -111,7 +119,7 @@ class ModalAddEditObjectProperty extends Component {
                                                 </FormGroup>
                                                 <FormGroup>
                                                     <Label for="propertyType">Property Type</Label>
-                                                    <Input type="select" id="propertyType" name="propertyType" onChange={this.typeChange.bind(this)} >
+                                                    <Input type="select" id="propertyType" name="propertyType" value={this.state.Data.PropertyTypeCode} onChange={this.typeChange.bind(this)} >
                                                         <option value="">Select Type</option>
                                                         <option value="NUMERIC">Numeric</option>
                                                         <option value="TEXT">Text</option>

@@ -5,12 +5,14 @@ import apiClient from '../../utility/apiClient';
 import Spinner from "../../components/spinner/spinner";
 import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row, Modal, ModalHeader, ModalBody, ModalFooter  } from "reactstrap";
 
-class ModalAddEditNamespace extends Component {
+class ModalAddEditObject extends Component {
+
+    
     state = {
         modal: false,
-        name: this.props.Name
+        Data: this.props.Data
     };
-
+    
     toggle = () => {
         this.setState({
             modal: !this.state.modal
@@ -20,14 +22,14 @@ class ModalAddEditNamespace extends Component {
     handleButtonClick = () => {
 
         this.toggle();
-        apiClient.post('BusinessNetworkObject/Save', {
-            BusinessNetworkObjectGUID: this.props.GUID,
-            BusinessNetworkObjectName: this.state.name,
-            BusinessNetworkClassName: "",
-            BusinessNetworkNamespaceGUID: this.props.BusinessNetworkNamespaceGUID
-        })
+        apiClient.post('BusinessNetworkObject/Save', this.state.Data)
         .then(res => {
-            toastr.success('Success', 'Object successfully added.', { position: 'top-right' });
+            if (this.state.Data.GUID == null) {
+                toastr.success('Success', 'Object successfully added.', { position: 'top-right' });
+            }
+            else {
+                toastr.success('Success', 'Object successfully updated.', { position: 'top-right' });
+            }
             this.props.OnFinishedAction();
         })
         .catch(function (error) {
@@ -37,8 +39,19 @@ class ModalAddEditNamespace extends Component {
 
     nameChange(event) {
         const inputName = event.target.value
+        let data = this.state.Data;
+        data.BusinessNetworkObjectName = inputName;
         this.setState({
-            name: inputName
+            Data: data
+        })
+    }
+
+    classNameChange(event) {
+        const inputName = event.target.value
+        let data = this.state.Data;
+        data.BusinessNetworkObjectClassName = inputName;
+        this.setState({
+            Data: data
         })
     }
     
@@ -46,14 +59,14 @@ class ModalAddEditNamespace extends Component {
         return (
             <div>
                 {
-                    this.props.NewNamespace == true ? (
-                    <Button color="primary" onClick={this.toggle}>
-                        <FilePlus size={16} color="#FFF" /> Add New Namespace
-                    </Button>
+                    this.state.Data.BusinessNetworkObjectGUID == null ? (
+                        <Button onClick={this.toggle}>
+                            Add New Tracked Object
+                        </Button>
                     ) :
                         (
-                            <Edit size={18} className="mr-2" onClick={this.toggle} />
-                    )
+                            <Edit size={18} className="mr-2" onClick={this.toggle} style={{ cursor: 'pointer' }} />
+                        )
                 }
                 <Modal
                     isOpen={this.state.modal}
@@ -72,16 +85,16 @@ class ModalAddEditNamespace extends Component {
                                         <Row>
                                             <Col md="12">
                                                 <FormGroup>
-                                                    <Label for="txtDisplayName">Display Name</Label>
-                                                    <Input type="text" id="txtDisplayName" className="border-primary" name="txtDisplayName" />
+                                                    <Label for="Name">Display Name</Label>
+                                                    <Input type="text" id="Name" className="border-primary" defaultValue={this.state.Data.BusinessNetworkObjectName} onChange={this.nameChange.bind(this)} />
                                                 </FormGroup>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col md="12">
                                                 <FormGroup>
-                                                    <Label for="txtClassName">Class Name</Label>
-                                                    <Input type="text" id="txtClassName"  className="border-primary" name="txtClassName" />
+                                                    <Label for="ClassName">Class Name</Label>
+                                                    <Input type="text" id="ClassName" className="border-primary" defaultValue={this.state.Data.BusinessNetworkObjectClassName} onChange={this.classNameChange.bind(this)} />
                                                 </FormGroup>
                                             </Col>
                                         </Row>
@@ -106,4 +119,4 @@ class ModalAddEditNamespace extends Component {
     }
 }
 
-export default ModalAddEditNamespace;
+export default ModalAddEditObject;

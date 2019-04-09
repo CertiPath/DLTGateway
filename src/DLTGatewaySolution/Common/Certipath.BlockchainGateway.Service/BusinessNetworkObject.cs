@@ -15,7 +15,9 @@ namespace CertiPath.BlockchainGateway.Service
             List<BusinessNetworkObjectViewModel> res = new List<BusinessNetworkObjectViewModel>();
             DataModelContainer context = DataModelContainer.Builder().Build();
 
-            var list = context.vBusinessNetworkObject.Where(w => w.BusinessNetworkNamespaceGUID == businessNetworkNamespaceGUID).ToList();
+            var list = context.vBusinessNetworkObject
+                                    .Where(w => w.BusinessNetworkNamespaceGUID == businessNetworkNamespaceGUID)
+                                    .ToList();
             foreach (var item in list)
             {
                 res.Add(new BusinessNetworkObjectViewModel()
@@ -27,6 +29,29 @@ namespace CertiPath.BlockchainGateway.Service
                 });
             }
             return res;
+        }
+
+        public void Delete(BusinessNetworkObjectViewModel obj)
+        {
+            Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
+            DataModelContainer context = DataModelContainer.Builder().Build();
+            var bno = context.BusinessNetworkObject.Where(w => w.GUID == obj.BusinessNetworkObjectGUID).SingleOrDefault();
+            string originalObject = converter.GetJson(bno);
+            bno.Deleted = true;
+            context.SaveChanges();
+
+            // Audit Log
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            AuditLogModel alm = new AuditLogModel();
+
+            alm.OperationType = AuditLogOperationType.Delete;
+            alm.PrimaryObjectGUID = bno.GUID;
+            alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObject;
+            alm.SecondaryObjectGUID = bno.BusinessNetworkNamespaceGUID;
+            alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkNamespace;
+            alm.NewRecordValue = converter.GetJson(bno);
+            alm.OldRecordValue = originalObject;
+            alo.Save(alm);
         }
 
         public void Save(BusinessNetworkObjectViewModel obj)
@@ -136,7 +161,7 @@ namespace CertiPath.BlockchainGateway.Service
 
             alm.OperationType = lAddNew ? AuditLogOperationType.Create : AuditLogOperationType.Update;
             alm.PrimaryObjectGUID = bnop.GUID;
-            alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectPropety;
+            alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectProperty;
             alm.SecondaryObjectGUID = bnop.BusinessNetworkObjectGUID;
             alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkObject;
             alm.NewRecordValue = converter.GetJson(bnop);
@@ -144,5 +169,27 @@ namespace CertiPath.BlockchainGateway.Service
             alo.Save(alm);
         }
 
+        public void DeleteProperty(BusinessNetworkObjectPropertyModel obj)
+        {
+            Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
+            DataModelContainer context = DataModelContainer.Builder().Build();
+            var objProp = context.BusinessNetworkObjectProperty.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+            string originalObject = converter.GetJson(objProp);
+            objProp.Deleted = true;
+            context.SaveChanges();
+
+            // Audit Log
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            AuditLogModel alm = new AuditLogModel();
+
+            alm.OperationType = AuditLogOperationType.Delete;
+            alm.PrimaryObjectGUID = objProp.GUID;
+            alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectProperty;
+            alm.SecondaryObjectGUID = objProp.BusinessNetworkObjectGUID;
+            alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkObject;
+            alm.NewRecordValue = converter.GetJson(objProp);
+            alm.OldRecordValue = originalObject;
+            alo.Save(alm);
+        }
     }
 }

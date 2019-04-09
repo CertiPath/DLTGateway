@@ -21,6 +21,13 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             bno.Save(obj);
         }
 
+        [HttpPost]
+        public void Delete(BusinessNetworkObjectViewModel obj)
+        {
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject();
+            bno.Delete(obj);
+        }
+
         public BusinessNetworkObjectDetailsModel GetDetails(Guid BusinessNetworkObjectGUID)
         {
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject();
@@ -34,6 +41,14 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             // TODO: Deal with response object and do error handling
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject();
             bno.SaveProperty(obj);
+        }
+
+        [HttpPost]
+        public void DeleteProperty(BusinessNetworkObjectPropertyModel obj)
+        {
+            // TODO: Deal with response object and do error handling
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject();
+            bno.DeleteProperty(obj);
         }
     }
 
