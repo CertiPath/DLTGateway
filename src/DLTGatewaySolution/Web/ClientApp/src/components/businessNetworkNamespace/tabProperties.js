@@ -29,27 +29,17 @@ export default class TrackedObjectList extends React.Component {
         this.props.onFinishedAddEdit();
     }
 
-    /*
-    componentWillReceiveProps(nextProps) {
-
-        this.loadData(nextProps.SelectedObjectGUID);
-    }
-
-    loadData(objGUID) {
-        //this.setState({
-        //    ObjectDetails: null
-        //});
-        apiClient.get('BusinessNetworkObject/GetDetails?BusinessNetworkObjectGUID=' + objGUID, {})
-            .then(res => {
-                this.setState({
-                    ObjectDetails: res.data
-                });
-            });
-    }
-    */
-
     handleClickDelete(objGUID) {
-        alert(objGUID);
+        apiClient.post('BusinessNetworkObject/DeleteProperty', {
+            GUID: objGUID
+        })
+            .then(res => {
+                toastr.success('Success', 'Object property successfully deleted.', { position: 'top-right' });
+                this.onFinishedAddEdit();
+            })
+            .catch(function (error) {
+                toastr.error('Error', 'There was an error trying to delete object property..', { position: 'top-right' });
+            });
     }
 
     render() {

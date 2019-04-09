@@ -10,4 +10,5 @@
 			)  as ObjectCount
 		FROM BusinessNetworkObject bno
 		LEFT JOIN DataStore dst ON bno.[GUID] = dst.BusinessNetworkObjectGUID
+		WHERE bno.Deleted = 0
 		GROUP BY bno.BusinessNetworkNamespaceGUID, bno.[GUID], bno.ClassName, bno.Name

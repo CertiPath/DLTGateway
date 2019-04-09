@@ -36,8 +36,12 @@ class ModalAddEditNamespace extends Component {
             this.props.OnFinishedAction();
         })
         .catch(function (error) {
-            //this.state.deleting = false;
-            toastr.error('Error', 'There was an error trying to deleted business network object.', { position: 'top-right' });
+            if (this.props.NewNamespace) {
+                toastr.error('Error', 'There was an error trying to add business network namespace.', { position: 'top-right' });
+            }
+            else {
+                toastr.error('Error', 'There was an error trying to update business network namespace.', { position: 'top-right' });
+            }
         });
     }
 
@@ -53,8 +57,8 @@ class ModalAddEditNamespace extends Component {
             <div>
                 {
                     this.props.NewNamespace == true ? (
-                    <Button color="primary" onClick={this.toggle}>
-                        <FilePlus size={16} color="#FFF" /> Add New Namespace
+                    <Button onClick={this.toggle}>
+                        Add New Namespace
                     </Button>
                     ) :
                         (
