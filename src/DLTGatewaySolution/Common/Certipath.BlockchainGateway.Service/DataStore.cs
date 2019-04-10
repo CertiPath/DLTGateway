@@ -81,7 +81,7 @@ namespace CertiPath.BlockchainGateway.Service
             {
                 list.Add(new Model.DataStoreViewModel()
                 {
-                    DataStoreValue = item.DataStoreValue,
+                    DataStoreGUID = item.DataStoreGUID,
                     DataStoreSourceID = item.DataStoreSourceID,
                     BusinessNetworkObjectName = item.BusinessNetworkObjectName,
                     BusinessNetworkName = item.BusinessNetworkName,

@@ -90,6 +90,7 @@
           <Property Name="Disabled" Type="bit" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="IsImported" Type="bit" Nullable="false" />
+          <Property Name="SortOrder" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DataStore">
           <Key>
@@ -1342,6 +1343,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="BusinessNetworkObjectGUID" Type="Guid" Nullable="false" />
           <NavigationProperty Name="BusinessNetworkObject" Relationship="DataModel.FK_BusinessNetworkObjectProperty_BusinessNetworkObject" FromRole="BusinessNetworkObjectProperty" ToRole="BusinessNetworkObject" />
           <Property Name="IsImported" Type="Boolean" Nullable="false" />
+          <Property Name="SortOrder" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="ObjectPropertyType">
           <Key>
@@ -1700,6 +1702,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySetMapping Name="BusinessNetworkObjectProperty">
             <EntityTypeMapping TypeName="DataModel.BusinessNetworkObjectProperty">
               <MappingFragment StoreEntitySet="BusinessNetworkObjectProperty">
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
                 <ScalarProperty Name="IsImported" ColumnName="IsImported" />
                 <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />

@@ -3,7 +3,7 @@
 import React from "react";
 // Import React Table
 import ReactTable from "react-table";
-import ValueModal from "./ValueModal";
+import { NavLink } from "react-router-dom";
 import apiClient from '../../../utility/apiClient';
 
 const requestData = (pageSize, page, sorted, filtered) => {
@@ -70,14 +70,11 @@ export default class Example extends React.Component {
                             width: 100,
                             sortable: false,
                             filterable: false,
-                            accessor: "DataStoreValue",
+                            accessor: "DataStoreGUID",
                             Cell: row => (
-                                <div style={{
-                                    textAlign: "center"
-                                }}>
-                                    <ValueModal
-                                        text={JSON.stringify(JSON.parse(row.value), null, 2)}
-                                    />
+
+                                <div>
+                                    <NavLink to={"/Object/Details/" + row.value}>View</NavLink>
                                 </div>
                             )
                         }
