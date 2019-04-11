@@ -9,6 +9,21 @@ namespace CertiPath.BlockchainGateway.Service
 {
     public class DataStore
     {
+        public Model.DataStoreModel Get(Guid objGUID)
+        {
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            var obj = context.DataStore.Where(w => w.GUID == objGUID).SingleOrDefault();
+
+            Model.DataStoreModel m = new Model.DataStoreModel()
+            {
+                GUID = obj.GUID,
+                SourceID = obj.SourceID,
+                TransactionHistoryGUID = obj.TransactionHistoryGUID,
+                PropertyValues = Helper.DataStore.Common.Extract(obj.BusinessNetworkObjectGUID, obj.Value)
+            };
+            return m;
+        }
+
         public Model.DataStoreTableModel GetAll(Model.TableModel model)
         {
             List<Model.DataStoreViewModel> list = new List<Model.DataStoreViewModel>();

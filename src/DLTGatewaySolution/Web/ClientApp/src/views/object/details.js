@@ -20,57 +20,49 @@ class BusinessNetworkObject extends Component {
         this.loadMetadata = this.loadMetadata.bind(this);
         this.saveBasicInformation = this.saveBasicInformation.bind(this);
         this.handleClickDelete = this.handleClickDelete.bind(this);
-        
-        this.state.BusinessNetworkGUID = this.props.match.params.id;
         */
+
+        this.state = {
+            ObjectDetails: null,
+            ObjectGUID: props.match.params.id
+        };
     }
 
     componentDidMount() {
-        /*
-        if (this.props.match.params.id.toUpperCase() == 'NEW') {
-            this.loadMetadata();
-        }
-        else {
-            this.reloadPage();
-        }
-        */
+        this.loadDetails(this.state.ObjectGUID);
     }
 
-    componentWillReceiveProps(nextProps) {
-        /*
-        this.setState({
-            BusinessNetworkGUID: nextProps.match.params.id
-        })
-        if (nextProps.match.params.id.toUpperCase() == 'NEW') {
-            this.loadMetadata();
-        }
-        else {
-            this.reloadPage();
-        }
-        */
-    }
-
-    /*
-    reloadPage() {
-        apiClient.get('BusinessNetwork/GetDetails?GUID=' + this.state.BusinessNetworkGUID, {})
+    loadDetails(objGUID) {
+        apiClient.get('DataStore/Get?GUID=' + objGUID, {})
             .then(res => {
+
                 this.setState({
-                    businessNetworkData: res.data
+                    ObjectDetails: res.data
                 });
             });
     }
-    */
-    
+
     render() {
         
+        let rows = this.state.ObjectDetails == null ? '<div></div>' : this.state.ObjectDetails.PropertyValues.map(item => {
+            return (
+                <li>
+                    <span className="text-bold-500 primary">
+                        <Link to="/pages/useer-profile">{item.Name}</Link>
+                    </span>
+                    <span className="display-block overflow-hidden">{item.Value}</span>
+                </li>
+            )
+        });
+
         return (
-             1==1 ? (
+            this.state.ObjectDetails != null ? (
                 <Fragment>
                     <Breadcrumb>
                         <BreadcrumbItem>
                             <NavLink to="/DataStore">Data Store</NavLink>
                         </BreadcrumbItem>
-                        <BreadcrumbItem active>TODO</BreadcrumbItem>
+                        <BreadcrumbItem active>Object Details</BreadcrumbItem>
                     </Breadcrumb>
 
                     <Row>
@@ -85,48 +77,7 @@ class BusinessNetworkObject extends Component {
                                                 <Row>
                                                     <Col xs="12" md="12" lg="12">
                                                         <ul className="no-list-style">
-                                                            <li className="mb-2">
-                                                                <span className="text-bold-500 primary">
-                                                                    <Link to="/pages/useer-profile">Birthday:</Link>
-                                                                </span>
-                                                                <span className="display-block overflow-hidden">June 10th, 1988</span>
-                                                            </li>
-                                                            <li className="mb-2">
-                                                                <span className="text-bold-500 primary">
-                                                                    <Link to="/pages/user-profile">Birthplace:</Link>
-                                                                </span>
-                                                                <span className="d-block overflow-hidden">New Jersey, USA</span>
-                                                            </li>
-                                                            <li className="mb-2">
-                                                                <span className="text-bold-500 primary">
-                                                                    <Link to="/pages/user-profile">Lives in:</Link>
-                                                                </span>
-                                                                <span className="display-block overflow-hidden">Denver, USA</span>
-                                                            </li>
-                                                            <li className="mb-2">
-                                                                <span className="text-bold-500 primary">
-                                                                    <Link to="/pages/useer-profile">Birthday:</Link>
-                                                                </span>
-                                                                <span className="display-block overflow-hidden">June 10th, 1988</span>
-                                                            </li>
-                                                            <li className="mb-2">
-                                                                <span className="text-bold-500 primary">
-                                                                    <Link to="/pages/user-profile">Birthplace:</Link>
-                                                                </span>
-                                                                <span className="d-block overflow-hidden">New Jersey, USA</span>
-                                                            </li>
-                                                            <li className="mb-2">
-                                                                <span className="text-bold-500 primary">
-                                                                    <Link to="/pages/user-profile">Lives in:</Link>
-                                                                </span>
-                                                                <span className="display-block overflow-hidden">Denver, USA</span>
-                                                            </li>
-                                                            <li className="mb-2">
-                                                                <span className="text-bold-500 primary">
-                                                                    <Link to="/pages/user-profile">Birthplace:</Link>
-                                                                </span>
-                                                                <span className="d-block overflow-hidden">New Jersey, USA</span>
-                                                            </li>
+                                                            {rows}      
                                                         </ul>
                                                     </Col>
                                                 </Row>
@@ -137,8 +88,22 @@ class BusinessNetworkObject extends Component {
                                 </CardBody>
                             </Card>
                         </Col>
-                        <Col sm="12" md="6">
-                            Yooooo
+                        <Col sm="12" md="9">
+                            <Card>
+                                <CardBody>
+                                    <div className="px-3">
+                                        <Form className="form-horizontal">
+                                            <div className="form-body">
+                                                <h4 className="form-section"><Box size={20} color="#212529" /> Data Views</h4>
+
+                                                TODO
+                                                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+                                            </div>
+                                        </Form>
+                                    </div>
+                                </CardBody>
+                            </Card>
                         </Col>
                     </Row>
 

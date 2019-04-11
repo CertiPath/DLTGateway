@@ -25,5 +25,12 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             var list = dsSrv.GetAll(model);
             return list;
         }
+
+        public Model.DataStoreModel Get(Guid GUID)
+        {
+            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore();
+            var result = dsSrv.Get(GUID);
+            return result;
+        }
     }
 }
