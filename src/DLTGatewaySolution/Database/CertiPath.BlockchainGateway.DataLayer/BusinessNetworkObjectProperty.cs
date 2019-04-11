@@ -22,6 +22,7 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public bool Deleted { get; set; }
         public System.Guid BusinessNetworkObjectGUID { get; set; }
         public bool IsImported { get; set; }
+        public int SortOrder { get; set; }
     
         public virtual ObjectPropertyType ObjectPropertyType { get; set; }
         public virtual BusinessNetworkObject BusinessNetworkObject { get; set; }

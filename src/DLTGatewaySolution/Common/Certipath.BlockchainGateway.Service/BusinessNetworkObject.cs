@@ -105,6 +105,7 @@ namespace CertiPath.BlockchainGateway.Service
             var properties = context.BusinessNetworkObjectProperty
                                             .Where(w => w.Deleted == false)
                                             .Where(w => w.BusinessNetworkObjectGUID == businessNetworkObjectGUID)
+                                            .OrderBy(o => o.SortOrder)
                                             .ToList();
 
             foreach (var prop in properties)
@@ -151,6 +152,7 @@ namespace CertiPath.BlockchainGateway.Service
                 bnop.BusinessNetworkObjectGUID = obj.BusinessNetworkObjectGUID;
                 bnop.IsImported = false;
                 bnop.BusinessNetworkObjectGUID = obj.BusinessNetworkObjectGUID;
+                bnop.SortOrder = getNextSortOrder(obj.BusinessNetworkObjectGUID);
                 context.BusinessNetworkObjectProperty.Add(bnop);
             }
             context.SaveChanges();
@@ -190,6 +192,16 @@ namespace CertiPath.BlockchainGateway.Service
             alm.NewRecordValue = converter.GetJson(objProp);
             alm.OldRecordValue = originalObject;
             alo.Save(alm);
+        }
+
+        private int getNextSortOrder(Guid objGUID)
+        {
+            DataModelContainer context = DataModelContainer.Builder().Build();
+            var last = context.BusinessNetworkObjectProperty
+                        .Where(w => w.BusinessNetworkObjectGUID == objGUID)
+                        .OrderByDescending(o => o.SortOrder)
+                        .Take(1).SingleOrDefault();
+            return last == null ? 0 : last.SortOrder + 1;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace CertiPath.BlockchainGateway.Model
         public int TotalCount { get; set; }
         public IEnumerable<Model.DataStoreViewModel> List { get; set; }
     }
+    
     public class DataStoreViewModel
     {
         public System.Guid BusinessNetworkGUID { get; set; }
@@ -23,7 +24,20 @@ namespace CertiPath.BlockchainGateway.Model
         public System.Guid DataStoreGUID { get; set; }
         public bool DataStoreIsDeleted { get; set; }
         public string DataStoreSourceID { get; set; }
-        public string DataStoreValue { get; set; }
         public Nullable<System.DateTime> DataStoreLastUpdatedOn { get; set; }
+    }
+
+    public class DataStoreModel
+    {
+        public Guid GUID { get; set; }
+        public Guid? TransactionHistoryGUID { get; set; }
+        public List<PropertyModel> PropertyValues { get; set; }
+        public string SourceID { get; set; }
+    }
+
+    public class PropertyModel
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
     }
 }

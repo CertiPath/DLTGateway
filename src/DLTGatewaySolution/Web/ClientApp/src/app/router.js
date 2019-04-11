@@ -17,6 +17,7 @@ const LazyBizNetworkList = lazy(() => import("../views/businessnetwork/list"));
 const LazyBizNetworkDetails = lazy(() => import("../views/businessnetwork/details"));
 const LazyBizNetworkNamespace = lazy(() => import("../views/businessnetwork/Namespace"));
 const LazyDataStore = lazy(() => import("../views/datastore/list"));
+const LazyObjectDetails = lazy(() => import("../views/object/details"));
 const LazySystemUsers = lazy(() => import("../views/users/users"));
 const LazyMyProfile = lazy(() => import("../views/users/myprofile"));
 const LazyAccessDenied = lazy(() => import("../views/login/accessDenied"));
@@ -138,6 +139,17 @@ class Router extends Component {
                         render={matchprops => (
                             <Suspense fallback={<Spinner />}>
                                 <LazyBizNetworkNamespace {...matchprops} />
+                            </Suspense>
+                        )}
+                    />
+                    <MainLayoutRoutes
+
+                        path="/Object/Details/:id"
+                        title={"Object Details"}
+                        subTitle={""}
+                        render={matchprops => (
+                            <Suspense fallback={<Spinner />}>
+                                <LazyObjectDetails {...matchprops} />
                             </Suspense>
                         )}
                     />
