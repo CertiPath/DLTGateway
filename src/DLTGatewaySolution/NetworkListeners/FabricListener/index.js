@@ -1,8 +1,6 @@
 /*
  * FabricListener\index.js
  */
-'use strict';
-
 require('dotenv').config();
 const fabric = require('./fabric');
 

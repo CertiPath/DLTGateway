@@ -1,10 +1,13 @@
 @echo off
 pushd ..
-echo "Enter SQL Login PWD Here"  > SQL_LOGIN_PWD.secret 
+echo "%DB_LOGIN_PWD%"  > SQL_LOGIN_PWD.secret 
 @echo on
 
-docker build --no-cache -t dlt-fabric-listener-img .
-docker-compose up --force-recreate
+docker-compose rm && ^
+docker-compose pull && ^
+docker-compose build --no-cache && ^
+docker-compose up --force-recreate && ^
+docker-compose down
 
 @echo off
 rm -rf *.secret

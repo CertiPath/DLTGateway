@@ -1,13 +1,13 @@
 version: '3.7'
 
 services:
-  dlt-fabric-listener:
-    image: dlt-fabric-listener-img
+  node:
+    build: .
     env_file:
       - dbConfigWithoutPassword.env
     secrets:
       - SQL_LOGIN_PWD
+
 secrets:
   SQL_LOGIN_PWD:
     file: ./SQL_LOGIN_PWD.secret
-    
