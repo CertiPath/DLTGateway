@@ -4,4 +4,5 @@ services:
   node:
     stdin_open: true
     tty: true
-    
+    # Uncomment the next line to keep Docker container running without ever exiting.
+    # command: tail -F index.js
