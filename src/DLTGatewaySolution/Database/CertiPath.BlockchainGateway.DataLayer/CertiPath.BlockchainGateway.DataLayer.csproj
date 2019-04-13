@@ -65,6 +65,9 @@
     <Compile Include="BusinessNetworkObject.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="BusinessNetworkObjectChart.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="BusinessNetworkObjectProperty.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>

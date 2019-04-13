@@ -161,4 +161,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="GUID" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="f24eedfd-1133-40bc-b7eb-8ff648127df8" ChangeDateTime="04/13/2019 02:30:26">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetworkObjectChart].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetworkObjectChart]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
 </Operations>

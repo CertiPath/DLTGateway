@@ -14,6 +14,12 @@ namespace CertiPath.BlockchainGateway.DataLayer
     
     public partial class ChartType
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public ChartType()
+        {
+            this.BusinessNetworkObjectChart = new HashSet<BusinessNetworkObjectChart>();
+        }
+    
         public System.Guid GUID { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
@@ -22,5 +28,7 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public bool Enabled { get; set; }
     
         public virtual ChartCategory ChartCategory { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BusinessNetworkObjectChart> BusinessNetworkObjectChart { get; set; }
     }
 }
