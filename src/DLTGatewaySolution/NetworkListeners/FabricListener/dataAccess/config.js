@@ -43,7 +43,7 @@ const readProcessEnv = (dotEnvLoadResult) => {
 };
 
 const readDockerSecret = (key) => {
-  console.debug('Reading Docker secrets..');
+  console.debug('Reading Docker secrets');
   return fs.readFileSync(`/run/secrets/${key}`, 'utf8');
 };
 
@@ -78,7 +78,8 @@ const load = () => {
     }
   }
 
-  return { password, ...dbConfig };
+  dbConfig.password = password;
+  return dbConfig;
 };
 
 exports.load = load;

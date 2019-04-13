@@ -1,6 +1,7 @@
 @echo off
 pushd ..
-echo "%DB_LOGIN_PWD%"  > SQL_LOGIN_PWD.secret 
+REM Using set and the /p parameter to echo without a newline 
+echo|set /p="%DB_LOGIN_PWD%" > SQL_LOGIN_PWD.secret
 @echo on
 
 docker-compose rm && ^

@@ -18,6 +18,7 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public TransactionHistory()
         {
             this.DataStore = new HashSet<DataStore>();
+            this.DataStoreHistory = new HashSet<DataStoreHistory>();
         }
     
         public System.Guid GUID { get; set; }
@@ -38,5 +39,7 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public virtual BusinessNetwork BusinessNetwork { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DataStore> DataStore { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DataStoreHistory> DataStoreHistory { get; set; }
     }
 }

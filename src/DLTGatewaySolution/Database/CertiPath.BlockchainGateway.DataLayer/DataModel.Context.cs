@@ -53,6 +53,10 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public virtual DbSet<vBusinessNetworkFile> vBusinessNetworkFile { get; set; }
         public virtual DbSet<BusinessNetworkObjectProperty> BusinessNetworkObjectProperty { get; set; }
         public virtual DbSet<ObjectPropertyType> ObjectPropertyType { get; set; }
+        public virtual DbSet<DataStoreHistory> DataStoreHistory { get; set; }
+        public virtual DbSet<ChartCategory> ChartCategory { get; set; }
+        public virtual DbSet<ChartType> ChartType { get; set; }
+        public virtual DbSet<BusinessNetworkObjectChart> BusinessNetworkObjectChart { get; set; }
     
         public virtual ObjectResult<GetSystemStats_Result> GetSystemStats(Nullable<int> offsetHours)
         {

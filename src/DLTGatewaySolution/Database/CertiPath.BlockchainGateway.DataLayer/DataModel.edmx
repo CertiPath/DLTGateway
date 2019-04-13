@@ -78,6 +78,17 @@
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="IsImported" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="BusinessNetworkObjectChart">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="BusinessNetworkObjectGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ChartTypeGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ChartSettings" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="BusinessNetworkObjectProperty">
           <Key>
             <PropertyRef Name="GUID" />
@@ -92,6 +103,27 @@
           <Property Name="IsImported" Type="bit" Nullable="false" />
           <Property Name="SortOrder" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="ChartCategory">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChartType">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ChartCategoryGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="DataStore">
           <Key>
             <PropertyRef Name="GUID" />
@@ -103,6 +135,17 @@
           <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
           <Property Name="TransactionHistoryGUID" Type="uniqueidentifier" />
           <Property Name="LastUpdatedOn" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="DataStoreHistory">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DataStoreGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SourceID" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TransactionHistoryGUID" Type="uniqueidentifier" />
+          <Property Name="CreatedOn" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="FileUpload">
           <Key>
@@ -415,6 +458,30 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_BusinessNetworkObjectChart_BusinessNetworkObject">
+          <End Role="BusinessNetworkObject" Type="Self.BusinessNetworkObject" Multiplicity="1" />
+          <End Role="BusinessNetworkObjectChart" Type="Self.BusinessNetworkObjectChart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetworkObject">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObjectChart">
+              <PropertyRef Name="BusinessNetworkObjectGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetworkObjectChart_ChartType">
+          <End Role="ChartType" Type="Self.ChartType" Multiplicity="1" />
+          <End Role="BusinessNetworkObjectChart" Type="Self.BusinessNetworkObjectChart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChartType">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObjectChart">
+              <PropertyRef Name="ChartTypeGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_BusinessNetworkObjectProperty_BusinessNetworkObject">
           <End Role="BusinessNetworkObject" Type="Self.BusinessNetworkObject" Multiplicity="1" />
           <End Role="BusinessNetworkObjectProperty" Type="Self.BusinessNetworkObjectProperty" Multiplicity="*" />
@@ -439,6 +506,18 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ChartType_ChartCategory">
+          <End Role="ChartCategory" Type="Self.ChartCategory" Multiplicity="1" />
+          <End Role="ChartType" Type="Self.ChartType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChartCategory">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="ChartType">
+              <PropertyRef Name="ChartCategoryGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DataStore_BusinessNetworkObject">
           <End Role="BusinessNetworkObject" Type="Self.BusinessNetworkObject" Multiplicity="1" />
           <End Role="DataStore" Type="Self.DataStore" Multiplicity="*" />
@@ -459,6 +538,30 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
               <PropertyRef Name="GUID" />
             </Principal>
             <Dependent Role="DataStore">
+              <PropertyRef Name="TransactionHistoryGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataStoreHistory_DataStore">
+          <End Role="DataStore" Type="Self.DataStore" Multiplicity="1" />
+          <End Role="DataStoreHistory" Type="Self.DataStoreHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataStore">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="DataStoreHistory">
+              <PropertyRef Name="DataStoreGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataStoreHistory_TransactionHistoryGUID">
+          <End Role="TransactionHistory" Type="Self.TransactionHistory" Multiplicity="0..1" />
+          <End Role="DataStoreHistory" Type="Self.DataStoreHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionHistory">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="DataStoreHistory">
               <PropertyRef Name="TransactionHistoryGUID" />
             </Dependent>
           </ReferentialConstraint>
@@ -557,8 +660,12 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySet Name="BusinessNetwork_FileUpload" EntityType="Self.BusinessNetwork_FileUpload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BusinessNetworkNamespace" EntityType="Self.BusinessNetworkNamespace" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BusinessNetworkObject" EntityType="Self.BusinessNetworkObject" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BusinessNetworkObjectChart" EntityType="Self.BusinessNetworkObjectChart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BusinessNetworkObjectProperty" EntityType="Self.BusinessNetworkObjectProperty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChartCategory" EntityType="Self.ChartCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChartType" EntityType="Self.ChartType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DataStore" EntityType="Self.DataStore" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DataStoreHistory" EntityType="Self.DataStoreHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileUpload" EntityType="Self.FileUpload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ObjectPropertyType" EntityType="Self.ObjectPropertyType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Policy" EntityType="Self.Policy" Schema="dbo" store:Type="Tables" />
@@ -660,6 +767,14 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="BusinessNetworkNamespace" EntitySet="BusinessNetworkNamespace" />
             <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
           </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkObjectChart_BusinessNetworkObject" Association="Self.FK_BusinessNetworkObjectChart_BusinessNetworkObject">
+            <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+            <End Role="BusinessNetworkObjectChart" EntitySet="BusinessNetworkObjectChart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkObjectChart_ChartType" Association="Self.FK_BusinessNetworkObjectChart_ChartType">
+            <End Role="ChartType" EntitySet="ChartType" />
+            <End Role="BusinessNetworkObjectChart" EntitySet="BusinessNetworkObjectChart" />
+          </AssociationSet>
           <AssociationSet Name="FK_BusinessNetworkObjectProperty_BusinessNetworkObject" Association="Self.FK_BusinessNetworkObjectProperty_BusinessNetworkObject">
             <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
             <End Role="BusinessNetworkObjectProperty" EntitySet="BusinessNetworkObjectProperty" />
@@ -668,6 +783,10 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="ObjectPropertyType" EntitySet="ObjectPropertyType" />
             <End Role="BusinessNetworkObjectProperty" EntitySet="BusinessNetworkObjectProperty" />
           </AssociationSet>
+          <AssociationSet Name="FK_ChartType_ChartCategory" Association="Self.FK_ChartType_ChartCategory">
+            <End Role="ChartCategory" EntitySet="ChartCategory" />
+            <End Role="ChartType" EntitySet="ChartType" />
+          </AssociationSet>
           <AssociationSet Name="FK_DataStore_BusinessNetworkObject" Association="Self.FK_DataStore_BusinessNetworkObject">
             <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
             <End Role="DataStore" EntitySet="DataStore" />
@@ -675,6 +794,14 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <AssociationSet Name="FK_DataStore_TransactionHistoryGUID" Association="Self.FK_DataStore_TransactionHistoryGUID">
             <End Role="TransactionHistory" EntitySet="TransactionHistory" />
             <End Role="DataStore" EntitySet="DataStore" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataStoreHistory_DataStore" Association="Self.FK_DataStoreHistory_DataStore">
+            <End Role="DataStore" EntitySet="DataStore" />
+            <End Role="DataStoreHistory" EntitySet="DataStoreHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataStoreHistory_TransactionHistoryGUID" Association="Self.FK_DataStoreHistory_TransactionHistoryGUID">
+            <End Role="TransactionHistory" EntitySet="TransactionHistory" />
+            <End Role="DataStoreHistory" EntitySet="DataStoreHistory" />
           </AssociationSet>
           <AssociationSet Name="FK_Policy_PolicyType" Association="Self.FK_Policy_PolicyType">
             <End Role="PolicyType" EntitySet="PolicyType" />
@@ -807,6 +934,30 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
             <End Role="BusinessNetworkObjectProperty" EntitySet="BusinessNetworkObjectProperty" />
           </AssociationSet>
+          <EntitySet Name="DataStoreHistory" EntityType="DataModel.DataStoreHistory" />
+          <AssociationSet Name="FK_DataStoreHistory_DataStore" Association="DataModel.FK_DataStoreHistory_DataStore">
+            <End Role="DataStore" EntitySet="DataStore" />
+            <End Role="DataStoreHistory" EntitySet="DataStoreHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DataStoreHistory_TransactionHistoryGUID" Association="DataModel.FK_DataStoreHistory_TransactionHistoryGUID">
+            <End Role="TransactionHistory" EntitySet="TransactionHistory" />
+            <End Role="DataStoreHistory" EntitySet="DataStoreHistory" />
+          </AssociationSet>
+          <EntitySet Name="ChartCategory" EntityType="DataModel.ChartCategory" />
+          <EntitySet Name="ChartType" EntityType="DataModel.ChartType" />
+          <AssociationSet Name="FK_ChartType_ChartCategory" Association="DataModel.FK_ChartType_ChartCategory">
+            <End Role="ChartCategory" EntitySet="ChartCategory" />
+            <End Role="ChartType" EntitySet="ChartType" />
+          </AssociationSet>
+          <EntitySet Name="BusinessNetworkObjectChart" EntityType="DataModel.BusinessNetworkObjectChart" />
+          <AssociationSet Name="FK_BusinessNetworkObjectChart_BusinessNetworkObject" Association="DataModel.FK_BusinessNetworkObjectChart_BusinessNetworkObject">
+            <End Role="BusinessNetworkObject" EntitySet="BusinessNetworkObject" />
+            <End Role="BusinessNetworkObjectChart" EntitySet="BusinessNetworkObjectChart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BusinessNetworkObjectChart_ChartType" Association="DataModel.FK_BusinessNetworkObjectChart_ChartType">
+            <End Role="ChartType" EntitySet="ChartType" />
+            <End Role="BusinessNetworkObjectChart" EntitySet="BusinessNetworkObjectChart" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="BlockchainFramework">
           <Key>
@@ -863,6 +1014,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="BusinessNetworkObjectProperty" Relationship="DataModel.FK_BusinessNetworkObjectProperty_BusinessNetworkObject" FromRole="BusinessNetworkObject" ToRole="BusinessNetworkObjectProperty" />
           <Property Name="IsImported" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="BusinessNetworkObjectChart" Relationship="DataModel.FK_BusinessNetworkObjectChart_BusinessNetworkObject" FromRole="BusinessNetworkObject" ToRole="BusinessNetworkObjectChart" />
         </EntityType>
         <Association Name="FK_BusinessNetwork_BlockchainFramework">
           <End Type="DataModel.BlockchainFramework" Role="BlockchainFramework" Multiplicity="1" />
@@ -920,6 +1072,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="ProcessedOn" Type="DateTime" Precision="7" />
           <Property Name="ProcessedNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="DataStore" Relationship="DataModel.FK_DataStore_TransactionHistoryGUID" FromRole="TransactionHistory" ToRole="DataStore" />
+          <NavigationProperty Name="DataStoreHistory" Relationship="DataModel.FK_DataStoreHistory_TransactionHistoryGUID" FromRole="TransactionHistory" ToRole="DataStoreHistory" />
         </EntityType>
         <Association Name="FK_TransactionHistory_BusinessNetwork">
           <End Type="DataModel.BusinessNetwork" Role="BusinessNetwork" Multiplicity="1" />
@@ -946,6 +1099,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="TransactionHistoryGUID" Type="Guid" />
           <Property Name="LastUpdatedOn" Type="DateTime" Precision="7" />
           <NavigationProperty Name="TransactionHistory" Relationship="DataModel.FK_DataStore_TransactionHistoryGUID" FromRole="DataStore" ToRole="TransactionHistory" />
+          <NavigationProperty Name="DataStoreHistory" Relationship="DataModel.FK_DataStoreHistory_DataStore" FromRole="DataStore" ToRole="DataStoreHistory" />
         </EntityType>
         <Association Name="FK_DataStore_BusinessNetworkObject">
           <End Type="DataModel.BusinessNetworkObject" Role="BusinessNetworkObject" Multiplicity="1" />
@@ -1378,6 +1532,116 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DataStoreHistory">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="DataStoreGUID" Type="Guid" Nullable="false" />
+          <Property Name="SourceID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionHistoryGUID" Type="Guid" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="DataStore" Relationship="DataModel.FK_DataStoreHistory_DataStore" FromRole="DataStoreHistory" ToRole="DataStore" />
+          <NavigationProperty Name="TransactionHistory" Relationship="DataModel.FK_DataStoreHistory_TransactionHistoryGUID" FromRole="DataStoreHistory" ToRole="TransactionHistory" />
+        </EntityType>
+        <Association Name="FK_DataStoreHistory_DataStore">
+          <End Type="DataModel.DataStore" Role="DataStore" Multiplicity="1" />
+          <End Type="DataModel.DataStoreHistory" Role="DataStoreHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DataStore">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="DataStoreHistory">
+              <PropertyRef Name="DataStoreGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DataStoreHistory_TransactionHistoryGUID">
+          <End Type="DataModel.TransactionHistory" Role="TransactionHistory" Multiplicity="0..1" />
+          <End Type="DataModel.DataStoreHistory" Role="DataStoreHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TransactionHistory">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="DataStoreHistory">
+              <PropertyRef Name="TransactionHistoryGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ChartCategory">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ChartType" Relationship="DataModel.FK_ChartType_ChartCategory" FromRole="ChartCategory" ToRole="ChartType" />
+        </EntityType>
+        <EntityType Name="ChartType">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChartCategoryGUID" Type="Guid" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ChartCategory" Relationship="DataModel.FK_ChartType_ChartCategory" FromRole="ChartType" ToRole="ChartCategory" />
+          <NavigationProperty Name="BusinessNetworkObjectChart" Relationship="DataModel.FK_BusinessNetworkObjectChart_ChartType" FromRole="ChartType" ToRole="BusinessNetworkObjectChart" />
+        </EntityType>
+        <Association Name="FK_ChartType_ChartCategory">
+          <End Type="DataModel.ChartCategory" Role="ChartCategory" Multiplicity="1" />
+          <End Type="DataModel.ChartType" Role="ChartType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChartCategory">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="ChartType">
+              <PropertyRef Name="ChartCategoryGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BusinessNetworkObjectChart">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessNetworkObjectGUID" Type="Guid" Nullable="false" />
+          <Property Name="ChartTypeGUID" Type="Guid" Nullable="false" />
+          <Property Name="ChartSettings" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BusinessNetworkObject" Relationship="DataModel.FK_BusinessNetworkObjectChart_BusinessNetworkObject" FromRole="BusinessNetworkObjectChart" ToRole="BusinessNetworkObject" />
+          <NavigationProperty Name="ChartType" Relationship="DataModel.FK_BusinessNetworkObjectChart_ChartType" FromRole="BusinessNetworkObjectChart" ToRole="ChartType" />
+        </EntityType>
+        <Association Name="FK_BusinessNetworkObjectChart_BusinessNetworkObject">
+          <End Type="DataModel.BusinessNetworkObject" Role="BusinessNetworkObject" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetworkObjectChart" Role="BusinessNetworkObjectChart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetworkObject">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObjectChart">
+              <PropertyRef Name="BusinessNetworkObjectGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BusinessNetworkObjectChart_ChartType">
+          <End Type="DataModel.ChartType" Role="ChartType" Multiplicity="1" />
+          <End Type="DataModel.BusinessNetworkObjectChart" Role="BusinessNetworkObjectChart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChartType">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="BusinessNetworkObjectChart">
+              <PropertyRef Name="ChartTypeGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1718,6 +1982,53 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <EntityTypeMapping TypeName="DataModel.ObjectPropertyType">
               <MappingFragment StoreEntitySet="ObjectPropertyType">
                 <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DataStoreHistory">
+            <EntityTypeMapping TypeName="DataModel.DataStoreHistory">
+              <MappingFragment StoreEntitySet="DataStoreHistory">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="TransactionHistoryGUID" ColumnName="TransactionHistoryGUID" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="SourceID" ColumnName="SourceID" />
+                <ScalarProperty Name="DataStoreGUID" ColumnName="DataStoreGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChartCategory">
+            <EntityTypeMapping TypeName="DataModel.ChartCategory">
+              <MappingFragment StoreEntitySet="ChartCategory">
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChartType">
+            <EntityTypeMapping TypeName="DataModel.ChartType">
+              <MappingFragment StoreEntitySet="ChartType">
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ChartCategoryGUID" ColumnName="ChartCategoryGUID" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BusinessNetworkObjectChart">
+            <EntityTypeMapping TypeName="DataModel.BusinessNetworkObjectChart">
+              <MappingFragment StoreEntitySet="BusinessNetworkObjectChart">
+                <ScalarProperty Name="ChartSettings" ColumnName="ChartSettings" />
+                <ScalarProperty Name="ChartTypeGUID" ColumnName="ChartTypeGUID" />
+                <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="GUID" ColumnName="GUID" />
               </MappingFragment>
