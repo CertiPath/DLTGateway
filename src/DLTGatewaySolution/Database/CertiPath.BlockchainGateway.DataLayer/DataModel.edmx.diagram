@@ -51,6 +51,9 @@
         <EntityTypeShape EntityType="DataModel.DataStoreHistory" Width="1.5" PointX="15.625" PointY="5" />
         <AssociationConnector Association="DataModel.FK_DataStoreHistory_DataStore" />
         <AssociationConnector Association="DataModel.FK_DataStoreHistory_TransactionHistoryGUID" />
+        <EntityTypeShape EntityType="DataModel.ChartCategory" Width="1.5" PointX="15.375" PointY="9" />
+        <EntityTypeShape EntityType="DataModel.ChartType" Width="1.5" PointX="17.625" PointY="9" />
+        <AssociationConnector Association="DataModel.FK_ChartType_ChartCategory" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

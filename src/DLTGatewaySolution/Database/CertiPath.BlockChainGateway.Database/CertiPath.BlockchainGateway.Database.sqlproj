@@ -95,6 +95,8 @@
     <Build Include="dbo\Tables\ObjectPropertyType.sql" />
     <Build Include="dbo\Tables\BusinessNetworkObjectProperty.sql" />
     <Build Include="dbo\Tables\DataStoreHistory.sql" />
+    <Build Include="dbo\Tables\ChartCategory.sql" />
+    <Build Include="dbo\Tables\ChartType.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="CertiPath.BlockchainGateway.Database.refactorlog" />
