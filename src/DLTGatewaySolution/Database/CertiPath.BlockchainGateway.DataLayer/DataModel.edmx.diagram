@@ -48,6 +48,9 @@
         <EntityTypeShape EntityType="DataModel.ObjectPropertyType" Width="1.5" PointX="14.375" PointY="1.25" />
         <AssociationConnector Association="DataModel.FK_BusinessNetworkObjectProperty_ObjectPropertyType" />
         <AssociationConnector Association="DataModel.FK_BusinessNetworkObjectProperty_BusinessNetworkObject" />
+        <EntityTypeShape EntityType="DataModel.DataStoreHistory" Width="1.5" PointX="15.625" PointY="5" />
+        <AssociationConnector Association="DataModel.FK_DataStoreHistory_DataStore" />
+        <AssociationConnector Association="DataModel.FK_DataStoreHistory_TransactionHistoryGUID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -140,4 +140,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Disabled" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a7033177-0971-4dd8-b6e8-ff4d08d87aea" ChangeDateTime="04/13/2019 01:22:29">
+    <Property Name="ElementName" Value="[dbo].[DataStoreHistory].[LastUpdatedOn]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[DataStoreHistory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CreatedOn" />
+  </Operation>
 </Operations>

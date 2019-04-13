@@ -90,6 +90,9 @@
     <Compile Include="DataStore.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataStoreHistory.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="FileUpload.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
