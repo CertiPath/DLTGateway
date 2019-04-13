@@ -75,6 +75,7 @@
     <Compile Include="Helper\BusinessNetwork\FileUpload.cs" />
     <Compile Include="Helper\Chart\ColorHelper.cs" />
     <Compile Include="Helper\Common\EntityConverter.cs" />
+    <Compile Include="Helper\DataStore\ChartHelper.cs" />
     <Compile Include="Helper\DataStore\Common.cs" />
     <Compile Include="Helper\DataStore\DataStoreHistory.cs" />
     <Compile Include="Log.cs" />

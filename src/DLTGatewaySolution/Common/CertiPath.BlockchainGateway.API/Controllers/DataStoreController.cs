@@ -32,5 +32,12 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             var result = dsSrv.Get(GUID);
             return result;
         }
+
+        public Model.ObjectChartReturnModel GetChart(Guid GUID)
+        {
+            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore();
+            var result = dsSrv.GetChart(GUID);
+            return result;
+        }
     }
 }
