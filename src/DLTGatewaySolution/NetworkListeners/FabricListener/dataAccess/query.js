@@ -26,7 +26,10 @@ const connect = () => {
   }
   if (!connected) {
     connected = true;
-    return connectionPool.connect().then(() => Promise.resolve('SQL connection created.'));
+      return connectionPool.connect().then(pool => {
+          console.debug('SQL connection created.');
+          return Promise.resolve(pool);
+      });
   }
 
   return Promise.resolve(connectionPool);
