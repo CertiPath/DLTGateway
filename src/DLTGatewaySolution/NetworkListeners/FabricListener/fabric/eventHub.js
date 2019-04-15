@@ -19,13 +19,13 @@ const createEventHub = ({
     log = console,
   } = options || {};
 
+  log.info(`[${networkName}] Created Fabric client with channel "${channelName}" and peer "${peerAddress}".`);
   // Setup the fabric network
   const client = createFabricClient();
   const channel = client.newChannel(channelName);
   const peer = client.newPeer(peerAddress);
   channel.addPeer(peer);
   const eventHub = channel.newChannelEventHub(peer);
-  log.info(`[${networkName}] Created Fabric client with channel "${channelName}" and peer "${peerAddress}".`);
 
   const storePath = path.join(__dirname, '..', cryptoMaterialDirectory);
   return FabricClient.newDefaultKeyValueStore({ path: storePath })
