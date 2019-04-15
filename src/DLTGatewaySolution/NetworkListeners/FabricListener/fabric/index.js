@@ -16,7 +16,8 @@ const connect = (targetNetworkName, options) => {
     registerBlockEvent = hub.registerBlockEvent,
     addTransactionHistory = db.transactionHistory.add,
   } = options || {};
-  search({ frameworkName, networkName: targetNetworkName })
+
+  return search({ frameworkName, networkName: targetNetworkName })
     .then((businessNetworks) => {
       log.info(`Found ${businessNetworks.length} business networks from database.`);
       return Promise.all(businessNetworks.map(businessNetwork => createEventHub(businessNetwork)));
