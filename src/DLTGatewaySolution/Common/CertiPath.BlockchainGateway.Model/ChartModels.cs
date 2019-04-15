@@ -7,16 +7,15 @@ using Newtonsoft.Json.Converters;
 namespace CertiPath.BlockchainGateway.Model
 {
     #region Return Objects
-    public enum ChartType
+    public class ChartType
     {
-        LINE_STRAIGHT,
-        LINE_DASHED,
-        LINE_CURVED,
-        LINE_CURVED_DASHED
+        public const string timelineLine = "LINE";
+        public const string timelineStraightLine = "TIMELINE_STRAIGHT_LINE";
+        public const string timelineCurvedLine = "TIMELINE_Curved_LINE";
     }
 
     public class ObjectChartReturnModel {
-        public ChartType ChartType { get; set; }
+        public string ChartType { get; set; }
         public dynamic ChartData { get; set; }
     }
     #endregion 

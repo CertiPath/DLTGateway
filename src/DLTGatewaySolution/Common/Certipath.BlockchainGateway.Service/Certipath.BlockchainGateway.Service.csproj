@@ -81,7 +81,9 @@
     <Compile Include="Helper\BusinessNetworkObject\ObjectPropertyType.cs" />
     <Compile Include="Helper\BusinessNetwork\DataStore.cs" />
     <Compile Include="Helper\BusinessNetwork\FileUpload.cs" />
+    <Compile Include="Helper\Chart\ChartBuilder.cs" />
     <Compile Include="Helper\Chart\ColorHelper.cs" />
+    <Compile Include="Helper\Chart\LineChart.cs" />
     <Compile Include="Helper\Common\EntityConverter.cs" />
     <Compile Include="Helper\DataStore\ChartHelper.cs" />
     <Compile Include="Helper\DataStore\Common.cs" />

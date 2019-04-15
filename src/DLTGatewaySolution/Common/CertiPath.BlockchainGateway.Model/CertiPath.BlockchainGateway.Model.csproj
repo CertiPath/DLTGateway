@@ -54,6 +54,7 @@
     <Compile Include="AuditLogModels.cs" />
     <Compile Include="AuthenticationModels.cs" />
     <Compile Include="BusinessNetworkModels.cs" />
+    <Compile Include="BusinessNetworkObjectModels.cs" />
     <Compile Include="ChartModels.cs" />
     <Compile Include="CommonModels.cs" />
     <Compile Include="DashboardModels.cs" />

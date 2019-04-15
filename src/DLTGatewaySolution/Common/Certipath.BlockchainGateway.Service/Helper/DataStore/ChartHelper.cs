@@ -10,30 +10,24 @@ namespace CertiPath.BlockchainGateway.Service.Helper.DataStore
 {
     internal class ChartHelper
     {
-        internal List<DataStoreChartModel> GetByDataStoreGUID(Guid GUID)
+        internal List<DataStoreChartModel> GetByDataStoreGUID(Guid objectGUID)
         {
             DataModelContainer context = DataModelContainer.Builder().Build();
             List<DataStoreChartModel> res = new List<DataStoreChartModel>();
 
-            // TODO - remove dummy data
-            res.Add(new DataStoreChartModel()
+            var charts = context.BusinessNetworkObjectChart
+                                        .Where(w => w.BusinessNetworkObjectGUID == objectGUID)
+                                        .OrderBy(O => O.SortOrder)
+                                        .ToList();
+            foreach (var chart in charts)
             {
-                Name = "Temperature/Humidity 24 Hours",
-                GUID = Guid.NewGuid(),
-                TypeCode = "LINE"
-            });
-            res.Add(new DataStoreChartModel()
-            {
-                Name = "T/H Pie Chart",
-                GUID = Guid.NewGuid(),
-                TypeCode = "LINE"
-            });
-            res.Add(new DataStoreChartModel()
-            {
-                Name = "Some Other Chart",
-                GUID = Guid.NewGuid(),
-                TypeCode = "LINE"
-            });
+                res.Add(new DataStoreChartModel()
+                {
+                    GUID = chart.GUID,
+                    Name = chart.Name,
+                    TypeCode = chart.ChartType.Code
+                });
+            }
             return res;
         }
     }
