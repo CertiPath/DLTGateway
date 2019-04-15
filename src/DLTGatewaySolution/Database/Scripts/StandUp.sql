@@ -293,3 +293,26 @@ BEGIN
 	PRINT 'ObjectPropertyType: complex already exists.'
 END
 GO
+
+-- timeline
+IF NOT EXISTS (SELECT * FROM ChartCategory WHERE Code = 'TIMELINE')
+BEGIN
+	INSERT INTO ChartCategory ([GUID], Name, Code, [Description], [Enabled])
+	VALUES ('D5ADF89A-0DAB-4D11-8B68-855401213B60', 'Timeline', 'TIMELINE', '', 1)
+END
+
+-- pie
+IF NOT EXISTS (SELECT * FROM ChartCategory WHERE Code = 'PIE')
+BEGIN
+	INSERT INTO ChartCategory ([GUID], Name, Code, [Description], [Enabled])
+	VALUES ('244532E5-DCFE-415B-9F49-740B6B491580', 'Pie', 'PIE', '', 1)
+END
+
+-- ChartTypes
+-- timeline - line
+IF NOT EXISTS (SELECT * FROM ChartType WHERE ChartCategoryGUID = 'D5ADF89A-0DAB-4D11-8B68-855401213B60' AND Code = 'LINE')
+BEGIN
+	INSERT INTO ChartType ([GUID], Name, Code, ChartCategoryGUID, [Description], [Enabled])
+	VALUES ('31D5BC78-2467-499C-BCB7-8D62C6B163F4', 'Line', 'LINE', 'D5ADF89A-0DAB-4D11-8B68-855401213B60', '', 1)
+END
+GO

@@ -17,10 +17,16 @@ namespace CertiPath.BlockchainGateway.Service
             Model.DataStoreModel m = new Model.DataStoreModel()
             {
                 GUID = obj.GUID,
+                ObjectName = obj.BusinessNetworkObject.Name,
                 SourceID = obj.SourceID,
                 TransactionHistoryGUID = obj.TransactionHistoryGUID,
                 PropertyValues = Helper.DataStore.Common.Extract(obj.BusinessNetworkObjectGUID, obj.Value)
             };
+
+            // get charts
+            Helper.DataStore.ChartHelper chartHelper = new Helper.DataStore.ChartHelper();
+            m.ChartList = chartHelper.GetByDataStoreGUID(obj.BusinessNetworkObjectGUID);
+
             return m;
         }
 
@@ -109,6 +115,15 @@ namespace CertiPath.BlockchainGateway.Service
                 TotalCount = totalCount
             };
             return result;
+        }
+
+        public Model.ObjectChartReturnModel GetChart(Guid objectChartGuid)
+        {
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            var chartDef = context.BusinessNetworkObjectChart.Where(w => w.GUID == objectChartGuid).SingleOrDefault();
+            Helper.Chart.ChartBuilder cb = new Helper.Chart.ChartBuilder();
+            Model.ObjectChartReturnModel res = cb.Build(chartDef);
+            return res;
         }
     }
 }

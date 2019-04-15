@@ -140,4 +140,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Disabled" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a7033177-0971-4dd8-b6e8-ff4d08d87aea" ChangeDateTime="04/13/2019 01:22:29">
+    <Property Name="ElementName" Value="[dbo].[DataStoreHistory].[LastUpdatedOn]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[DataStoreHistory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CreatedOn" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="37fe5218-4bf5-4562-9153-00f5c6a10c15" ChangeDateTime="04/13/2019 02:05:34">
+    <Property Name="ElementName" Value="[dbo].[ChartCategory].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ChartCategory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7ebb1f28-e495-4aab-a89b-84bee930736e" ChangeDateTime="04/13/2019 02:08:34">
+    <Property Name="ElementName" Value="[dbo].[ChartType].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ChartType]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f24eedfd-1133-40bc-b7eb-8ff648127df8" ChangeDateTime="04/13/2019 02:30:26">
+    <Property Name="ElementName" Value="[dbo].[BusinessNetworkObjectChart].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[BusinessNetworkObjectChart]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GUID" />
+  </Operation>
 </Operations>

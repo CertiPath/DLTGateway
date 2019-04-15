@@ -12,25 +12,21 @@ namespace CertiPath.BlockchainGateway.DataLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class DataStore
+    public partial class ChartCategory
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DataStore()
+        public ChartCategory()
         {
-            this.DataStoreHistory = new HashSet<DataStoreHistory>();
+            this.ChartType = new HashSet<ChartType>();
         }
     
         public System.Guid GUID { get; set; }
-        public System.Guid BusinessNetworkObjectGUID { get; set; }
-        public string SourceID { get; set; }
-        public bool IsDeleted { get; set; }
-        public string Value { get; set; }
-        public Nullable<System.Guid> TransactionHistoryGUID { get; set; }
-        public Nullable<System.DateTime> LastUpdatedOn { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+        public bool Enabled { get; set; }
     
-        public virtual BusinessNetworkObject BusinessNetworkObject { get; set; }
-        public virtual TransactionHistory TransactionHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DataStoreHistory> DataStoreHistory { get; set; }
+        public virtual ICollection<ChartType> ChartType { get; set; }
     }
 }

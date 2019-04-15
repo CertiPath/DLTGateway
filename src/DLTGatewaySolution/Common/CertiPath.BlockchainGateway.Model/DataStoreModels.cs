@@ -30,14 +30,25 @@ namespace CertiPath.BlockchainGateway.Model
     public class DataStoreModel
     {
         public Guid GUID { get; set; }
+        public string ObjectName { get; set; }
         public Guid? TransactionHistoryGUID { get; set; }
-        public List<PropertyModel> PropertyValues { get; set; }
         public string SourceID { get; set; }
+        public List<PropertyModel> PropertyValues { get; set; }
+        public List<DataStoreChartModel> ChartList { get; set; }
+
     }
 
     public class PropertyModel
     {
         public string Name { get; set; }
         public string Value { get; set; }
+    }
+
+    public class DataStoreChartModel
+    {
+        public Guid GUID { get; set; }
+        public string Name { get; set; }
+        public string TypeCode { get; set; }
+        public string ChartData { get; set; }
     }
 }

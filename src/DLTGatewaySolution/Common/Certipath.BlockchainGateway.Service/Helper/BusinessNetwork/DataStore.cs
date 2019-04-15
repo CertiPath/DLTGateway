@@ -23,7 +23,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.BusinessNetwork
                                 .Where(w => w.BusinessNetworkObjectGUID == objToTrack.GUID)
                                 .SingleOrDefault();
 
-
+            
 
             bool lAddNew = false;
             string oldValue = "";
@@ -51,20 +51,10 @@ namespace CertiPath.BlockchainGateway.Service.Helper.BusinessNetwork
             }
             context.SaveChanges();
 
-            // 2. Audit log
-            Helper.Audit.AuditLog alo = new Audit.AuditLog();
-            AuditLogModel alm = new AuditLogModel();
+            // 2. DataStoreHistory
+            Helper.DataStore.DataStoreHistory dsh = new Helper.DataStore.DataStoreHistory();
+            dsh.Add(ds);
 
-            alm.OperationType = lAddNew ? AuditLogOperationType.Create : AuditLogOperationType.Update;
-            alm.PrimaryObjectGUID = ds.GUID;
-            alm.PrimaryObjectType = AuditLogObjectType.DataStore;
-            alm.SecondaryObjectGUID = transaction.GUID;
-            alm.SecondaryObjectType = AuditLogObjectType.TransactionHistory;
-            alm.NewRecordValue = converter.GetJson(ds);
-            alm.OldRecordValue = oldValue;
-
-            alo.Save(alm);
-            
         }
     }
 }
