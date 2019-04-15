@@ -16,9 +16,7 @@ const search = ({ frameworkName, networkName }, options) => {
   } = options || {};
   const andNetworkNameCondition = networkName ? `AND N.Name ='${networkName}'` : '';
   const sql = `
-SELECT N.GUID,
-       N.Name,
-       N.LastBlockProcessed
+SELECT N.*
 FROM   BusinessNetwork AS N 
        INNER JOIN BlockchainFramework AS F 
                ON N.BlockchainFrameworkGUID = F.GUID 
