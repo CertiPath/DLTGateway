@@ -10,14 +10,18 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
 {
     internal class ChartBuilder
     {
-        internal ObjectChartReturnModel Build(BusinessNetworkObjectChart chartDef)
+        internal ObjectChartReturnModel Build(Guid dataStoreGUID, BusinessNetworkObjectChart chartDef)
         {
             ObjectChartReturnModel res = new ObjectChartReturnModel();
             switch (chartDef.ChartType.Code)
             {
                 case Model.ChartType.timelineLine:
                     Helper.Chart.LineChart lineChart = new LineChart();
-                    res = lineChart.Build(chartDef);
+                    res = lineChart.Build(dataStoreGUID, chartDef);
+                    break;
+                case Model.ChartType.piePie:
+                    Helper.Chart.PieChart pieChart = new Chart.PieChart();
+                    res = pieChart.Build(dataStoreGUID, chartDef);
                     break;
                 default:
                     throw new NotImplementedException();

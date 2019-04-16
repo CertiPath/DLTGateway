@@ -5,29 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using CertiPath.BlockchainGateway.DataLayer;
 using CertiPath.BlockchainGateway.Model;
+using Newtonsoft.Json;
 
 namespace CertiPath.BlockchainGateway.Service.Helper.Chart
 {
     internal class LineChart
     {
-        internal ObjectChartReturnModel Build(BusinessNetworkObjectChart chartDef)
+        internal ObjectChartReturnModel Build(Guid dataStoreGUID, BusinessNetworkObjectChart chartDef)
         {
-            
-            ObjectChartDataModel chartData = new ObjectChartDataModel();
-            chartData.LabelList = new List<string>() { "January", "February", "March", "April", "May", "June", "July" };
-            chartData.SeriesList = new List<ChartDataSeriesModel>();
-            chartData.SeriesList.Add(new ChartDataSeriesModel()
-            {
-                DataList = new List<long>() { 65, 59, 80, 81, 56, 55, 40 },
-                Label = "My First dataset",
-            });
-            chartData.SeriesList.Add(new ChartDataSeriesModel()
-            {
-                DataList = new List<long>() { 28, 48, 40, 19, 86, 27, 90 },
-                Label = "My Second dataset",
-            });
+            Model.NetworkObjectChartSetting chartSettings = JsonConvert.DeserializeObject<Model.NetworkObjectChartSetting>(chartDef.ChartSettings);
+            Helper.Chart.DataBuilder dataBuilder = new DataBuilder();
+            ObjectChartDataModel chartData = dataBuilder.Get(dataStoreGUID, chartDef, chartSettings);
 
-            
             Model.LineChartModel model = new Model.LineChartModel();
             ColorHelper colorHelper = new ColorHelper();
 
@@ -46,8 +35,8 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                     Label = series.Label,
                     Fill = false,
                     BorderDash = new List<long>() { 5, 5 },
-                    BorderColor = colorHelper.GetNextColor(index),
-                    PointBorderColor = colorHelper.GetNextColor(index),
+                    BorderColor = colorHelper.GetNextColor(index, true),
+                    PointBorderColor = colorHelper.GetNextColor(index, true),
                     PointBackgroundColor = "#FFF",
                     PointBorderWidth = 2,
                     PointHoverBorderWidth = 2,
@@ -63,8 +52,12 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
             chartOptions.ResponsiveAnimationDuration = 1000;
             chartOptions.Responsive = true;
             chartOptions.MaintainAspectRatio = false;
-            chartOptions.Legend = new Model.Legend() { Position = "bottom" };
-            chartOptions.Title = new Model.Title() { Display = true, Text = "My chaaaaaaartttt" };
+            chartOptions.Legend = new Model.Legend() {
+                Position = chartSettings.LegendLocation == null || chartSettings.LegendLocation == "" ? "bottom" : chartSettings.LegendLocation
+            };
+            chartOptions.Title = new Model.Title() {
+                Display = chartSettings.Title == null || chartSettings.Title == "" ? false : true,
+                Text = chartSettings.Title == null || chartSettings.Title == "" ? "" : chartSettings.Title };
 
             // options - scales
             chartOptions.Scales = new Model.Scales();
@@ -73,14 +66,20 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
             {
                 Display = true,
                 GridLines = new Model.GridLines() { Color = "#f3f3f3", DrawTicks = false },
-                ScaleLabel = new Model.ScaleLabel() { Display = true, LabelString = "Month" }
+                ScaleLabel = new Model.ScaleLabel() {
+                    Display = chartSettings.XAxes.Title == "" ? false : true,
+                    LabelString = chartSettings.XAxes.Title
+                }
             });
             chartOptions.Scales.YAxes = new List<Model.Ax>();
             chartOptions.Scales.YAxes.Add(new Model.Ax()
             {
                 Display = true,
                 GridLines = new Model.GridLines() { Color = "#f3f3f3", DrawTicks = false },
-                ScaleLabel = new Model.ScaleLabel() { Display = true, LabelString = "Value" }
+                ScaleLabel = new Model.ScaleLabel() {
+                    Display = chartSettings.YAxes.Title == "" ? false : true,
+                    LabelString = chartSettings.YAxes.Title
+                }
             });
             model.Options = chartOptions;
 

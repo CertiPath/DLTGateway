@@ -12,19 +12,67 @@ namespace CertiPath.BlockchainGateway.Model
         public const string timelineLine = "LINE";
         public const string timelineStraightLine = "TIMELINE_STRAIGHT_LINE";
         public const string timelineCurvedLine = "TIMELINE_Curved_LINE";
+        public const string piePie = "PIE_PIE";
     }
 
     public class ObjectChartReturnModel {
         public string ChartType { get; set; }
         public dynamic ChartData { get; set; }
     }
-    #endregion 
+    #endregion
 
-    #region Common Classes
+    #region Common Models
 
     #endregion
 
-    #region Line Chart Classes
+
+    #region Pie Chart Models
+    public partial class PieChartModel
+    {
+        [JsonProperty("data")]
+        public Data Data { get; set; }
+
+        [JsonProperty("options")]
+        public Options Options { get; set; }
+    }
+
+    public partial class Data
+    {
+        [JsonProperty("labels")]
+        public List<string> Labels { get; set; }
+
+        [JsonProperty("datasets")]
+        public List<Dataset> Datasets { get; set; }
+    }
+
+    public partial class Dataset
+    {
+        [JsonProperty("data")]
+        public List<long> Data { get; set; }
+
+        [JsonProperty("backgroundColor")]
+        public List<string> BackgroundColor { get; set; }
+    }
+
+    public partial class Options
+    {
+        [JsonProperty("animation")]
+        public bool Animation { get; set; }
+
+        [JsonProperty("responsive")]
+        public bool Responsive { get; set; }
+
+        [JsonProperty("maintainAspectRatio")]
+        public bool MaintainAspectRatio { get; set; }
+    }
+
+    public partial class PieChartModel
+    {
+        public static PieChartModel FromJson(string json) => JsonConvert.DeserializeObject<PieChartModel>(json, CertiPath.BlockchainGateway.Model.Converter.Settings);
+    }
+    #endregion 
+
+    #region Line Chart Models
     public partial class LineChartModel
     {
         [JsonProperty("data")]
