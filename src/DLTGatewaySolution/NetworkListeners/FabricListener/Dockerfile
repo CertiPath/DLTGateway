@@ -1,12 +1,22 @@
-FROM mhart/alpine-node:10
+# FROM mhart/alpine-node:10
+
+# If you have native dependencies, you'll need extra tools
+#RUN apk add --no-cache make gcc g++ python
+
+FROM mcr.microsoft.com/mssql-tools
 
 WORKDIR /app
 COPY . .
 
-# If you have native dependencies, you'll need extra tools
-RUN apk add --no-cache make gcc g++ python
+# Install Node v10
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get update
+RUN apt-cache policy nodejs
+RUN apt-get install -y nodejs
 
-# npm will not install modules listed in devDependencies
+# The build-essential package is required for building node-gyp
+RUN apt-get install -y build-essential
+
 RUN npm install --prod
 
 CMD ["npm", "start"]
