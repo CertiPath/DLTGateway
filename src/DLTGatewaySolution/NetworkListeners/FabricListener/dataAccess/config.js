@@ -2,6 +2,7 @@
  * FabricListener\dataAccess\config.js
  */
 const fs = require('fs');
+const crypto = require('crypto');
 const DotEnv = require('dotenv');
 
 const readProcessEnv = (dotEnvLoadResult) => {
@@ -78,7 +79,15 @@ const load = () => {
     }
   }
 
+  if (!password) {
+    throw new Error('Failed to load SQL login password.');
+  }
+
   dbConfig.password = password;
+
+  const hash = crypto.createHash('md5').update(password).digest('hex');
+  console.debug(`Hashed password: ${hash}`);
+
   return dbConfig;
 };
 

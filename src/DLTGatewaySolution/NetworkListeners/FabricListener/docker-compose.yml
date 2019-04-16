@@ -10,4 +10,4 @@ services:
 
 secrets:
   SQL_LOGIN_PWD:
-    file: ./SQL_LOGIN_PWD.secret
+    file: ./secrets/SQL_LOGIN_PWD

@@ -19,7 +19,9 @@ const createEventHub = ({
     log = console,
   } = options || {};
 
-  log.info(`[${networkName}] Created Fabric client with channel "${channelName}" and peer "${peerAddress}".`);
+  const info = msg => log.info(`[${networkName}] ${msg}`);
+
+  info(`Created Fabric client with channel "${channelName}" and peer "${peerAddress}".`);
   // Setup the fabric network
   const client = createFabricClient();
   const channel = client.newChannel(channelName);
@@ -28,6 +30,7 @@ const createEventHub = ({
   const eventHub = channel.newChannelEventHub(peer);
 
   const storePath = path.join(__dirname, '..', cryptoMaterialDirectory);
+  info(`Calculated path for crypto material to be "${storePath}".`);
   return FabricClient.newDefaultKeyValueStore({ path: storePath })
     .then((stateStore) => {
       // Assign the store to the fabric client.
@@ -39,22 +42,31 @@ const createEventHub = ({
       cryptoSuite.setCryptoKeyStore(keyStore);
       client.setCryptoSuite(cryptoSuite);
 
-      // Get the enrolled user from persistence, this user will sign all requests.
-      log.info(`[${networkName}] Loading user context for '${username}'`);
-
       return client.getUserContext(username, true);
     })
     .then((user) => {
-      if (user && user.isEnrolled()) {
-        log.info(`[${networkName}] Verified enrollment for user "${username}".`);
+      // Get the enrolled user from persistence, this user will sign all requests.
+      // https://fabric-sdk-node.github.io/Client.html#getUserContext__anchor
+      info(`Loading the user by name "${username}" from the local storage`);
+      let isEnrolled = false;
+      if (!user) {
+        return Promise.reject(
+          new Error('User not found.')
+        );
+      }
 
+      info(`Verifying enrollment for user "${username}"`);
+      isEnrolled = user.isEnrolled();
+
+      if (isEnrolled) {
+        info('Successfully verified user enrollment');
         return Promise.resolve({
           eventHub, networkGUID, networkName, startBlock: lastBlockProcessed,
         });
       }
 
       return Promise.reject(
-        new Error(`[${networkName}] Failed to verify enrollment for user "${username}".`),
+        new Error('Failed to verify user enrollment.')
       );
     });
 };
