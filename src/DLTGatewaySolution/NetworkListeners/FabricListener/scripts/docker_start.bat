@@ -1,4 +1,3 @@
-@echo off
 if not exist ..\secrets\SQL_* Powershell.exe -executionpolicy remotesigned -File  docker_create_secrets.ps1
 
 pushd ..
@@ -14,4 +13,3 @@ docker image prune
 popd
 
 
-@echo on
