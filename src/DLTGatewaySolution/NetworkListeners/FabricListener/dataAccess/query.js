@@ -26,10 +26,10 @@ const connect = () => {
   }
   if (!connected) {
     connected = true;
-      return connectionPool.connect().then(pool => {
-          console.debug('SQL connection created.');
-          return Promise.resolve(pool);
-      });
+    return connectionPool.connect().then((pool) => {
+      console.debug('SQL connection created.');
+      return Promise.resolve(pool);
+    });
   }
 
   return Promise.resolve(connectionPool);
@@ -50,7 +50,7 @@ const query = (...sqlQueries) => {
   }
 
   return connect().then(pool => Promise.all(
-    sqlQueries.map(sql => pool.request().query(sql)),
+    sqlQueries.map(sql => pool.request().query(sql))
   ));
 };
 
