@@ -11,7 +11,6 @@ import classnames from "classnames";
 import Spinner from "../../components/spinner/spinner";
 import apiClient from "../../utility/apiClient";
 
-
 class BusinessNetworkObject extends Component {
     constructor(props) {
         super(props);
@@ -62,7 +61,7 @@ class BusinessNetworkObject extends Component {
     }
 
     loadChart(chartGUID) {
-        apiClient.get('DataStore/GetChart?GUID=' + chartGUID, {})
+        apiClient.get('DataStore/GetChart?dataStoreGUID=' + this.state.ObjectGUID + '&objectChartGUID=' + chartGUID, {})
             .then(res => {
 
                 this.setState(state => {
@@ -129,12 +128,20 @@ class BusinessNetworkObject extends Component {
                         {
                             this.state.ObjectDetails.ChartList[index].ChartData == null ? (<Spinner />) : 
                                 (
-                                    <Line height={500}
-                                        data={this.state.ObjectDetails.ChartList[index].ChartData.data}
-                                        options={this.state.ObjectDetails.ChartList[index].ChartData.options}
-                                        style={{ display: "block" }} />
-                                )
-                        }
+                                    this.state.ObjectDetails.ChartList[index].ChartType == "PIE_PIE" ? 
+                                        (
+                                            <Pie height={500}
+                                                data={this.state.ObjectDetails.ChartList[index].ChartData.data}
+                                                options={this.state.ObjectDetails.ChartList[index].ChartData.options} />
+                                        ):
+                                            (
+                                                <Line height={500}
+                                                        data={this.state.ObjectDetails.ChartList[index].ChartData.data}
+                                                        options={this.state.ObjectDetails.ChartList[index].ChartData.options}
+                                                        style={{ display: "block" }} />
+                                            )
+                )
+        }
                     </div>
                 </TabPane>
             )

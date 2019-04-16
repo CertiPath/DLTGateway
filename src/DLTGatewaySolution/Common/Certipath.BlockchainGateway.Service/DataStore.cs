@@ -117,12 +117,12 @@ namespace CertiPath.BlockchainGateway.Service
             return result;
         }
 
-        public Model.ObjectChartReturnModel GetChart(Guid objectChartGuid)
+        public Model.ObjectChartReturnModel GetChart(Guid dataStoreGUID, Guid objectChartGuid)
         {
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             var chartDef = context.BusinessNetworkObjectChart.Where(w => w.GUID == objectChartGuid).SingleOrDefault();
             Helper.Chart.ChartBuilder cb = new Helper.Chart.ChartBuilder();
-            Model.ObjectChartReturnModel res = cb.Build(chartDef);
+            Model.ObjectChartReturnModel res = cb.Build(dataStoreGUID, chartDef);
             return res;
         }
     }

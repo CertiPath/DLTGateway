@@ -57,6 +57,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic, Version=1.0.6132.35681, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Linq.Dynamic.1.0.7\lib\net40\System.Linq.Dynamic.dll</HintPath>
     </Reference>
@@ -83,7 +84,9 @@
     <Compile Include="Helper\BusinessNetwork\FileUpload.cs" />
     <Compile Include="Helper\Chart\ChartBuilder.cs" />
     <Compile Include="Helper\Chart\ColorHelper.cs" />
+    <Compile Include="Helper\Chart\DataBuilder.cs" />
     <Compile Include="Helper\Chart\LineChart.cs" />
+    <Compile Include="Helper\Chart\PieChart.cs" />
     <Compile Include="Helper\Common\EntityConverter.cs" />
     <Compile Include="Helper\DataStore\ChartHelper.cs" />
     <Compile Include="Helper\DataStore\Common.cs" />
