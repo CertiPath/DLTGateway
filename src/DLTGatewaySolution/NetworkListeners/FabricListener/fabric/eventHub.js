@@ -1,9 +1,10 @@
 ﻿/*
  * FabricListener\fabric\eventHub.js
  */
-
+const fs = require('fs');
 const path = require('path');
 const FabricClient = require('fabric-client');
+const db = require('../dataAccess');
 
 const createEventHub = ({
   GUID: networkGUID,
@@ -31,7 +32,8 @@ const createEventHub = ({
 
   const storePath = path.join(__dirname, '..', cryptoMaterialDirectory);
   info(`Calculated path for crypto material to be "${storePath}".`);
-  return FabricClient.newDefaultKeyValueStore({ path: storePath })
+
+  const loadUser = () => FabricClient.newDefaultKeyValueStore({ path: storePath })
     .then((stateStore) => {
       // Assign the store to the fabric client.
       client.setStateStore(stateStore);
@@ -69,6 +71,24 @@ const createEventHub = ({
         new Error('Failed to verify user enrollment.')
       );
     });
+
+  const saveToDisk = files => Promise.all(files.map(({
+    FileUploadContent: fileContent,
+    FileUploadFileName: filename,
+  }) => new Promise((resolve, reject) => {
+    const filePath = path.join(storePath, filename);
+    fs.writeFile(filePath, fileContent, (err) => {
+      if (err) {
+        reject(err);
+      }
+      info(`File saved to disk: ${filePath}`);
+      resolve(filePath);
+    });
+  })));
+
+  return db.businessNetworks
+    .loadFiles(networkGUID)
+    .then(files => saveToDisk(files)).then(loadUser);
 };
 
 const registerBlockEvent = ({
@@ -86,7 +106,7 @@ const registerBlockEvent = ({
     (err) => {
       log.warn(`[${networkName}] ${err}`);
     },
-    { startBlock },
+    { startBlock }
   );
   log.info(`[${networkName}] Registered block event listener.`);
 
