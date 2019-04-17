@@ -10,7 +10,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
 {
     internal class PieChart
     {
-        internal ObjectChartReturnModel Build(Guid dataStoreGUID, BusinessNetworkObjectChart chartDef)
+        internal ObjectChartReturnModel Build(Model.ChartType chartType, Guid dataStoreGUID, BusinessNetworkObjectChart chartDef)
         {
             /*
              * data: {
@@ -49,6 +49,13 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                     "rgba(" + color.GetNextColor(2) + ", 0.8)"
                 }
             });
+
+            model.Options = new Options()
+            {
+                Animation = false,
+                Responsive = true,
+                MaintainAspectRatio = false
+            };
 
             result.ChartType = "PIE_PIE";
             result.ChartData = model;
