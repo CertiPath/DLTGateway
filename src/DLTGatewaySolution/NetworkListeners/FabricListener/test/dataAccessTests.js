@@ -3,6 +3,7 @@
  */
 const assert = require('assert');
 const db = require('../dataAccess');
+const config = require('../dataAccess/config');
 
 const testValues = {
   frameworkName: 'hlf423987',
@@ -99,5 +100,28 @@ describe('transactionHistory.add', () => {
         done();
       })
       .catch(done);
+  });
+});
+
+describe('config.parse', () => {
+  it('should extract the server attribute', () => {
+    const dummyServer = 'mssql2019';
+    const { server } = config.parse(`Server=${dummyServer}`);
+    assert.equal(server, dummyServer);
+  });
+  it('should extract the database attribute', () => {
+    const dummyDatabase = 'some.database.name';
+    const { database } = config.parse(`Server=dummyServer;Database=${dummyDatabase}`);
+    assert.equal(database, dummyDatabase);
+  });
+  it('should extract the user attribute', () => {
+    const dummyUser = 'user5';
+    const { 'user id': user } = config.parse(`Server=dummyServer;Database=dummyDatabase;User Id=${dummyUser}`);
+    assert.equal(user, dummyUser);
+  });
+  it('should extract the password attribute', () => {
+    const dummyPassword = 'Password***';
+    const { password } = config.parse(`Server=dummyServer;Database=dummyDatabase;User Id=dummyUser;Password=${dummyPassword}`);
+    assert.equal(password, dummyPassword);
   });
 });
