@@ -11,7 +11,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
 {
     internal class LineChart
     {
-        internal ObjectChartReturnModel Build(Guid dataStoreGUID, BusinessNetworkObjectChart chartDef)
+        internal ObjectChartReturnModel Build(Model.ChartType chartType, Guid dataStoreGUID, BusinessNetworkObjectChart chartDef)
         {
             Model.NetworkObjectChartSetting chartSettings = JsonConvert.DeserializeObject<Model.NetworkObjectChartSetting>(chartDef.ChartSettings);
             Helper.Chart.DataBuilder dataBuilder = new DataBuilder();
@@ -33,8 +33,9 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                 {
                     Data = series.DataList,
                     Label = series.Label,
+                    LineTension = getLineTension(chartType),
                     Fill = false,
-                    BorderDash = new List<long>() { 5, 5 },
+                    BorderDash = getBorderDash(chartType),
                     BorderColor = colorHelper.GetNextColor(index, true),
                     PointBorderColor = colorHelper.GetNextColor(index, true),
                     PointBackgroundColor = "#FFF",
@@ -85,9 +86,29 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
 
             Model.ObjectChartReturnModel res = new Model.ObjectChartReturnModel();
             res.ChartData = model;
-            res.ChartType = Model.ChartType.timelineLine;
+            res.ChartType = chartType.ToString();
 
             return res;
+        }
+
+        private List<long> getBorderDash(Model.ChartType chartType)
+        {
+            if (chartType == Model.ChartType.TIMELINE_LINE_CURVED_DASHED ||
+                chartType == Model.ChartType.TIMELINE_LINE_STRAIGHT_DASHED)
+            {
+                return new List<long>() { 5, 5 };
+            }
+            return null;
+        }
+
+        private long? getLineTension(Model.ChartType chartType)
+        {
+            if (chartType == Model.ChartType.TIMELINE_LINE_STRAIGHT ||
+                chartType == Model.ChartType.TIMELINE_LINE_STRAIGHT_DASHED)
+            {
+                return (long) 0;
+            }
+            return null;
         }
     }
 }
