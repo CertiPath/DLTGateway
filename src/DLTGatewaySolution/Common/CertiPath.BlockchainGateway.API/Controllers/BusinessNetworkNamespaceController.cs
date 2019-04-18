@@ -10,14 +10,16 @@ namespace CertiPath.BlockchainGateway.API.Controllers
     {
         public List<BusinessNetworkNamespaceViewModel> GetAll(Guid BusinessNetworkGUID)
         {
-            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace();
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(context);
             var res = bnn.GetAllByBusinessNetwork(BusinessNetworkGUID);
             return res;
         }
 
         public BusinessNetworkNamespaceModel GetDetails(Guid GUID)
         {
-            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace();
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(context);
             var res = bnn.GetDetails(GUID);
             return res;
         }
@@ -25,14 +27,16 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Delete(BusinessNetworkObjectModel obj)
         {
-            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace();
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(context);
             bnn.Delete(obj.GUID);
         }
 
         [HttpPost]
         public void Save(BusinessNetworkNamespaceViewModel obj)
         {
-            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace();
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(context);
             bnn.Save(obj);
         }
 
