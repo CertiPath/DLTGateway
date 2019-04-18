@@ -12,11 +12,17 @@ namespace CertiPath.BlockchainGateway.Service
 {
     public class BusinessNetwork
     {
+        private DataModelContainer _context;
+
+        public BusinessNetwork(DataModelContainer context)
+        {
+            _context = context;
+        }
+
         public BusinessNetworkTableModel GetAll()
         {
             List<BusinessNetworkModel> list = new List<BusinessNetworkModel>();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var networks = context.BusinessNetwork.Where(w => w.Deleted == false).ToList();
+            var networks = _context.BusinessNetwork.Where(w => w.Deleted == false).ToList();
             foreach (var network in networks)
             {
                 list.Add(new BusinessNetworkModel() {
@@ -39,11 +45,10 @@ namespace CertiPath.BlockchainGateway.Service
         public void Delete(BusinessNetworkModel obj)
         {
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var network = context.BusinessNetwork.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+            var network = _context.BusinessNetwork.Where(w => w.GUID == obj.GUID).SingleOrDefault();
             string originalObject = converter.GetJson(network);
             network.Deleted = true;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
             Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
@@ -63,11 +68,10 @@ namespace CertiPath.BlockchainGateway.Service
         public void Disable(BusinessNetworkModel obj)
         {
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var network = context.BusinessNetwork.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+            var network = _context.BusinessNetwork.Where(w => w.GUID == obj.GUID).SingleOrDefault();
             string originalObject = converter.GetJson(network);
             network.Disabled = true;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
             Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
@@ -86,18 +90,16 @@ namespace CertiPath.BlockchainGateway.Service
         public void DeleteConnectionFile(Guid fileGUID)
         {
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
-            var bnfu = context.BusinessNetwork_FileUpload
+            var bnfu = _context.BusinessNetwork_FileUpload
                                     .Where(w => w.Deleted == false)
                                     .Where(w => w.FileUploadGUID == fileGUID)
                                     .SingleOrDefault();
             bnfu.Deleted = true;
 
-            var file = context.FileUpload.Where(w => w.GUID == fileGUID).SingleOrDefault();
+            var file = _context.FileUpload.Where(w => w.GUID == fileGUID).SingleOrDefault();
             string originalObject = converter.GetJson(file);
             file.Deleted = true;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
             Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
@@ -117,11 +119,10 @@ namespace CertiPath.BlockchainGateway.Service
         public void Enable(BusinessNetworkModel obj)
         {
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var network = context.BusinessNetwork.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+            var network = _context.BusinessNetwork.Where(w => w.GUID == obj.GUID).SingleOrDefault();
             string originalObject = converter.GetJson(network);
             network.Disabled = false;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
             Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
@@ -140,8 +141,7 @@ namespace CertiPath.BlockchainGateway.Service
         public void AddConnectionFile(Guid bneGUID, FileUploadModel model)
         {
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
+            
             DataLayer.FileUpload fup = new FileUpload()
             {
                 GUID = Guid.NewGuid(),
@@ -151,7 +151,7 @@ namespace CertiPath.BlockchainGateway.Service
                 Name = model.Name,
                 TypeExtension = model.TypeExtension
             };
-            context.FileUpload.Add(fup);
+            _context.FileUpload.Add(fup);
 
             // add link to business network
             string originalObject = "";
@@ -162,8 +162,8 @@ namespace CertiPath.BlockchainGateway.Service
                 FileUploadGUID = fup.GUID,
                 Deleted = false
             };
-            context.BusinessNetwork_FileUpload.Add(bnfu);
-            context.SaveChanges();
+            _context.BusinessNetwork_FileUpload.Add(bnfu);
+            _context.SaveChanges();
 
             // Audit Log
             Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
@@ -188,15 +188,14 @@ namespace CertiPath.BlockchainGateway.Service
         {
             ApiResult result = new ApiResult();
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
+            
             DataLayer.BusinessNetwork network = new DataLayer.BusinessNetwork();
             bool lAddNew = true;
             string originalObject = "";
             if (obj.GUID != null && obj.GUID != Guid.Empty)
             {
                 lAddNew = false;
-                network = context.BusinessNetwork.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+                network = _context.BusinessNetwork.Where(w => w.GUID == obj.GUID).SingleOrDefault();
             }
             originalObject = converter.GetJson(network);
 
@@ -211,9 +210,9 @@ namespace CertiPath.BlockchainGateway.Service
                 network.GUID = Guid.NewGuid();
                 network.Deleted = false;
                 network.CryptoMaterialDirectory = "";
-                context.BusinessNetwork.Add(network);
+                _context.BusinessNetwork.Add(network);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
             Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
@@ -237,12 +236,11 @@ namespace CertiPath.BlockchainGateway.Service
         {
             // 1. delete
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var obj = context.BusinessNetworkObject.Where(w => w.GUID == GUID).SingleOrDefault();
+            var obj = _context.BusinessNetworkObject.Where(w => w.GUID == GUID).SingleOrDefault();
             string oldObject = converter.GetJson(obj);
 
             obj.Deleted = true;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // 2. Audit log
             Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
@@ -260,10 +258,9 @@ namespace CertiPath.BlockchainGateway.Service
 
         public Model.BusinessNetworkModel GetDetails(Guid GUID)
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
             Model.BusinessNetworkModel res = new BusinessNetworkModel();
 
-            var bne = context.BusinessNetwork.Where(w => w.GUID == GUID).SingleOrDefault();
+            var bne = _context.BusinessNetwork.Where(w => w.GUID == GUID).SingleOrDefault();
             res.GUID = bne.GUID;
             res.Name = bne.Name;
             res.ChannelName = bne.ChannelName;
@@ -275,7 +272,7 @@ namespace CertiPath.BlockchainGateway.Service
 
             // get frameworks
             List<SelectModel> frameworkList = new List<SelectModel>();
-            var frameworks = context.BlockchainFramework.Where(w => w.Deleted == false).ToList();
+            var frameworks = _context.BlockchainFramework.Where(w => w.Deleted == false).ToList();
             foreach (var framework in frameworks)
             {
                 frameworkList.Add(new SelectModel()
@@ -295,18 +292,18 @@ namespace CertiPath.BlockchainGateway.Service
 
         public BusinessNetworkModel GetMetadata()
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            Model.BusinessNetworkModel res = new BusinessNetworkModel();
-            
-            res.Name = "";
-            res.ChannelName = "";
-            res.PeerAddress = "";
-            res.BlockchainFrameworkName = "";
-            res.Username = "";
+            Model.BusinessNetworkModel res = new BusinessNetworkModel()
+            {
+                Name = "",
+                ChannelName = "",
+                PeerAddress = "",
+                BlockchainFrameworkName = "",
+                Username = ""
+            };
 
             // get frameworks
             List<SelectModel> frameworkList = new List<SelectModel>();
-            var frameworks = context.BlockchainFramework.Where(w => w.Deleted == false).ToList();
+            var frameworks = _context.BlockchainFramework.Where(w => w.Deleted == false).ToList();
             foreach (var framework in frameworks)
             {
                 frameworkList.Add(new SelectModel()
@@ -323,9 +320,8 @@ namespace CertiPath.BlockchainGateway.Service
         public List<BusinessNetworkNamespaceModel> GetNamespaces()
         {
             List<BusinessNetworkNamespaceModel> list = new List<BusinessNetworkNamespaceModel>();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
-            var namespaces = context.BusinessNetworkNamespace.Where(w => w.BusinessNetwork.Deleted == false).ToList();
+            
+            var namespaces = _context.BusinessNetworkNamespace.Where(w => w.BusinessNetwork.Deleted == false).ToList();
             foreach (var ns in namespaces)
             {
                 var item = new BusinessNetworkNamespaceModel()
@@ -338,7 +334,7 @@ namespace CertiPath.BlockchainGateway.Service
                     ObjectList = new List<BusinessNetworkObjectModel>()
                 };
 
-                var objects = context.BusinessNetworkObject.Where(w => w.BusinessNetworkNamespaceGUID == ns.GUID).ToList();
+                var objects = _context.BusinessNetworkObject.Where(w => w.BusinessNetworkNamespaceGUID == ns.GUID).ToList();
                 foreach (var obj in objects)
                 {
                     item.ObjectList.Add(new BusinessNetworkObjectModel()
@@ -365,8 +361,7 @@ namespace CertiPath.BlockchainGateway.Service
 
             Log.Info("ProcessNamespace: " + model.NamespaceName + " - START");
 
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var transactionList = context.TransactionHistory
+            var transactionList = _context.TransactionHistory
                                                 .Where(w => w.BusinessNetworkGUID == model.NetworkGUID)
                                                 .Where(w => w.IsProcessed == false)
                                                 .Where(w => w.ChaincodeName == model.NamespaceName)
@@ -438,11 +433,11 @@ namespace CertiPath.BlockchainGateway.Service
                 }
                 finally
                 {
-                    var tran = context.TransactionHistory.Where(w => w.GUID == transaction.GUID).SingleOrDefault();
+                    var tran = _context.TransactionHistory.Where(w => w.GUID == transaction.GUID).SingleOrDefault();
                     tran.IsProcessed = true;
                     tran.ProcessedOn = DateTime.UtcNow;
                     tran.ProcessedNote = processingMessage;
-                    context.SaveChanges();
+                    _context.SaveChanges();
                 }
             }
             Log.Info("ProcessNamespace: " + model.NamespaceName + " - END");

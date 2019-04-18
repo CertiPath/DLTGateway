@@ -134,7 +134,12 @@ class BusinessNetworkObject extends Component {
                                             <Pie height={500}
                                                 data={this.state.ObjectDetails.ChartList[index].ChartData.data}
                                                 options={this.state.ObjectDetails.ChartList[index].ChartData.options} />
-                                        ):
+                                        ): chart.ChartType == "PIE_DONUT" ?
+                                            (
+                                                <Doughnut height={500}
+                                                    data={this.state.ObjectDetails.ChartList[index].ChartData.data}
+                                                    options={this.state.ObjectDetails.ChartList[index].ChartData.options} />
+                                            ) :
                                             (
                                                 <Line height={500}
                                                         data={this.state.ObjectDetails.ChartList[index].ChartData.data}

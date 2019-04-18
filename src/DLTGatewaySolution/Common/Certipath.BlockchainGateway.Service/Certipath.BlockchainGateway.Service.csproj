@@ -84,7 +84,8 @@
     <Compile Include="Helper\BusinessNetwork\FileUpload.cs" />
     <Compile Include="Helper\Chart\ChartBuilder.cs" />
     <Compile Include="Helper\Chart\ColorHelper.cs" />
-    <Compile Include="Helper\Chart\DataBuilder.cs" />
+    <Compile Include="Helper\Chart\DataBuilderLineChart.cs" />
+    <Compile Include="Helper\Chart\DataBuilderPieChart.cs" />
     <Compile Include="Helper\Chart\LineChart.cs" />
     <Compile Include="Helper\Chart\PieChart.cs" />
     <Compile Include="Helper\Common\EntityConverter.cs" />

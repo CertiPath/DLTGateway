@@ -9,18 +9,25 @@ namespace CertiPath.BlockchainGateway.Service
 {
     public class DataStore
     {
+        private DataLayer.DataModelContainer _context;
+
+        public DataStore(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
+
         public Model.DataStoreModel Get(Guid objGUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            var obj = context.DataStore.Where(w => w.GUID == objGUID).SingleOrDefault();
+            var obj = _context.DataStore.Where(w => w.GUID == objGUID).SingleOrDefault();
 
+            Helper.DataStore.Common dataStoreCommon = new Helper.DataStore.Common(_context);
             Model.DataStoreModel m = new Model.DataStoreModel()
             {
                 GUID = obj.GUID,
                 ObjectName = obj.BusinessNetworkObject.Name,
                 SourceID = obj.SourceID,
                 TransactionHistoryGUID = obj.TransactionHistoryGUID,
-                PropertyValues = Helper.DataStore.Common.Extract(obj.BusinessNetworkObjectGUID, obj.Value)
+                PropertyValues = dataStoreCommon.Extract(obj.BusinessNetworkObjectGUID, obj.Value)
             };
 
             // get charts
@@ -33,8 +40,7 @@ namespace CertiPath.BlockchainGateway.Service
         public Model.DataStoreTableModel GetAll(Model.TableModel model)
         {
             List<Model.DataStoreViewModel> list = new List<Model.DataStoreViewModel>();
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-
+            
             bool lFilter = model.FilterList.Count > 0;
             bool lFilterOnObjectName = false;
             bool lFilterOnSourceID = false;
@@ -72,7 +78,7 @@ namespace CertiPath.BlockchainGateway.Service
                 sortBy = model.SortList[0].id + " "  + (Convert.ToBoolean(model.SortList[0].desc) ? "DESC" : "ASC");
             }
 
-            var data = context.vDataStore
+            var data = _context.vDataStore
                             .Where(w => 
                                 (lFilter == false) ||
                                 (
@@ -87,7 +93,7 @@ namespace CertiPath.BlockchainGateway.Service
                             .Take(model.PageSize)
                             .ToList();
 
-            int totalCount = context.vDataStore
+            int totalCount = _context.vDataStore
                             .Where(w =>
                                 (lFilter == false) ||
                                 (
@@ -119,9 +125,8 @@ namespace CertiPath.BlockchainGateway.Service
 
         public Model.ObjectChartReturnModel GetChart(Guid dataStoreGUID, Guid objectChartGuid)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            var chartDef = context.BusinessNetworkObjectChart.Where(w => w.GUID == objectChartGuid).SingleOrDefault();
-            Helper.Chart.ChartBuilder cb = new Helper.Chart.ChartBuilder();
+            var chartDef = _context.BusinessNetworkObjectChart.Where(w => w.GUID == objectChartGuid).SingleOrDefault();
+            Helper.Chart.ChartBuilder cb = new Helper.Chart.ChartBuilder(_context);
             Model.ObjectChartReturnModel res = cb.Build(dataStoreGUID, chartDef);
             return res;
         }

@@ -7,9 +7,9 @@ using System.Drawing;
 
 namespace CertiPath.BlockchainGateway.Service.Helper.Chart
 {
-    internal class ColorHelper
+    internal static class ColorHelper
     {
-        private List<string> chartColors = new List<string>()
+        private static List<string> chartColors = new List<string>()
         {
             "119, 81, 246",
             "241, 26, 100",
@@ -28,7 +28,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
             "124, 179, 66"
         };
 
-        internal string GetNextColor(int index)
+        internal static string GetNextColor(int index)
         {
             if (index >= chartColors.Count)
             {
@@ -37,7 +37,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
             return chartColors[index];
         }
 
-        internal string GetNextColor(int index, bool lHex)
+        internal static string GetNextColor(int index, bool lHex)
         {
             string colorStr = GetNextColor(index);
             string[] colorArr = colorStr.Split(',');
@@ -53,15 +53,11 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
             return String.Format("#{0:X6}", myColor.ToArgb() & 0x00FFFFFF);
         }
 
-        private string HexConverter(Color c)
-        {
-            return String.Format("#{0:X6}", c.ToArgb() & 0x00FFFFFF);
-        }
 
-        public string RgbConverter(Color c)
+        internal static string GetNextColorRgba(int index, string opacity)
         {
-            return String.Format("RGB({0},{1},{2})", c.R, c.G, c.B);
+            string color = GetNextColor(index);
+            return String.Format("rgba({0}, {1})", color, opacity);
         }
-        
     }
 }

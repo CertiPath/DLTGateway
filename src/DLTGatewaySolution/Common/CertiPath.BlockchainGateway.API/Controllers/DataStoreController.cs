@@ -21,21 +21,24 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public Model.DataStoreTableModel GetAll([FromBody]Model.TableModel model)
         {
-            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore();
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(context);
             var list = dsSrv.GetAll(model);
             return list;
         }
 
         public Model.DataStoreModel Get(Guid GUID)
         {
-            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore();
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(context);
             var result = dsSrv.Get(GUID);
             return result;
         }
 
         public Model.ObjectChartReturnModel GetChart(Guid dataStoreGUID, Guid objectChartGUID)
         {
-            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore();
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(context);
             var result = dsSrv.GetChart(dataStoreGUID, objectChartGUID);
             return result;
         }
