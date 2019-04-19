@@ -10,13 +10,19 @@ namespace CertiPath.BlockchainGateway.Service
 {
     public class Authenticate
     {
+        private DataModelContainer _context;
+
+        public Authenticate(DataModelContainer context)
+        {
+            _context = context;
+        }
+
         public AuthenticationResponseModel Login(AuthenticationModel model)
         {
             AuthenticationResponseModel res = new AuthenticationResponseModel() { IsAuthenticated = false };
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
+            
             // TODO: Must deal with password and everything else
-            var user = context.User.Where(w => w.Email == model.Username).SingleOrDefault();
+            var user = _context.User.Where(w => w.Email == model.Username).SingleOrDefault();
 
             if (user != null)
             {

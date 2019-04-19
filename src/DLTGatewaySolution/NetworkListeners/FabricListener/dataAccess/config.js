@@ -5,29 +5,29 @@ const fs = require('fs');
 const crypto = require('crypto');
 const DotEnv = require('dotenv');
 
+const parse = cns => cns.split(';').map((pair) => {
+  const [key, value] = pair.split('=');
+  return {
+    key: key.toLowerCase(),
+    value,
+  };
+}).reduce((previous, current) => ({ [current.key]: current.value, ...previous }), {});
+
 const readProcessEnv = (dotEnvLoadResult) => {
   if (dotEnvLoadResult && dotEnvLoadResult.error) {
     throw dotEnvLoadResult.error;
   }
 
   const {
-    SQL_SERVER_NAME_OR_IP: server,
-    SQL_DATABASE_NAME: database,
-    SQL_LOGIN_ID: user,
-    SQL_LOGIN_PWD: password,
+    DLT_SQL_CNS: connectionString,
   } = process.env;
 
-  if (!server) {
-    throw Error('SQL server name or IP address not found');
-  }
-
-  if (!database) {
-    throw Error('SQL database name not found');
-  }
-
-  if (!user) {
-    throw Error('SQL Login ID not found');
-  }
+  const {
+    server,
+    database,
+    'user id': user,
+    password,
+  } = parse(connectionString);
 
   console.debug(`Successfully read database config: ${server}/${database}/${user}`);
   return {
@@ -91,4 +91,5 @@ const load = () => {
   return dbConfig;
 };
 
+exports.parse = parse;
 exports.load = load;

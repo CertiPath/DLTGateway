@@ -1,8 +1,6 @@
 /*
  * FabricListener\dataAccess\index.js
  */
-'use strict';
-
 const query = require('./query');
 
 // Each individual table has its own js file with pluralized name.

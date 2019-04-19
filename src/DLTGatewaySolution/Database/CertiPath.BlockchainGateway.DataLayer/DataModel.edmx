@@ -89,6 +89,8 @@
           <Property Name="ChartTypeGUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ChartSettings" Type="nvarchar(max)" Nullable="false" />
           <Property Name="SortOrder" Type="int" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="Disabled" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="BusinessNetworkObjectProperty">
           <Key>
@@ -1619,6 +1621,8 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <NavigationProperty Name="BusinessNetworkObject" Relationship="DataModel.FK_BusinessNetworkObjectChart_BusinessNetworkObject" FromRole="BusinessNetworkObjectChart" ToRole="BusinessNetworkObject" />
           <NavigationProperty Name="ChartType" Relationship="DataModel.FK_BusinessNetworkObjectChart_ChartType" FromRole="BusinessNetworkObjectChart" ToRole="ChartType" />
           <Property Name="SortOrder" Type="Int32" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="Disabled" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_BusinessNetworkObjectChart_BusinessNetworkObject">
           <End Type="DataModel.BusinessNetworkObject" Role="BusinessNetworkObject" Multiplicity="1" />
@@ -2027,6 +2031,8 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySetMapping Name="BusinessNetworkObjectChart">
             <EntityTypeMapping TypeName="DataModel.BusinessNetworkObjectChart">
               <MappingFragment StoreEntitySet="BusinessNetworkObjectChart">
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
                 <ScalarProperty Name="ChartSettings" ColumnName="ChartSettings" />
                 <ScalarProperty Name="ChartTypeGUID" ColumnName="ChartTypeGUID" />

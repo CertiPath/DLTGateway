@@ -26,19 +26,19 @@ const add = ({
   return dbConnect()
     .then(pool => Promise.all(
       transactions.map(({ payload: tranPayload }, tranIndex) => {
-        const { tx_id: tranID, channel_id: channelName } = t(tranPayload, 'header.channel_header');
-        const mspid = t(tranPayload, 'header.signature_header.creator.Mspid');
+        const { tx_id: tranID, channel_id: channelName } = t(tranPayload, 'header.channel_header').safeObject;
+        const mspid = t(tranPayload, 'header.signature_header.creator.Mspid').safeObject;
         const { actions } = tranPayload.data;
 
         return Promise.all(actions.map(({ payload: actionPayload }, actionIndex) => {
           const chaincodeName = t(
             actionPayload,
-            'chaincode_proposal_payload.input.chaincode_spec.chaincode_id.name',
-          );
+            'chaincode_proposal_payload.input.chaincode_spec.chaincode_id.name'
+          ).safeObject;
           const { version } = t(
             actionPayload,
-            'action.proposal_response_payload.extension.chaincode_id',
-          );
+            'action.proposal_response_payload.extension.chaincode_id'
+          ).safeObject;
 
           return poolRequest(pool)
             .input('networkGUID', Mssql.UniqueIdentifier, networkGUID)
@@ -55,11 +55,11 @@ const add = ({
               return Promise.resolve(countAffectedRecords(result));
             });
         }));
-      }),
+      })
     ))
     .then(affectedRecordCounts => Promise.resolve(
       flat(affectedRecordCounts)
-        .reduce((prev, curr) => prev + curr, 0),
+        .reduce((prev, curr) => prev + curr, 0)
     ));
 };
 

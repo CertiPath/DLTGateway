@@ -21,6 +21,8 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public System.Guid ChartTypeGUID { get; set; }
         public string ChartSettings { get; set; }
         public int SortOrder { get; set; }
+        public bool Deleted { get; set; }
+        public bool Disabled { get; set; }
     
         public virtual BusinessNetworkObject BusinessNetworkObject { get; set; }
         public virtual ChartType ChartType { get; set; }

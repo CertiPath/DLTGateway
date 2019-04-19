@@ -68,6 +68,7 @@ class BusinessNetworkObject extends Component {
                     const details = state.ObjectDetails.ChartList.map(chart => {
                         if (chartGUID == chart.GUID) {
                             chart.ChartData = res.data.ChartData;
+                            chart.ChartType = res.data.ChartType;
                             chart.Loaded = true;
                         }
                     });
@@ -126,14 +127,19 @@ class BusinessNetworkObject extends Component {
                 <TabPane tabId={index}>
                     <div style={{ width: "100%" }}>
                         {
-                            this.state.ObjectDetails.ChartList[index].ChartData == null ? (<Spinner />) : 
-                                (
-                                    this.state.ObjectDetails.ChartList[index].ChartType == "PIE_PIE" ? 
+                            chart.ChartData == null ? (<Spinner />) : 
+                            (
+                                chart.ChartType == "PIE_PIE" ? 
                                         (
                                             <Pie height={500}
                                                 data={this.state.ObjectDetails.ChartList[index].ChartData.data}
                                                 options={this.state.ObjectDetails.ChartList[index].ChartData.options} />
-                                        ):
+                                        ): chart.ChartType == "PIE_DONUT" ?
+                                            (
+                                                <Doughnut height={500}
+                                                    data={this.state.ObjectDetails.ChartList[index].ChartData.data}
+                                                    options={this.state.ObjectDetails.ChartList[index].ChartData.options} />
+                                            ) :
                                             (
                                                 <Line height={500}
                                                         data={this.state.ObjectDetails.ChartList[index].ChartData.data}
