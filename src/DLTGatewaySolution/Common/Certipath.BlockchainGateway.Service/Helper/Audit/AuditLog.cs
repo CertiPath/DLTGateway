@@ -27,8 +27,8 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Audit
 
             alo.ServerName = System.Environment.MachineName;
             alo.ServerUTC = DateTime.UtcNow;
-            alo.UserGUID = new Guid("4E8E2AD7-B4D9-4EF5-AC01-6B75B99ADBD0");        // TODO: FIX THIS
-            alo.UserName = "TODO";
+            alo.UserGUID = new Guid("6B49F34B-204E-40AB-8C89-25FE657433EC");        // TODO: FIX THIS
+            alo.UserName = "Manoj Srivastava";
             alo.TransactionSequence = 0;
 
             context.AuditLog.Add(alo);
