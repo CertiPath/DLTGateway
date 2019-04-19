@@ -199,5 +199,36 @@ namespace CertiPath.BlockchainGateway.Service
                         .Take(1).SingleOrDefault();
             return last == null ? 0 : last.SortOrder + 1;
         }
+
+        public List<BusinessNetworkObjectChartModel> GetCharts(Guid objGUID)
+        {
+            var configuredCharts = _context.BusinessNetworkObjectChart
+                                        .Where(w => w.BusinessNetworkObjectGUID == objGUID)
+                                        .Where(w => w.Deleted == false)
+                                        .OrderBy(O => O.SortOrder)
+                                        .ToList();
+
+            List<BusinessNetworkObjectChartModel> result = new List<BusinessNetworkObjectChartModel>();
+            foreach (var chart in configuredCharts)
+            {
+                result.Add(new BusinessNetworkObjectChartModel()
+                {
+                    BusinessNetworkObjectGUID = chart.BusinessNetworkObjectGUID,
+                    ChartSettings = chart.ChartSettings,
+                    Description = chart.Description,
+                    Disabled = chart.Disabled,
+                    GUID = chart.GUID,
+                    Name = chart.Name,
+                    SortOrder = chart.SortOrder,
+                    ChartTypeGUID = chart.ChartTypeGUID,
+                    ChartTypeCode = chart.ChartType.Code,
+                    ChartTypeName = chart.ChartType.Name,
+                    ChartCategoryGUID = chart.ChartType.ChartCategory.GUID,
+                    ChartCategoryCode = chart.ChartType.ChartCategory.Code,
+                    ChartCategoryName = chart.ChartType.ChartCategory.Name
+                });
+            }
+            return result;
+        }
     }
 }

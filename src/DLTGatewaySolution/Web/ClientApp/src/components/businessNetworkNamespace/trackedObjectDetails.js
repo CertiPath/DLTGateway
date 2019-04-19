@@ -9,6 +9,7 @@ import classnames from "classnames";
 
 import apiClient from "../../utility/apiClient";
 import TabProperties from "../businessNetworkNamespace/tabProperties";
+import TabChartList from "../businessNetworkNamespace/tabChartList";
 
 export default class TrackedObjectList extends React.Component {
     constructor(props) {
@@ -18,15 +19,26 @@ export default class TrackedObjectList extends React.Component {
         
         this.state = {
             activeTab: "1",
-            ObjectDetails: null
+            ObjectDetails: null,
+            ChartListLoaded: false,
+            ObjectChartList: null
         };
     }
-
-    toggle = tab => {
+    
+    toggleTab = tab => {
         if (this.state.activeTab !== tab) {
             this.setState({
                 activeTab: tab
             });
+
+            if (tab == "2") {
+                if (this.state.ChartListLoaded == false) {
+                    this.loadCharts(this.state.ObjectGUID);
+                    this.setState({
+                        ChartListLoaded: true
+                    });
+                }
+            }
         }
     };
 
@@ -49,7 +61,16 @@ export default class TrackedObjectList extends React.Component {
                 });
             });
     }
-    
+
+    loadCharts(objGUID) {
+        apiClient.get('BusinessNetworkObject/GetCharts?BusinessNetworkObjectGUID=' + objGUID, {})
+            .then(res => {
+                this.setState({
+                    ObjectChartList: res.data
+                });
+            });
+    }
+
     render() {
 
         let rows = this.state.ObjectDetails == null ? '<div></div>' : this.state.ObjectDetails.PropertyList.map(dataField => {
@@ -82,7 +103,7 @@ export default class TrackedObjectList extends React.Component {
                                                         active: this.state.activeTab === "1"
                                                     })}
                                                     onClick={() => {
-                                                        this.toggle("1");
+                                                        this.toggleTab("1");
                                                     }}
                                                 >
                                                     Properties
@@ -94,22 +115,10 @@ export default class TrackedObjectList extends React.Component {
                                                         active: this.state.activeTab === "2"
                                                     })}
                                                     onClick={() => {
-                                                        this.toggle("2");
+                                                        this.toggleTab("2");
                                                     }}
                                                 >
-                                                    Tab 2
-                                            </NavLink>
-                                            </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({
-                                                        active: this.state.activeTab === "3"
-                                                    })}
-                                                    onClick={() => {
-                                                        this.toggle("3");
-                                                    }}
-                                                >
-                                                    Tab 3
+                                                    Data Views/Charts
                                             </NavLink>
                                             </NavItem>
                                         </Nav>
@@ -121,22 +130,9 @@ export default class TrackedObjectList extends React.Component {
                                                 />
                                             </TabPane>
                                             <TabPane tabId="2">
-                                                <Row>
-                                                    <Col sm="12">
-                                                        <Card body>
-                                                            <CardTitle>TODO</CardTitle>
-                                                        </Card>
-                                                    </Col>
-                                                </Row>
-                                            </TabPane>
-                                            <TabPane tabId="3">
-                                                <Row>
-                                                    <Col sm="12">
-                                                        <Card body>
-                                                            <CardTitle>TODO</CardTitle>
-                                                        </Card>
-                                                    </Col>
-                                                </Row>
+                                                <TabChartList
+                                                    ChartList={this.state.ObjectChartList}
+                                                />
                                             </TabPane>
                                         </TabContent>
                                     </div>

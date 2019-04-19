@@ -10,13 +10,15 @@ namespace CertiPath.BlockchainGateway.Service.Helper.DataStore
 {
     internal class ChartHelper
     {
-        internal List<DataStoreChartModel> GetByDataStoreGUID(Guid objectGUID)
+        internal List<DataStoreChartModel> GetByBusinessNetworkObjectGUID(Guid objectGUID)
         {
             DataModelContainer context = DataModelContainer.Builder().Build();
             List<DataStoreChartModel> res = new List<DataStoreChartModel>();
 
             var charts = context.BusinessNetworkObjectChart
                                         .Where(w => w.BusinessNetworkObjectGUID == objectGUID)
+                                        .Where(w => w.Deleted == false)
+                                        .Where(w => w.Disabled == false)
                                         .OrderBy(O => O.SortOrder)
                                         .ToList();
             foreach (var chart in charts)

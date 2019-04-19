@@ -32,7 +32,7 @@ namespace CertiPath.BlockchainGateway.Service
 
             // get charts
             Helper.DataStore.ChartHelper chartHelper = new Helper.DataStore.ChartHelper();
-            m.ChartList = chartHelper.GetByDataStoreGUID(obj.BusinessNetworkObjectGUID);
+            m.ChartList = chartHelper.GetByBusinessNetworkObjectGUID(obj.BusinessNetworkObjectGUID);
 
             return m;
         }
@@ -125,7 +125,12 @@ namespace CertiPath.BlockchainGateway.Service
 
         public Model.ObjectChartReturnModel GetChart(Guid dataStoreGUID, Guid objectChartGuid)
         {
-            var chartDef = _context.BusinessNetworkObjectChart.Where(w => w.GUID == objectChartGuid).SingleOrDefault();
+            var chartDef = _context
+                            .BusinessNetworkObjectChart
+                            .Where(w => w.GUID == objectChartGuid)
+                            .Where(w => w.Deleted == false)
+                            .Where(w => w.Disabled == false)
+                            .SingleOrDefault();
             Helper.Chart.ChartBuilder cb = new Helper.Chart.ChartBuilder(_context);
             Model.ObjectChartReturnModel res = cb.Build(dataStoreGUID, chartDef);
             return res;
