@@ -11,6 +11,7 @@ import apiClient from "../../utility/apiClient";
 import ConfirmDelete from "../../components/common/modal/ConfirmDialog";
 import AddEditObjectProperty from "../../components/businessNetworkNamespace/modalAddEditObjectProperty";
 import ConfirmEnableDisable from "../../components/businessnetwork/modalConfirmEnableDisable";
+import AddEditChart from "../../components/businessNetworkObject/modalAddEditChart";
 
 export default class TrackedObjectChartList extends React.Component {
     constructor() {
@@ -79,6 +80,19 @@ export default class TrackedObjectChartList extends React.Component {
                             EnabledText={"Disabling chart " + chart.Name + " will exclude it from the object details page. Are you sure you want to continue?"}
                     />
                     </td>
+                    <td width="40px" title="Update chart settings">
+                        <AddEditChart
+                            ButtonText={chart.GUID}
+                            Data={{
+                                BusinessNetworkObjectGUID: null,
+                                BusinessNetworkObjectName: '',
+                                BusinessNetworkObjectClassName: '',
+                            }}
+                            OnFinishedAction={this.onFinishedAddEdit}
+                            GUID={chart.GUID}
+                            BusinessNetworkGUID={null}
+                        />
+                    </td>
                     <td width="40px">
                         <ConfirmDelete
                             Title={"Delete " + chart.Name + "?"}
@@ -106,6 +120,7 @@ export default class TrackedObjectChartList extends React.Component {
                                                 <th>Type</th>
                                                 <th>Enabled</th>
                                                 <th width="40px"></th>
+                                                <th width="40px"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -120,7 +135,17 @@ export default class TrackedObjectChartList extends React.Component {
                                     )}
                                 <div className="form-actions">
                                     <div className="float-right">
-                                        Add New CHart
+                                        <AddEditChart
+                                            ButtonText="Add New Chart"
+                                            Data={{
+                                                BusinessNetworkObjectGUID: null,
+                                                BusinessNetworkObjectName: '',
+                                                BusinessNetworkObjectClassName: '',
+                                            }}
+                                            OnFinishedAction={this.onFinishedAddEdit}
+                                            GUID={null}
+                                            BusinessNetworkGUID={null}
+                                        />
                                     </div>
                                 </div>
                             </Form>

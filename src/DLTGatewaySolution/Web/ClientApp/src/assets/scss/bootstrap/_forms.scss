@@ -1,47 +1,51 @@
-form{
-    label{
+form {
+    label {
         color: #75787d;
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 2px;
         font-weight: 500;
     }
-    .labelfocus{
+
+    .labelfocus {
         color: #000;
     }
-    .col-form-label{
+
+    .col-form-label {
         font-size: 0.75rem;
         text-align: right;
     }
-    .form-group{
+
+    .form-group {
         margin-bottom: 1.5rem;
     }
 
-    .form-control{
+    .form-control {
         border: 1px solid #A6A9AE;
         color: #75787d;
 
         &::-webkit-input-placeholder {
-           color: darken($body-bg, 20%);
+            color: darken($body-bg, 20%);
         }
 
         &:-moz-placeholder { /* Firefox 18- */
-           color: darken($body-bg, 20%);
+            color: darken($body-bg, 20%);
         }
 
-        &::-moz-placeholder {  /* Firefox 19+ */
-           color: darken($body-bg, 20%);
+        &::-moz-placeholder { /* Firefox 19+ */
+            color: darken($body-bg, 20%);
         }
 
         &:-ms-input-placeholder {
-           color: darken($body-bg, 20%);
+            color: darken($body-bg, 20%);
         }
 
-        &:focus{
+        &:focus {
             border-color: #000;
         }
     }
-    .form-control-position{
+
+    .form-control-position {
         position: absolute;
         top: 0;
         right: 0;
@@ -52,22 +56,26 @@ form{
         line-height: 2.2rem;
         text-align: center;
     }
-    .has-icon-left{
-        .form-control-position{
+
+    .has-icon-left {
+        .form-control-position {
             right: auto;
             left: inherit;
         }
-        .form-control{
+
+        .form-control {
             padding-right: .85rem;
             padding-left: 2.95rem;
         }
     }
-    .has-icon-right{
-        .form-control{
+
+    .has-icon-right {
+        .form-control {
             padding-right: 2.5rem;
         }
     }
-    .form-section{
+
+    .form-section {
         color: theme-color('dark');
         line-height: 3rem;
         font-size: 1.2rem;
@@ -76,33 +84,33 @@ form{
         margin-bottom: 20px;
         border-bottom: 1px solid theme-color('dark');
 
-        i{
+        i {
             font-size: 20px;
             margin-left: 5px;
             margin-right: 5px;
         }
     }
-
     /* .form-body{
         overflow: hidden;
     } */
-
-    .form-actions{
+    .form-actions {
         border-top: 1px solid darken($body-bg, 10%);
         padding: 20px 0;
         margin-top: 20px;
 
-        &.filled{
+        &.filled {
             background-color: $body-bg;
         }
-        &.center{
+
+        &.center {
             text-align: center;
         }
-        &.right{
+
+        &.right {
             text-align: right;
         }
 
-        &.top{
+        &.top {
             border-top: 0;
             border-bottom: 1px solid darken($body-bg, 10%);
             margin-top: 0;
@@ -110,92 +118,98 @@ form{
         }
 
         @include media-breakpoint-down(sm) {
-            .buttons-group{
+            .buttons-group {
                 float: left !important;
                 margin-bottom: 10px;
             }
         }
     }
 
-    &.form-horizontal{
-        .form-group{
+    &.form-horizontal {
+        .form-group {
             @include media-breakpoint-up(sm) {
-                .label-control{
+                .label-control {
                     text-align: right;
                 }
             }
         }
     }
 
-    &.row-separator{
-        .form-group{
+    &.row-separator {
+        .form-group {
             margin: 0;
             border-bottom: 1px solid darken($body-bg, 3%);
-            .label-control{
-                padding-top: 1.5rem;
+
+            .label-control {
+                padding-top: 1.0rem; // NB: 1.5
             }
-            > div{
-                padding: 1.2rem;
+
+            > div {
+                padding: 1.0rem; // NB: 1.2
                 padding-right: 0;
             }
-            &.last{
+
+            &.last {
                 border-bottom: 0;
             }
         }
     }
 
-    &.form-bordered{
-        .form-group{
+    &.form-bordered {
+        .form-group {
             margin: 0;
             border-bottom: 1px solid darken($body-bg, 3%);
-            .label-control{
+
+            .label-control {
                 padding-top: 1.5rem;
             }
-            > div{
+
+            > div {
                 padding: 1.2rem;
                 padding-right: 0;
                 border-left: 1px solid darken($body-bg, 3%);
             }
-            &.last{
+
+            &.last {
                 border-bottom: 0;
             }
         }
     }
 
-    &.striped-rows{
-        .form-group{
+    &.striped-rows {
+        .form-group {
             margin: 0;
 
-            .label-control, .col-form-label{
-                padding-top: 1.5rem;
+            .label-control, .col-form-label {
+                padding-top: 1.0rem; // NB: 1.5
             }
 
-            > div{
-                padding: 1.2rem;
+            > div {
+                padding: 1.0rem; // NB: 1.2
                 padding-right: 0;
             }
 
-            &:nth-child(even){
+            &:nth-child(even) {
                 background-color: $body-bg;
             }
         }
     }
 
-    &.striped-labels{
-        .form-group{
+    &.striped-labels {
+        .form-group {
             margin: 0;
 
-            .label-control{
-                padding-top: 1.5rem;
+            .label-control {
+                padding-top: 1.0rem; // NB: 1.5
             }
 
-            > div{
-                padding: 1.2rem;
+            > div {
+                padding: 1.0rem; // NB: 1.2
                 padding-right: 0;
                 background-color: white;
             }
 
-            &:nth-child(even){
+            &:nth-child(even) {
                 background-color: $body-bg;
             }
         }
