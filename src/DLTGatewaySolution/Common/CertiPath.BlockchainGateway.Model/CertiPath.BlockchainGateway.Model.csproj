@@ -57,6 +57,7 @@
     <Compile Include="BusinessNetworkObjectModels.cs" />
     <Compile Include="ChartModels.cs" />
     <Compile Include="CommonModels.cs" />
+    <Compile Include="CurrentContextModels.cs" />
     <Compile Include="DashboardModels.cs" />
     <Compile Include="DataStoreModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +70,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Database\CertiPath.BlockchainGateway.DataLayer\CertiPath.BlockchainGateway.DataLayer.csproj">
+      <Project>{3530dd53-7b66-4592-8df5-fb063723815c}</Project>
+      <Name>CertiPath.BlockchainGateway.DataLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

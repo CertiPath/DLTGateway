@@ -46,7 +46,7 @@ namespace CertiPath.BlockchainGateway.Service
             _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = AuditLogOperationType.Delete;
@@ -82,7 +82,7 @@ namespace CertiPath.BlockchainGateway.Service
             _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = lAddNew ? AuditLogOperationType.Create : AuditLogOperationType.Update;
@@ -157,7 +157,7 @@ namespace CertiPath.BlockchainGateway.Service
             _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = lAddNew ? AuditLogOperationType.Create : AuditLogOperationType.Update;
@@ -178,7 +178,7 @@ namespace CertiPath.BlockchainGateway.Service
             _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = AuditLogOperationType.Delete;
@@ -249,7 +249,7 @@ namespace CertiPath.BlockchainGateway.Service
             _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = AuditLogOperationType.Update;
@@ -270,7 +270,7 @@ namespace CertiPath.BlockchainGateway.Service
             _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = AuditLogOperationType.Delete;

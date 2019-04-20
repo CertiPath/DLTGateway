@@ -1,58 +1,100 @@
-import React from "react";
-import { Row, Col, Form, FormGroup, Label, Input } from "reactstrap";
+import React, { Component } from "react";
+import { Row, Col, Form, FormGroup, Label, Input, Alert, Table } from "reactstrap";
 
-const Step3 = props => (
-   <div className="step step3">
-      <Form>
-         <div className="form-body">
-            <Row>
-               <Col md="6">
-                  <FormGroup>
-                     <Label for="eventName">Event Name</Label>
-                     <Input type="text" id="eventName" name="event" />
-                  </FormGroup>
-               </Col>
-               <Col md="6">
-                  <FormGroup>
-                     <Label for="eventType">Event Type</Label>
-                     <Input type="text" id="eventType" name="eventtype" />
-                  </FormGroup>
-               </Col>
-            </Row>
+import Spinner from "../../../components/spinner/spinner"
+import ConfirmDelete from "../../../components/common/modal/ConfirmDialog";
 
-            <Row>
-               <Col md="6">
-                  <FormGroup>
-                     <Label for="eventLocation">Event Location</Label>
-                     <Input type="select" id="eventLocation" name="location">
-                        <option value="none" defaultValue="" disabled="">
-                           Select City
-                        </option>
-                        <option value="">Select City</option>
-                        <option value="Amsterdam">Amsterdam</option>
-                        <option value="Berlin">Berlin</option>
-                        <option value="Frankfurt">Frankfurt</option>
-                     </Input>
-                  </FormGroup>
-               </Col>
+export default class Step3 extends Component {
 
-               <Col md="6">
-                  <FormGroup>
-                     <Label for="eventStatus">Event Status</Label>
-                     <Input type="select" id="eventStatus" name="status">
-                        <option value="0" defaultValue="" disabled="">
-                           Event Status
-                        </option>
-                        <option value="Planning">Planning</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Finished">Finished</option>
-                     </Input>
-                  </FormGroup>
-               </Col>
-            </Row>
-         </div>
-      </Form>
-   </div>
-);
+    constructor(props) {
 
-export default Step3;
+        super();
+
+        let chartSettings = JSON.parse(props.ChartSettings);
+
+        this.state = {
+            Series: chartSettings.Series
+        };
+    }
+
+    componentDidMount() {
+
+        //if (this.state.SelectedCategoryGUID != null) {
+        //    this.categoryChange(null);
+        //}
+    }
+
+    /*
+    nameChange(event) {
+        const name = event.target.value
+        this.props.ChartNameChangedAction(name);
+    }
+    */
+
+    handleClickDelete() {
+        alert('alooo');
+    }
+
+    render() {
+
+        let rows = this.state.Series == null ? (<Spinner />) : this.state.Series.map(dataPoint => {
+            return (
+                <tr>
+                    <td>
+                        {dataPoint.ObjectPropertyName}
+                    </td>
+                    <td width="40px">
+                        <ConfirmDelete
+                            Title={"Delete " + dataPoint.ObjectPropertyName + "?"}
+                            Text={"You are about to delete configured chart " + dataPoint.ObjectPropertyName + ". Once you delete it all the configuration will be gone. Do you want to continue?"}
+                            YesButtonText="Delete"
+                            YesButtonAction={() => this.handleClickDelete(dataPoint.ObjectPropertyGUID)}
+                        />
+                    </td>
+                </tr>
+            )
+        });
+
+        return (
+            <div className="step step1">
+                <Form>
+                    <div className="form-body">
+                        <Row>
+                            <Col md="12">
+                                <Alert color="dark">
+                                    Data series to be shown in chart.
+                                </Alert>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col md="12">
+                                <Table striped responsive>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th width="40px"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {rows}
+                                    </tbody>
+                                </Table>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col md="12">
+                                <FormGroup>
+                                    <FormGroup>
+                                        Button Here
+                                    </FormGroup>
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                    </div>
+                </Form>
+            </div>
+        );
+    }
+}

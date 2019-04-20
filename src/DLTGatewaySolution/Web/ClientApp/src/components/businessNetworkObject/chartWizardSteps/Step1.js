@@ -84,7 +84,7 @@ export default class Step1 extends Component {
               <Form>
                   <div className="form-body">
                       <Row>
-                          <Col md="6">
+                          <Col md="12">
                               <FormGroup>
                                   <Label for="chartCategory">Chart Category</Label>
                                   <Input type="select" id="chartCategory" name="chartCategory" onChange={this.categoryChange.bind(this)} >
@@ -95,7 +95,7 @@ export default class Step1 extends Component {
                                   </Input>
                               </FormGroup>
                           </Col>
-                          <Col md="6">
+                          <Col md="12">
                               <FormGroup>
                                   {
                                       this.state.SelectedCategoryDescription == '' ? '' : (
@@ -112,17 +112,13 @@ export default class Step1 extends Component {
                           this.state.SelectedCategoryGUID == null || this.state.SelectedCategoryGUID == '' ? '' : 
                               (
                                   <Row>
-                                      <Col md="6">
+                                      <Col md="12">
                                           <FormGroup>
                                               <Label for="chartType">Chart Type</Label>
                                               <Input type="select" id="chartType" name="chartType">
                                                   {typeOptions}
                                               </Input>
                                           </FormGroup>
-                                      </Col>
-
-                                      <Col md="6">
-
                                       </Col>
                                   </Row>           
                               )

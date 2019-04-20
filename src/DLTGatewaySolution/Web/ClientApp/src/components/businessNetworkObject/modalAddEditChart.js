@@ -11,17 +11,25 @@ import Step1 from "./chartWizardSteps/Step1";
 import Step2 from "./chartWizardSteps/Step2";
 import Step3 from "./chartWizardSteps/Step3";
 import Step4 from "./chartWizardSteps/Step4";
+import Step5 from "./chartWizardSteps/Step5";
 
 import "../../assets/scss/components/wizard/wizard.scss"
 
 class ModalAddEditChart extends Component {
 
+    constructor(props) {
 
-    state = {
-        modal: false,
-        ChartGUID: this.props.GUID,
-        Data: this.props.Data
-    };
+        super();
+
+        this.ChartNameChangedAction = this.ChartNameChangedAction.bind(this);
+        
+        this.state = {
+            modal: false,
+            ChartGUID: props.GUID,
+            ChartName: props.Data.Name,
+            Data: props.Data
+        };
+    }
 
     toggle = () => {
         this.setState({
@@ -44,7 +52,9 @@ class ModalAddEditChart extends Component {
       return this.sampleStore;
    }
 
-   updateStore(update) {
+    updateStore(update) {
+        alert('what');
+        debugger;
       this.sampleStore = {
          ...this.sampleStore,
          ...update
@@ -92,6 +102,12 @@ class ModalAddEditChart extends Component {
     }
     */
 
+    ChartNameChangedAction(name) {
+        this.setState({
+            ChartName: name
+        });
+    }
+
     render() {
 
         const steps = [
@@ -102,7 +118,7 @@ class ModalAddEditChart extends Component {
                         <Step1
                             ChartGUID={this.props.GUID}
                             ChartCategoryGUID={this.props.Data.ChartCategoryGUID}
-                            ChartTypeGUID={this.props.Data.ChartTypeGUID}
+                            ChartTypeGUID={this.props.Data.ChartCategoryGUID}
                             CategoryList={this.props.CategoryList}
                             TypeList={this.props.TypeList}
 
@@ -119,6 +135,10 @@ class ModalAddEditChart extends Component {
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step2
+                            ChartName={this.props.Data.Name}
+                            ChartDescription={this.props.Data.Description}
+                            ChartNameChangedAction={this.ChartNameChangedAction}
+
                             getStore={() => this.getStore()}
                             updateStore={u => {
                                 this.updateStore(u);
@@ -130,7 +150,16 @@ class ModalAddEditChart extends Component {
             {
                 name: "Data",
                 component: (
-                    <div style={{ height: '400px' }}>Step 3</div>
+                    <div style={{ height: '400px' }}>
+                        <Step3
+                            ChartSettings={this.props.Data.ChartSettings}
+
+                            getStore={() => this.getStore()}
+                            updateStore={u => {
+                                this.updateStore(u);
+                            }}
+                        />
+                    </div>
                 )
             },
             {
@@ -142,7 +171,19 @@ class ModalAddEditChart extends Component {
             {
                 name: "Summary",
                 component: (
-                    <div style={{ height: '400px' }}>Step 5</div>
+                    <div style={{ height: '400px' }}>
+                        <Step5
+                            CategoryName="dsadsad"
+                            TypeName="Dsadsa"
+                            ChartName="my chart todo"
+                            ChartSeries="todo, todo"
+
+                            getStore={() => this.getStore()}
+                            updateStore={u => {
+                                this.updateStore(u);
+                            }}
+                        />
+                    </div>
                 )
             }
         ];
@@ -164,7 +205,7 @@ class ModalAddEditChart extends Component {
                 <Modal
                     isOpen={this.state.modal}
                     toggle={this.toggle}
-                    className="modal-dialog modal-xl"
+                    className="modal-dialog modal-lg"
                     backdrop="static"
                 >
                     <ModalHeader toggle={this.toggle}>
@@ -173,7 +214,7 @@ class ModalAddEditChart extends Component {
                                 <span>Add New Chart</span>
                             ) :
                             (
-                                <span>{this.props.Data.Name}</span>
+                                <span>{this.state.ChartName}</span>
                             )
                         }
                     </ModalHeader>
