@@ -10,13 +10,22 @@ class ConfirmDialog extends Component {
     constructor(props) {
         super();
 
+        let disabledText = "Click on the enable button to make the network enabled again.";
+        let enabledText = "Disabling network " + props.Name + " will exclude it from any data collection and processing. Are you sure you want to continue?";
+        if (props.DisabledText != null) {
+            disabledText = props.DisabledText;
+        }
+        if (props.EnabledText != null) {
+            enabledText = props.EnabledText;
+        }
+
         this.state = {
             modal: false,
             disabled: props.Disabled,
             modalTitle: props.Disabled == true ? "Enable network: " + props.Name + "?" : "Disable network: " + props.Name + "?",
-            modalText: props.Disabled == true ?
-                "Click on the enable button to make the network enabled again." :
-                "Disabling network " + props.Name + " will exclude it from any data collection and processing. Are you sure you want to continue?",
+                modalText: props.Disabled == true ?
+                    disabledText :
+                    enabledText,
             modalYesButtonText: props.Disabled == true ? "Enable" : "Disable"
         };
     }

@@ -15,50 +15,51 @@ import ConfirmEnableDisable from "../../components/businessnetwork/modalConfirmE
 export default class TrackedObjectChartList extends React.Component {
     constructor() {
         super();
-        // Bind the this context to the handler function
         this.handleClickDelete = this.handleClickDelete.bind(this);
         this.handleEnable = this.handleEnable.bind(this);
-        //this.onFinishedAddEdit = this.onFinishedAddEdit.bind(this);
+        this.handleDisable = this.handleDisable.bind(this);
     }
-
-    /*
-    onFinishedAddEdit() {
-        this.props.onFinishedAddEdit();
-    }
-    */
-
-    handleEnable(networkGUID) {
-        /*
-        apiClient.post('BusinessNetwork/Enable', {
-            "GUID": networkGUID
+    
+    handleEnable(chartGUID) {
+        
+        apiClient.post('BusinessNetworkObject/EnableChart', {
+            "GUID": chartGUID
         })
             .then(res => {
-                toastr.success('Success', 'Network successfully enabled.', { position: 'top-right' });
-                // should just switch the button, but cannot figure out how to do it at the moment
-                // so reloading the entire list
-                this.loadData();
+                toastr.success('Success', 'Object chart successfully enabled.', { position: 'top-right' });
+                this.props.ReloadListAction();
             })
             .catch(function (error) {
-                toastr.error('Error', 'There was an error trying to enable network.', { position: 'top-right' });
+                toastr.error('Error', 'There was an error trying to enable chart.', { position: 'top-right' });
             });
-            */
-        alert('dsa')
     }
 
-    handleClickDelete(objGUID) {
-        /*
-        apiClient.post('BusinessNetworkObject/DeleteProperty', {
-            GUID: objGUID
+    handleDisable(chartGUID) {
+
+        apiClient.post('BusinessNetworkObject/DisableChart', {
+            "GUID": chartGUID
         })
             .then(res => {
-                toastr.success('Success', 'Object property successfully deleted.', { position: 'top-right' });
-                this.onFinishedAddEdit();
+                toastr.success('Success', 'Object chart successfully deleted.', { position: 'top-right' });
+                this.props.ReloadListAction();
             })
             .catch(function (error) {
-                toastr.error('Error', 'There was an error trying to delete object property..', { position: 'top-right' });
+                toastr.error('Error', 'There was an error trying to disable chart.', { position: 'top-right' });
             });
-        */
-        alert('hola')
+    }
+
+    handleClickDelete(chartGUID) {
+        
+        apiClient.post('BusinessNetworkObject/DeleteChart', {
+            GUID: chartGUID
+        })
+            .then(res => {
+                toastr.success('Success', 'Chart successfully deleted.', { position: 'top-right' });
+                this.props.ReloadListAction();
+            })
+            .catch(function (error) {
+                toastr.error('Error', 'There was an error trying to delete chart.', { position: 'top-right' });
+            });
     }
     
     render() {
@@ -74,7 +75,9 @@ export default class TrackedObjectChartList extends React.Component {
                             Name={chart.Name}
                             YesButtonAction={() => chart.Disabled == false ? this.handleDisable(chart.GUID) : this.handleEnable(chart.GUID)}
                             Disabled={chart.Disabled}
-                        />
+                            DisabledText="Click on the enable button to make the chart enabled again."
+                            EnabledText={"Disabling chart " + chart.Name + " will exclude it from the object details page. Are you sure you want to continue?"}
+                    />
                     </td>
                     <td width="40px">
                         <ConfirmDelete

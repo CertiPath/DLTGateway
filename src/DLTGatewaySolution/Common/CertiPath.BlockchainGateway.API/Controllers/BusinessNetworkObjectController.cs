@@ -64,6 +64,33 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             var res = bno.GetCharts(BusinessNetworkObjectGUID);
             return res;
         }
+
+        [HttpPost]
+        public void EnableChart(BusinessNetworkObjectChartModel obj)
+        {
+            // TODO: Deal with response object and do error handling
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            bno.EnableChart(obj.GUID);
+        }
+
+        [HttpPost]
+        public void DisableChart(BusinessNetworkObjectChartModel obj)
+        {
+            // TODO: Deal with response object and do error handling
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            bno.DisableChart(obj.GUID);
+        }
+
+        [HttpPost]
+        public void DeleteChart(BusinessNetworkObjectChartModel obj)
+        {
+            // TODO: Deal with response object and do error handling
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            bno.DeleteChart(obj.GUID);
+        }
     }
 
 }
