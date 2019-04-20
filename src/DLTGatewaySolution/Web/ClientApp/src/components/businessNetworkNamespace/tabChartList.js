@@ -68,7 +68,17 @@ export default class TrackedObjectChartList extends React.Component {
         let rows = this.props.ChartList == null ? (<Spinner />) : this.props.ChartList.map(chart => {
             return (
                 <tr>
-                    <td>{chart.Name}</td>
+                    <td>
+                        <AddEditChart
+                            ButtonText={chart.GUID}
+                            Data={chart}
+                            CategoryList={this.props.ChartCategoryList}
+                            TypeList={this.props.ChartTypeList}
+                            OnFinishedAction={this.onFinishedAddEdit}
+                            GUID={chart.GUID}
+                            DisplayType="NAME"
+                        />
+                    </td>
                     <td>{chart.ChartCategoryName}</td>
                     <td>{chart.ChartTypeName}</td>
                     <td>
@@ -83,14 +93,12 @@ export default class TrackedObjectChartList extends React.Component {
                     <td width="40px" title="Update chart settings">
                         <AddEditChart
                             ButtonText={chart.GUID}
-                            Data={{
-                                BusinessNetworkObjectGUID: null,
-                                BusinessNetworkObjectName: '',
-                                BusinessNetworkObjectClassName: '',
-                            }}
+                            Data={chart}
+                            CategoryList={this.props.ChartCategoryList}
+                            TypeList={this.props.ChartTypeList}
                             OnFinishedAction={this.onFinishedAddEdit}
                             GUID={chart.GUID}
-                            BusinessNetworkGUID={null}
+                            DisplayType="ICON"
                         />
                     </td>
                     <td width="40px">
@@ -138,13 +146,13 @@ export default class TrackedObjectChartList extends React.Component {
                                         <AddEditChart
                                             ButtonText="Add New Chart"
                                             Data={{
-                                                BusinessNetworkObjectGUID: null,
-                                                BusinessNetworkObjectName: '',
-                                                BusinessNetworkObjectClassName: '',
+                                                Name: ""
                                             }}
+                                            CategoryList={this.props.ChartCategoryList}
+                                            TypeList={this.props.ChartTypeList}
                                             OnFinishedAction={this.onFinishedAddEdit}
                                             GUID={null}
-                                            BusinessNetworkGUID={null}
+                                            DisplayType="BUTTON"
                                         />
                                     </div>
                                 </div>

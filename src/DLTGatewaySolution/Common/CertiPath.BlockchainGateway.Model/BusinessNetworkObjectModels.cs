@@ -6,6 +6,30 @@ using Newtonsoft.Json.Converters;
 
 namespace CertiPath.BlockchainGateway.Model
 {
+    public class GetObjectChartsModel
+    {
+        public List<BusinessNetworkObjectChartModel> ChartList { get; set; }
+        public List<ChartCategoryModel> CategoryList { get; set; }
+        public List<ChartTypeModel> TypeList { get; set; }
+    }
+
+    public class ChartCategoryModel
+    {
+        public Guid GUID { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class ChartTypeModel
+    {
+        public Guid GUID { get; set; }
+        public Guid ChartCategoryGUID { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+    }
+
     public partial class BusinessNetworkObjectChartModel
     {
         public System.Guid GUID { get; set; }

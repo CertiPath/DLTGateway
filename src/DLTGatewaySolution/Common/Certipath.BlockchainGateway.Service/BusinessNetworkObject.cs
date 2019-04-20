@@ -94,7 +94,7 @@ namespace CertiPath.BlockchainGateway.Service
             alm.OldRecordValue = originalObject;
             alo.Save(alm);
         }
-        
+
         public BusinessNetworkObjectDetailsModel GetDetails(Guid businessNetworkObjectGUID)
         {
             BusinessNetworkObjectDetailsModel res = new BusinessNetworkObjectDetailsModel();
@@ -281,6 +281,40 @@ namespace CertiPath.BlockchainGateway.Service
             alm.NewRecordValue = _converter.GetJson(chart);
             alm.OldRecordValue = originalObject;
             alo.Save(alm);
+        }
+
+        public List<ChartCategoryModel> GetChartCategories()
+        {
+            var list = _context.ChartCategory.OrderBy(o => o.Name).ToList();
+            List<ChartCategoryModel> res = new List<ChartCategoryModel>();
+            foreach (var item in list)
+            {
+                res.Add(new ChartCategoryModel() {
+                    Code = item.Code,
+                    Description = item.Description,
+                    GUID = item.GUID,
+                    Name = item.Name
+                });
+            }
+            return res;
+        }
+
+        public List<ChartTypeModel> GetChartTypes()
+        {
+            var list = _context.ChartType.OrderBy(o => o.Name).ToList();
+            List<ChartTypeModel> res = new List<ChartTypeModel>();
+            foreach (var item in list)
+            {
+                res.Add(new ChartTypeModel()
+                {
+                    ChartCategoryGUID = item.ChartCategoryGUID,
+                    Code = item.Code,
+                    Description = item.Description,
+                    GUID = item.GUID,
+                    Name = item.Name
+                });
+            }
+            return res;
         }
     }
 }

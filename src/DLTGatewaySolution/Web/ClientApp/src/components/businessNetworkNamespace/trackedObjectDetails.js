@@ -66,7 +66,9 @@ export default class TrackedObjectList extends React.Component {
         apiClient.get('BusinessNetworkObject/GetCharts?BusinessNetworkObjectGUID=' + objGUID, {})
             .then(res => {
                 this.setState({
-                    ObjectChartList: res.data
+                    ObjectChartList: res.data.ChartList,
+                    ChartCategoryList: res.data.CategoryList,
+                    ChartTypeList: res.data.TypeList,
                 });
             });
     }
@@ -132,6 +134,8 @@ export default class TrackedObjectList extends React.Component {
                                             <TabPane tabId="2">
                                                 <TabChartList
                                                     ChartList={this.state.ObjectChartList}
+                                                    ChartCategoryList={this.state.ChartCategoryList}
+                                                    ChartTypeList={this.state.ChartTypeList}
                                                     ReloadListAction={() => this.loadCharts(this.state.ObjectGUID)}
                                                 />
                                             </TabPane>

@@ -57,11 +57,22 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             bno.DeleteProperty(obj);
         }
 
-        public List<BusinessNetworkObjectChartModel> GetCharts(Guid BusinessNetworkObjectGUID)
+        public GetObjectChartsModel GetCharts(Guid BusinessNetworkObjectGUID)
         {
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
-            var res = bno.GetCharts(BusinessNetworkObjectGUID);
+
+            // get charts
+            List<BusinessNetworkObjectChartModel> chartList = bno.GetCharts(BusinessNetworkObjectGUID);
+            List<ChartCategoryModel> categories = bno.GetChartCategories();
+            List<ChartTypeModel> types = bno.GetChartTypes();
+
+            GetObjectChartsModel res = new GetObjectChartsModel()
+            {
+                ChartList = chartList,
+                CategoryList = categories,
+                TypeList = types
+            };
             return res;
         }
 
