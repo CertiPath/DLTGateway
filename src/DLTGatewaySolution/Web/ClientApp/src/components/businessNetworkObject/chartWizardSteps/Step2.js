@@ -25,6 +25,11 @@ export default class Step2 extends Component {
         this.props.ChartNameChangedAction(name);
     }
 
+    descriptionChange(event) {
+        const desc = event.target.value
+        this.props.ChartDescriptionChangedAction(desc);
+    }
+
     render() {
 
         return (
@@ -45,7 +50,7 @@ export default class Step2 extends Component {
                                 <FormGroup>
                                     <FormGroup>
                                         <Label for="chartDescription">Chart Description</Label>
-                                        <Input type="textarea" id="chartDescription" name="chartDescription" defaultValue={this.state.ChartDescription} />
+                                        <Input type="textarea" id="chartDescription" name="chartDescription" defaultValue={this.state.ChartDescription} onChange={this.descriptionChange.bind(this)}  />
                                     </FormGroup>
                                 </FormGroup>
                             </Col>

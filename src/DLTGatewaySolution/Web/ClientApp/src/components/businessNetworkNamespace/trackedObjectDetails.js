@@ -136,6 +136,7 @@ export default class TrackedObjectList extends React.Component {
                                                     ChartList={this.state.ObjectChartList}
                                                     ChartCategoryList={this.state.ChartCategoryList}
                                                     ChartTypeList={this.state.ChartTypeList}
+                                                    PropertyList={this.state.ObjectDetails.PropertyList}
                                                     ReloadListAction={() => this.loadCharts(this.state.ObjectGUID)}
                                                 />
                                             </TabPane>

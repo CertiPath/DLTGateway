@@ -22,11 +22,22 @@ class ModalAddEditChart extends Component {
         super();
 
         this.ChartNameChangedAction = this.ChartNameChangedAction.bind(this);
-        
+        this.ChartDescriptionChangedAction = this.ChartDescriptionChangedAction.bind(this);
+        this.ChartTypeChangedAction = this.ChartTypeChangedAction.bind(this);
+        this.ChartCategoryChangedAction = this.ChartCategoryChangedAction.bind(this);
+
         this.state = {
             modal: false,
+            CurrentStep: 0,
+
             ChartGUID: props.GUID,
             ChartName: props.Data.Name,
+            ChartDescription: props.Data.Description,
+            ChartTypeGUID: props.Data.ChartTypeGUID,
+            ChartTypeName: props.Data.ChartTypeName,
+            ChartCategoryGUID: props.Data.ChartCategoryGUID,
+            ChartCategoryName: props.Data.ChartCategoryName,
+            
             Data: props.Data
         };
     }
@@ -36,32 +47,9 @@ class ModalAddEditChart extends Component {
             modal: !this.state.modal
         });
     }
-
-    /*****/
-     sampleStore = {
-      email: "",
-      gender: "",
-      savedToCloud: false
-   };
-
+    
    componentDidMount() {}
-
-   componentWillUnmount() {}
-
-   getStore() {
-      return this.sampleStore;
-   }
-
-    updateStore(update) {
-        alert('what');
-        debugger;
-      this.sampleStore = {
-         ...this.sampleStore,
-         ...update
-      };
-   }
-   /****/
-
+    
     handleButtonClick = () => {
         alert('hola');
         /*
@@ -81,30 +69,27 @@ class ModalAddEditChart extends Component {
             });
         */
     }
-
-    /*
-    nameChange(event) {
-        const inputName = event.target.value
-        let data = this.state.Data;
-        data.BusinessNetworkObjectName = inputName;
-        this.setState({
-            Data: data
-        })
-    }
-
-    classNameChange(event) {
-        const inputName = event.target.value
-        let data = this.state.Data;
-        data.BusinessNetworkObjectClassName = inputName;
-        this.setState({
-            Data: data
-        })
-    }
-    */
-
+    
     ChartNameChangedAction(name) {
         this.setState({
             ChartName: name
+        });
+    }
+    ChartDescriptionChangedAction(desc) {
+        this.setState({
+            ChartDescription: desc
+        });
+    }
+    ChartCategoryChangedAction(guid, name) {
+        this.setState({
+            ChartCategoryGUID: guid,
+            ChartCategoryName: name
+        });
+    }
+    ChartTypeChangedAction(guid, name) {
+        this.setState({
+            ChartTypeGUID: guid,
+            ChartTypeName: name
         });
     }
 
@@ -117,15 +102,15 @@ class ModalAddEditChart extends Component {
                     <div style={{ height: '400px' }}>
                         <Step1
                             ChartGUID={this.props.GUID}
-                            ChartCategoryGUID={this.props.Data.ChartCategoryGUID}
-                            ChartTypeGUID={this.props.Data.ChartCategoryGUID}
+                            ChartCategoryGUID={this.state.ChartCategoryGUID}
+                            ChartTypeGUID={this.state.ChartTypeGUID}
+
                             CategoryList={this.props.CategoryList}
                             TypeList={this.props.TypeList}
 
-                            getStore={() => this.getStore()}
-                            updateStore={u => {
-                                this.updateStore(u);
-                            }}
+                            ChartCategoryChangedAction={this.ChartCategoryChangedAction}
+                            ChartTypeChangedAction={this.ChartTypeChangedAction}
+                            
                         />
                     </div>
                 )
@@ -135,14 +120,10 @@ class ModalAddEditChart extends Component {
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step2
-                            ChartName={this.props.Data.Name}
-                            ChartDescription={this.props.Data.Description}
+                            ChartName={this.state.ChartName}
+                            ChartDescription={this.state.ChartDescription}
                             ChartNameChangedAction={this.ChartNameChangedAction}
-
-                            getStore={() => this.getStore()}
-                            updateStore={u => {
-                                this.updateStore(u);
-                            }}
+                            ChartDescriptionChangedAction={this.ChartDescriptionChangedAction}
                         />
                     </div>
                 )
@@ -153,11 +134,7 @@ class ModalAddEditChart extends Component {
                     <div style={{ height: '400px' }}>
                         <Step3
                             ChartSettings={this.props.Data.ChartSettings}
-
-                            getStore={() => this.getStore()}
-                            updateStore={u => {
-                                this.updateStore(u);
-                            }}
+                            PropertyList={this.props.PropertyList}
                         />
                     </div>
                 )
@@ -173,15 +150,11 @@ class ModalAddEditChart extends Component {
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step5
-                            CategoryName="dsadsad"
-                            TypeName="Dsadsa"
-                            ChartName="my chart todo"
+                            CategoryName={this.state.ChartCategoryName}
+                            TypeName={this.state.ChartTypeName}
+                            ChartName={this.state.ChartName}
+                            ChartDescription={this.state.ChartDescription}
                             ChartSeries="todo, todo"
-
-                            getStore={() => this.getStore()}
-                            updateStore={u => {
-                                this.updateStore(u);
-                            }}
                         />
                     </div>
                 )
@@ -224,19 +197,24 @@ class ModalAddEditChart extends Component {
                             preventEnterSubmission={true}
                             nextTextOnFinalActionStep={"Save"}
                             //hocValidationAppliedTo={[3]}
-                            startAtStep={window.sessionStorage.getItem("step") ? parseFloat(window.sessionStorage.getItem("step")) : 0}
-                            onStepChange={step => window.sessionStorage.setItem("step", step)}
-                        />
+                            startAtStep={0}
+                            onStepChange={step => this.setState({ CurrentStep: step }) }
+                    />
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => {
-                            this.handleButtonClick();
-                        }}>
-                            {this.props.ButtonText}
-                        </Button>{" "}
+                        {
+                            this.state.CurrentStep == 4 ? 
+                            ( 
+                                    <Button color="primary" onClick={() => {
+                                        this.handleButtonClick();
+                                    }}>
+                                        {this.props.ButtonText}
+                                    </Button>
+                            ) : ('')
+                        }
                         <Button color="secondary" onClick={this.toggle}>
                             Cancel
-                  </Button>
+                        </Button>
                     </ModalFooter>
                 </Modal>
             </div>

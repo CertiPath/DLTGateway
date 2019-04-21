@@ -22,13 +22,7 @@ export default class Step1 extends Component {
             this.categoryChange(null);
         }
     }
-
-    /*
-    componentWillReceiveProps(nextProps) {
-        
-    }
-    */
-
+    
     categoryChange(event) {
 
         let categoryGUID = event != null ? event.target.value : this.state.SelectedCategoryGUID
@@ -43,9 +37,11 @@ export default class Step1 extends Component {
 
         // category description
         let categoryDescription = '';
+        let categoryName = '';
         this.props.CategoryList.map(category => {
             if (category.GUID == categoryGUID) {
                 categoryDescription = category.Description;
+                categoryName = category.Name;
             }
         });
 
@@ -54,6 +50,23 @@ export default class Step1 extends Component {
             SelectedCategoryDescription: categoryDescription,
             TypeList: typeList
         })
+
+        // must set type to the first type
+        this.props.ChartTypeChangedAction(typeList[0].GUID, typeList[0].Name);
+        this.props.ChartCategoryChangedAction(categoryGUID, categoryName);
+    }
+
+    typeChange(event) {
+
+        let typeGUID = event.target.value;
+        let typeName = '';
+        this.props.TypeList.map(type => {
+            if (type.GUID == typeGUID) {
+                typeName = type.Name;
+            }
+        });
+
+        this.props.ChartTypeChangedAction(typeGUID, typeName);
     }
 
     render() {
@@ -115,7 +128,7 @@ export default class Step1 extends Component {
                                       <Col md="12">
                                           <FormGroup>
                                               <Label for="chartType">Chart Type</Label>
-                                              <Input type="select" id="chartType" name="chartType">
+                                              <Input type="select" id="chartType" name="chartType" onChange={this.typeChange.bind(this)}>
                                                   {typeOptions}
                                               </Input>
                                           </FormGroup>

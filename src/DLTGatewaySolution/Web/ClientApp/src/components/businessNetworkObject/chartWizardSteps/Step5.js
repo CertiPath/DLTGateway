@@ -42,7 +42,7 @@ export default class Step3 extends Component {
                         <Row>
                             <Col md="12">
                                 <Row>
-                                    <Col xs="12" md="12" lg="12">
+                                    <Col xs="12" md="6" lg="6">
                                         <ul className="no-list-style">
                                             <li>
                                                 <span className="text-bold-500 primary">
@@ -51,6 +51,8 @@ export default class Step3 extends Component {
                                                 <span className="display-block overflow-hidden">{this.props.CategoryName}</span>
                                             </li>
                                         </ul>
+                                    </Col>
+                                    <Col xs="12" md="6" lg="6">
                                         <ul className="no-list-style">
                                             <li>
                                                 <span className="text-bold-500 primary">
@@ -59,12 +61,24 @@ export default class Step3 extends Component {
                                                 <span className="display-block overflow-hidden">{this.props.TypeName}</span>
                                             </li>
                                         </ul>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs="12" md="12" lg="12">
                                         <ul className="no-list-style">
                                             <li>
                                                 <span className="text-bold-500 primary">
                                                     <Link to="#">Name</Link>
                                                 </span>
                                                 <span className="display-block overflow-hidden">{this.props.ChartName}</span>
+                                            </li>
+                                        </ul>
+                                        <ul className="no-list-style">
+                                            <li>
+                                                <span className="text-bold-500 primary">
+                                                    <Link to="#">Description</Link>
+                                                </span>
+                                                <span className="display-block overflow-hidden">{this.props.ChartDescription == '' ? 'N/A' : this.props.ChartDescription}</span>
                                             </li>
                                         </ul>
                                         <ul className="no-list-style">

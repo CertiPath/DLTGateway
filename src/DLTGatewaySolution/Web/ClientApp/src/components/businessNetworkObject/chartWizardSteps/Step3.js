@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Row, Col, Form, FormGroup, Label, Input, Alert, Table } from "reactstrap";
+import { Row, Col, Form, FormGroup, Label, Input, Alert, Table, Button } from "reactstrap";
+import { Trash2 } from 'react-feather';
 
 import Spinner from "../../../components/spinner/spinner"
 import ConfirmDelete from "../../../components/common/modal/ConfirmDialog";
@@ -11,9 +12,11 @@ export default class Step3 extends Component {
         super();
 
         let chartSettings = JSON.parse(props.ChartSettings);
-
+        let propertyList = this.getAvailableProperties(props, chartSettings.Series);
+        
         this.state = {
-            Series: chartSettings.Series
+            Series: chartSettings.Series,
+            PropertyList: propertyList
         };
     }
 
@@ -23,19 +26,57 @@ export default class Step3 extends Component {
         //    this.categoryChange(null);
         //}
     }
+    
+    handleClickDelete(propertyGUID) {
+        
+        let series = this.state.Series;
 
-    /*
-    nameChange(event) {
-        const name = event.target.value
-        this.props.ChartNameChangedAction(name);
+        let indexToRemove = -1;
+        for (var i = 0; i < series.length; i++) {
+            if (series[0].ObjectPropertyGUID.toUpperCase() == propertyGUID.toUpperCase()) {
+                indexToRemove = i;
+                break;
+            }
+        }
+        if (indexToRemove > -1) {
+            series.splice(indexToRemove, 1);
+            let propertyList = this.getAvailableProperties(this.props, series);
+
+            this.setState({
+                Series: series,
+                PropertyList: propertyList
+            });
+            
+        }
     }
-    */
 
-    handleClickDelete() {
-        alert('alooo');
+    getAvailableProperties(props, chartSeries) {
+        let propertyList = [];
+        props.PropertyList.map(property => {
+            // we only care about numeric properties
+            if (property.PropertyTypeCode == 'NUMERIC') {
+                // we only want to make un-used numeric properties available for addition
+                let found = false;
+                chartSeries.map(series => {
+                    if (series.ObjectPropertyGUID.toUpperCase() == property.GUID.toUpperCase()) {
+                        found = true;
+                    }
+                });
+                if (found == false) {
+                    propertyList.push(property);
+                }
+            }
+        });
+        return propertyList;
     }
 
     render() {
+
+        let properties = this.state.PropertyList == null ? '' : this.state.PropertyList.map(property => {
+            return (
+                <option value={property.GUID} > {property.Name}</option >  
+            )
+        });
 
         let rows = this.state.Series == null ? (<Spinner />) : this.state.Series.map(dataPoint => {
             return (
@@ -44,12 +85,7 @@ export default class Step3 extends Component {
                         {dataPoint.ObjectPropertyName}
                     </td>
                     <td width="40px">
-                        <ConfirmDelete
-                            Title={"Delete " + dataPoint.ObjectPropertyName + "?"}
-                            Text={"You are about to delete configured chart " + dataPoint.ObjectPropertyName + ". Once you delete it all the configuration will be gone. Do you want to continue?"}
-                            YesButtonText="Delete"
-                            YesButtonAction={() => this.handleClickDelete(dataPoint.ObjectPropertyGUID)}
-                        />
+                        <Trash2 size={this.props.IconSize == null ? 18 : this.props.IconSize} color="#FF586B" onClick={() => this.handleClickDelete(dataPoint.ObjectPropertyGUID)} style={this.props.IconSize == null ? { cursor: 'pointer' } : { cursor: 'pointer', margin: "0 0 15px 0" }} />
                     </td>
                 </tr>
             )
@@ -82,12 +118,21 @@ export default class Step3 extends Component {
                                 </Table>
                             </Col>
                         </Row>
-
+                        <hr style={{ margin: "5px 0px 5px 0px" }}/>
                         <Row>
-                            <Col md="12">
+                            <Col md="4">
                                 <FormGroup>
                                     <FormGroup>
-                                        Button Here
+                                        <Input type="select" id="propertyList" name="propertyList" >
+                                            {properties}
+                                        </Input>
+                                    </FormGroup>
+                                </FormGroup>
+                            </Col>
+                            <Col md="8">
+                                <FormGroup>
+                                    <FormGroup>
+                                        <Button>Add New Series</Button>
                                     </FormGroup>
                                 </FormGroup>
                             </Col>

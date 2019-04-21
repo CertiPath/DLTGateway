@@ -70,10 +70,13 @@ export default class TrackedObjectChartList extends React.Component {
                 <tr>
                     <td>
                         <AddEditChart
-                            ButtonText={chart.GUID}
+                            ButtonText="Save"
                             Data={chart}
+
                             CategoryList={this.props.ChartCategoryList}
                             TypeList={this.props.ChartTypeList}
+                            PropertyList={this.props.PropertyList}
+
                             OnFinishedAction={this.onFinishedAddEdit}
                             GUID={chart.GUID}
                             DisplayType="NAME"
@@ -92,7 +95,7 @@ export default class TrackedObjectChartList extends React.Component {
                     </td>
                     <td width="40px" title="Update chart settings">
                         <AddEditChart
-                            ButtonText={chart.GUID}
+                            ButtonText="Save"
                             Data={chart}
                             CategoryList={this.props.ChartCategoryList}
                             TypeList={this.props.ChartTypeList}
