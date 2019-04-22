@@ -10,11 +10,14 @@ export default class Step3 extends Component {
     constructor(props) {
 
         super();
-        /*
+
+        this.updateSeriesDisplayString = this.updateSeriesDisplayString.bind(this);
+
         this.state = {
-            Series: chartSettings.Series
+            ChartSeries: props.ChartSeries
         };
-        */
+        //this.updateSeriesDisplayString();
+        
     }
 
     componentDidMount() {
@@ -24,14 +27,27 @@ export default class Step3 extends Component {
         //}
     }
 
-    /*
-    nameChange(event) {
-        const name = event.target.value
-        this.props.ChartNameChangedAction(name);
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            ChartSeries: nextProps.ChartSeries
+        });
+        this.updateSeriesDisplayString();
     }
-    */
-    
 
+    updateSeriesDisplayString() {
+        let stringToDisplay = '';
+        this.state.ChartSeries.map(series => {
+            if (stringToDisplay.length > 0) {
+                stringToDisplay += ", ";
+            }
+            stringToDisplay += series.ObjectPropertyName;
+        });
+        this.setState({
+            ChartSeriesDisplay: stringToDisplay
+        });
+    }
+
+    
     render() {
         
         return (
@@ -86,7 +102,7 @@ export default class Step3 extends Component {
                                                 <span className="text-bold-500 primary">
                                                     <Link to="#">Series</Link>
                                                 </span>
-                                                <span className="display-block overflow-hidden">{this.props.ChartSeries}</span>
+                                                <span className="display-block overflow-hidden">{this.state.ChartSeriesDisplay}</span>
                                             </li>
                                         </ul>
                                     </Col>

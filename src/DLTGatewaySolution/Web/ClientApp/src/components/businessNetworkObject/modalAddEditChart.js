@@ -25,7 +25,8 @@ class ModalAddEditChart extends Component {
         this.ChartDescriptionChangedAction = this.ChartDescriptionChangedAction.bind(this);
         this.ChartTypeChangedAction = this.ChartTypeChangedAction.bind(this);
         this.ChartCategoryChangedAction = this.ChartCategoryChangedAction.bind(this);
-
+        this.onSeriesUpdated = this.onSeriesUpdated.bind(this);
+        
         this.state = {
             modal: false,
             CurrentStep: 0,
@@ -37,6 +38,7 @@ class ModalAddEditChart extends Component {
             ChartTypeName: props.Data.ChartTypeName,
             ChartCategoryGUID: props.Data.ChartCategoryGUID,
             ChartCategoryName: props.Data.ChartCategoryName,
+            ChartSeries: props.Data.ChartSettings != undefined && props.Data.ChartSettings != null ? JSON.parse(props.Data.ChartSettings).Series : [],
             
             Data: props.Data
         };
@@ -92,7 +94,12 @@ class ModalAddEditChart extends Component {
             ChartTypeName: name
         });
     }
-
+    onSeriesUpdated(series) {
+        this.setState({
+            ChartSeries: series
+        });
+    }
+    
     render() {
 
         const steps = [
@@ -135,6 +142,8 @@ class ModalAddEditChart extends Component {
                         <Step3
                             ChartSettings={this.props.Data.ChartSettings}
                             PropertyList={this.props.PropertyList}
+
+                            OnSeriesUpdated={this.onSeriesUpdated}
                         />
                     </div>
                 )
@@ -154,7 +163,7 @@ class ModalAddEditChart extends Component {
                             TypeName={this.state.ChartTypeName}
                             ChartName={this.state.ChartName}
                             ChartDescription={this.state.ChartDescription}
-                            ChartSeries="todo, todo"
+                            ChartSeries={this.state.ChartSeries}
                         />
                     </div>
                 )

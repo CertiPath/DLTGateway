@@ -11,12 +11,20 @@ export default class Step3 extends Component {
 
         super();
 
+        this.addNewSeries = this.addNewSeries.bind(this);
+        this.handlePropertyValueChange = this.handlePropertyValueChange.bind(this);
+
         let chartSettings = JSON.parse(props.ChartSettings);
         let propertyList = this.getAvailableProperties(props, chartSettings.Series);
-        
+        let propertySelectedValue = null;
+        if (propertyList.length > 0) {
+            propertySelectedValue = propertyList[0].GUID;
+        }
+
         this.state = {
             Series: chartSettings.Series,
-            PropertyList: propertyList
+            PropertyList: propertyList,
+            PropertySelectedValue: propertySelectedValue
         };
     }
 
@@ -33,7 +41,7 @@ export default class Step3 extends Component {
 
         let indexToRemove = -1;
         for (var i = 0; i < series.length; i++) {
-            if (series[0].ObjectPropertyGUID.toUpperCase() == propertyGUID.toUpperCase()) {
+            if (series[i].ObjectPropertyGUID.toUpperCase() == propertyGUID.toUpperCase()) {
                 indexToRemove = i;
                 break;
             }
@@ -44,10 +52,11 @@ export default class Step3 extends Component {
 
             this.setState({
                 Series: series,
-                PropertyList: propertyList
+                PropertyList: propertyList,
+                PropertySelectedValue: propertyList.length > 0 ? propertyList[0].GUID : null
             });
-            
         }
+        this.props.OnSeriesUpdated(series);
     }
 
     getAvailableProperties(props, chartSeries) {
@@ -68,6 +77,42 @@ export default class Step3 extends Component {
             }
         });
         return propertyList;
+    }
+
+    addNewSeries() {
+        
+        let properties = this.state.PropertyList;
+        let series = this.state.Series;
+        let indexToRemove = -1;
+        for (var i = 0; i < properties.length; i++) {
+            if (this.state.PropertySelectedValue.toUpperCase() == properties[i].GUID.toUpperCase()) {
+                indexToRemove = i;
+                break;
+            }
+        }
+        
+        if (indexToRemove > -1) {
+            series.push(
+                {
+                    ObjectPropertyGUID: properties[indexToRemove].GUID,
+                    ObjectPropertyName: properties[indexToRemove].Name,
+                });
+            let propertyList = this.getAvailableProperties(this.props, series);
+
+            this.setState({
+                Series: series,
+                PropertyList: propertyList,
+                PropertySelectedValue: propertyList.length > 0 ? propertyList[0].GUID : null
+            });
+        }
+        this.props.OnSeriesUpdated(series);
+    }
+
+    handlePropertyValueChange(event) {
+        let propertyGUID = event.target.value;
+        this.setState({
+            PropertySelectedValue: propertyGUID
+        });
     }
 
     render() {
@@ -119,24 +164,35 @@ export default class Step3 extends Component {
                             </Col>
                         </Row>
                         <hr style={{ margin: "5px 0px 5px 0px" }}/>
-                        <Row>
-                            <Col md="4">
-                                <FormGroup>
-                                    <FormGroup>
-                                        <Input type="select" id="propertyList" name="propertyList" >
-                                            {properties}
-                                        </Input>
-                                    </FormGroup>
-                                </FormGroup>
-                            </Col>
-                            <Col md="8">
-                                <FormGroup>
-                                    <FormGroup>
-                                        <Button>Add New Series</Button>
-                                    </FormGroup>
-                                </FormGroup>
-                            </Col>
-                        </Row>
+                            {
+                                properties.length > 0 ?
+                                    ( 
+                                        <Row>
+                                        <Col md="4">
+                                            <FormGroup>
+                                                <FormGroup>
+                                                    <Input type="select" id="propertyList" name="propertyList" defaultValue={this.state.PropertySelectedValue} onChange={this.handlePropertyValueChange}  >
+                                                        {properties}
+                                                    </Input>
+                                                </FormGroup>
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md="8">
+                                            <FormGroup>
+                                                <FormGroup>
+                                                    <Button onClick={this.addNewSeries}>Add New Series</Button>
+                                                </FormGroup>
+                                            </FormGroup>
+                                            </Col>
+                                        </Row>
+                                ) : (
+                                    <Row>
+                                        <Col md="12">
+                                            <Alert color="info">All numeric data points have been assigned as series.</Alert>
+                                        </Col>
+                                    </Row>)
+
+                    }
                     </div>
                 </Form>
             </div>
