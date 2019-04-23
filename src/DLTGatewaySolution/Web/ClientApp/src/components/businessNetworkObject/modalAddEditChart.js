@@ -11,7 +11,7 @@ import Step1 from "./chartWizardSteps/Step1";
 import Step2 from "./chartWizardSteps/Step2";
 import Step3 from "./chartWizardSteps/Step3";
 import Step4 from "./chartWizardSteps/Step4";
-import Step5 from "./chartWizardSteps/Step5";
+import StepSummary from "./chartWizardSteps/Step5";
 
 import "../../assets/scss/components/wizard/wizard.scss"
 
@@ -102,7 +102,7 @@ class ModalAddEditChart extends Component {
     
     render() {
 
-        const steps = [
+        let steps = [
             {
                 name: "Chart Type",
                 component: (
@@ -120,7 +120,8 @@ class ModalAddEditChart extends Component {
                             
                         />
                     </div>
-                )
+                ),
+                visible: true
             },
             {
                 name: "Name and Description",
@@ -133,32 +134,39 @@ class ModalAddEditChart extends Component {
                             ChartDescriptionChangedAction={this.ChartDescriptionChangedAction}
                         />
                     </div>
-                )
+                ),
+                visible: true
             },
             {
                 name: "Data",
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step3
-                            ChartSettings={this.props.Data.ChartSettings}
+                            ChartSeries={this.state.ChartSeries}
                             PropertyList={this.props.PropertyList}
 
                             OnSeriesUpdated={this.onSeriesUpdated}
                         />
                     </div>
-                )
+                ),
+                visible: true
             },
             {
                 name: "Settings",
                 component: (
-                    <div style={{ height: '400px' }}>Step 4</div>
-                )
+                    <div style={{ height: '400px' }}>
+                        <Step4
+                            
+                        />
+                    </div>
+                ),
+                visible: this.props.Data.ChartCategoryCode == 'TIMELINE'
             },
             {
                 name: "Summary",
                 component: (
                     <div style={{ height: '400px' }}>
-                        <Step5
+                        <StepSummary
                             CategoryName={this.state.ChartCategoryName}
                             TypeName={this.state.ChartTypeName}
                             ChartName={this.state.ChartName}
@@ -166,9 +174,17 @@ class ModalAddEditChart extends Component {
                             ChartSeries={this.state.ChartSeries}
                         />
                     </div>
-                )
+                ),
+                visible: true
             }
         ];
+
+        let stepsFinal = [];
+        steps.map((step, index) => {
+            if (step.visible) {
+                stepsFinal.push(step);
+            }
+        });
 
         return (
             <div>
@@ -202,7 +218,7 @@ class ModalAddEditChart extends Component {
                     </ModalHeader>
                     <ModalBody>
                         <StepZilla
-                            steps={steps}
+                            steps={stepsFinal}
                             preventEnterSubmission={true}
                             nextTextOnFinalActionStep={"Save"}
                             //hocValidationAppliedTo={[3]}

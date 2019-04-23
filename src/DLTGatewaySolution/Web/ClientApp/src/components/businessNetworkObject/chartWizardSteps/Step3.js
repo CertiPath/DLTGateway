@@ -14,15 +14,15 @@ export default class Step3 extends Component {
         this.addNewSeries = this.addNewSeries.bind(this);
         this.handlePropertyValueChange = this.handlePropertyValueChange.bind(this);
 
-        let chartSettings = JSON.parse(props.ChartSettings);
-        let propertyList = this.getAvailableProperties(props, chartSettings.Series);
+        let chartSeries = props.ChartSeries; 
+        let propertyList = this.getAvailableProperties(props, chartSeries);
         let propertySelectedValue = null;
         if (propertyList.length > 0) {
             propertySelectedValue = propertyList[0].GUID;
         }
 
         this.state = {
-            Series: chartSettings.Series,
+            Series: chartSeries,
             PropertyList: propertyList,
             PropertySelectedValue: propertySelectedValue
         };
