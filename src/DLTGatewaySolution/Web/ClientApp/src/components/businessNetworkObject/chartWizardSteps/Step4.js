@@ -1,12 +1,45 @@
 import React, { Component } from "react";
 import { Row, Col, Form, FormGroup, Label, Input, Alert, Table, Button, CustomInput, } from "reactstrap";
 
-export default class Step6 extends Component {
-   state = {};
+export default class Step4 extends Component {
+    constructor(props) {
 
-   componentDidMount() {}
+        super();
 
-   componentWillUnmount() {}
+        this.state = {
+            DataValue: props.DataValue,
+            DataType: props.DataType,
+            ShowGridlines: props.ShowGridlines
+        };
+    }
+    
+    componentDidMount() {}
+
+    componentWillUnmount() {}
+
+    dataValueChange(event) {
+        const value = event.target.value
+        this.setState({
+            DataValue: value
+        });
+        this.props.OnUpdateStep4Action(value, this.state.DataType, this.state.ShowGridlines);
+    }
+
+    dataTypeChange(event) {
+        const value = event.target.value
+        this.setState({
+            DataType: value
+        });
+        this.props.OnUpdateStep4Action(this.state.DataValue, value, this.state.ShowGridlines);
+    }
+
+    showGrdilinesChange(event) {
+        const value = event.target.checked;
+        this.setState({
+            ShowGridlines: value
+        });
+        this.props.OnUpdateStep4Action(this.state.DataValue, this.state.DataType, value);
+    }
 
    render() {
       return (
@@ -24,13 +57,13 @@ export default class Step6 extends Component {
                           <Col md="4">
                               <FormGroup>
                                   <Label for="dataAmount">Number/Length</Label>
-                                  <Input type="text" id="dataAmount" name="dataAmount" />
+                                  <Input type="text" id="dataAmount" name="dataAmount" defaultValue={this.state.DataValue} onChange={this.dataValueChange.bind(this)} />
                               </FormGroup>
                           </Col>
                           <Col md="8">
                               <FormGroup>
                                   <Label for="lengthType">Type</Label>
-                                  <Input type="select" id="lengthType" name="lengthType">
+                                  <Input type="select" id="lengthType" name="lengthType" defaultValue={this.state.DataType} onChange={this.dataTypeChange.bind(this)}>
                                       <option value="RECORD">Records</option>
                                       <option value="MINUTE">Minutes</option>
                                       <option value="HOUR">Hours</option>
@@ -44,7 +77,7 @@ export default class Step6 extends Component {
                       <Row>
                           <Col md="12">
                               <Label check>
-                                  <CustomInput type="checkbox" defaultChecked label="Show Gridlines" />
+                                  <CustomInput id="cbxShowGridlines" type="checkbox" checked={this.state.ShowGridlines} onChange={this.showGrdilinesChange.bind(this)} label="Show Gridlines" />
                               </Label>
                           </Col>
                       </Row>

@@ -149,10 +149,13 @@ export default class TrackedObjectChartList extends React.Component {
                                         <AddEditChart
                                             ButtonText="Add New Chart"
                                             Data={{
-                                                Name: ""
+                                                Name: "",
+                                                ChartSettings: "{}"
                                             }}
                                             CategoryList={this.props.ChartCategoryList}
                                             TypeList={this.props.ChartTypeList}
+                                            PropertyList={this.props.PropertyList}
+
                                             OnFinishedAction={this.onFinishedAddEdit}
                                             GUID={null}
                                             DisplayType="BUTTON"
