@@ -38,10 +38,12 @@ export default class Step1 extends Component {
         // category description
         let categoryDescription = '';
         let categoryName = '';
+        let categoryCode = '';
         this.props.CategoryList.map(category => {
             if (category.GUID == categoryGUID) {
                 categoryDescription = category.Description;
                 categoryName = category.Name;
+                categoryCode = category.Code;
             }
         });
 
@@ -53,7 +55,7 @@ export default class Step1 extends Component {
 
         // must set type to the first type
         this.props.ChartTypeChangedAction(typeList[0].GUID, typeList[0].Name);
-        this.props.ChartCategoryChangedAction(categoryGUID, categoryName);
+        this.props.ChartCategoryChangedAction(categoryGUID, categoryName, categoryCode);
     }
 
     typeChange(event) {

@@ -26,6 +26,7 @@ class ModalAddEditChart extends Component {
         this.ChartTypeChangedAction = this.ChartTypeChangedAction.bind(this);
         this.ChartCategoryChangedAction = this.ChartCategoryChangedAction.bind(this);
         this.onSeriesUpdated = this.onSeriesUpdated.bind(this);
+        this.onUpdateStep4Action = this.onUpdateStep4Action.bind(this);
         
         this.state = {
             modal: false,
@@ -38,8 +39,12 @@ class ModalAddEditChart extends Component {
             ChartTypeName: props.Data.ChartTypeName,
             ChartCategoryGUID: props.Data.ChartCategoryGUID,
             ChartCategoryName: props.Data.ChartCategoryName,
-            ChartSeries: props.Data.ChartSettings != undefined && props.Data.ChartSettings != null ? JSON.parse(props.Data.ChartSettings).Series : [],
-            
+            ChartCategoryCode: props.Data.ChartCategoryCode,
+            ChartSeries: JSON.parse(props.Data.ChartSettings).Series != undefined ? JSON.parse(props.Data.ChartSettings).Series : [],
+            ChartDataValue: JSON.parse(props.Data.ChartSettings).XAxes != undefined ? JSON.parse(props.Data.ChartSettings).XAxes.Value : '',
+            ChartDataType: JSON.parse(props.Data.ChartSettings).XAxes != undefined ? JSON.parse(props.Data.ChartSettings).XAxes.Type : '',
+            ChartShowGridlines: JSON.parse(props.Data.ChartSettings).ShowGridlines != undefined ? JSON.parse(props.Data.ChartSettings).ShowGridlines : false,
+
             Data: props.Data
         };
     }
@@ -50,28 +55,16 @@ class ModalAddEditChart extends Component {
         });
     }
     
-   componentDidMount() {}
-    
-    handleButtonClick = () => {
-        alert('hola');
-        /*
-        this.toggle();
-        apiClient.post('BusinessNetworkObject/Save', this.state.Data)
-            .then(res => {
-                if (this.state.Data.GUID == null) {
-                    toastr.success('Success', 'Object successfully added.', { position: 'top-right' });
-                }
-                else {
-                    toastr.success('Success', 'Object successfully updated.', { position: 'top-right' });
-                }
-                this.props.OnFinishedAction();
-            })
-            .catch(function (error) {
-                toastr.error('Error', 'There was an error trying to add business network object.', { position: 'top-right' });
-            });
-        */
+    componentDidMount() {}
+
+    onUpdateStep4Action(value, type, showGridlines) {
+        this.setState({
+            ChartDataValue: value,
+            ChartDataType: type,
+            ChartShowGridlines: showGridlines
+        });
     }
-    
+
     ChartNameChangedAction(name) {
         this.setState({
             ChartName: name
@@ -82,10 +75,11 @@ class ModalAddEditChart extends Component {
             ChartDescription: desc
         });
     }
-    ChartCategoryChangedAction(guid, name) {
+    ChartCategoryChangedAction(guid, name, code) {
         this.setState({
             ChartCategoryGUID: guid,
-            ChartCategoryName: name
+            ChartCategoryName: name,
+            ChartCategoryCode: code
         });
     }
     ChartTypeChangedAction(guid, name) {
@@ -156,11 +150,14 @@ class ModalAddEditChart extends Component {
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step4
-                            
+                            DataValue={this.state.ChartDataValue}
+                            DataType={this.state.ChartDataType}
+                            ShowGridlines={this.state.ChartShowGridlines}
+                            OnUpdateStep4Action={this.onUpdateStep4Action}
                         />
                     </div>
                 ),
-                visible: this.props.Data.ChartCategoryCode == 'TIMELINE'
+                visible: this.state.ChartCategoryCode == 'TIMELINE'
             },
             {
                 name: "Summary",
@@ -168,10 +165,12 @@ class ModalAddEditChart extends Component {
                     <div style={{ height: '400px' }}>
                         <StepSummary
                             CategoryName={this.state.ChartCategoryName}
+                            CategoryCode={this.state.ChartCategoryCode}
                             TypeName={this.state.ChartTypeName}
                             ChartName={this.state.ChartName}
                             ChartDescription={this.state.ChartDescription}
                             ChartSeries={this.state.ChartSeries}
+                            AmountOfData={this.state.ChartDataValue + ' ' + this.state.ChartDataType}
                         />
                     </div>
                 ),

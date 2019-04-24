@@ -13,8 +13,11 @@ export default class Step3 extends Component {
 
         this.updateSeriesDisplayString = this.updateSeriesDisplayString.bind(this);
 
+        let amountOfData = props.AmountOfData.toLowerCase() + 's';
+
         this.state = {
-            ChartSeries: props.ChartSeries
+            ChartSeries: props.ChartSeries,
+            AmountOfData: amountOfData
         };
         //this.updateSeriesDisplayString();
         
@@ -29,7 +32,8 @@ export default class Step3 extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            ChartSeries: nextProps.ChartSeries
+            ChartSeries: nextProps.ChartSeries,
+            AmountOfData: nextProps.AmountOfData.toLowerCase() + 's'
         });
         this.updateSeriesDisplayString();
     }
@@ -97,6 +101,10 @@ export default class Step3 extends Component {
                                                 <span className="display-block overflow-hidden">{this.props.ChartDescription == '' ? 'N/A' : this.props.ChartDescription}</span>
                                             </li>
                                         </ul>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs="12" md="6" lg="6">
                                         <ul className="no-list-style">
                                             <li>
                                                 <span className="text-bold-500 primary">
@@ -106,6 +114,21 @@ export default class Step3 extends Component {
                                             </li>
                                         </ul>
                                     </Col>
+                                    {
+                                        this.props.CategoryCode == 'TIMELINE' ? (
+                                            <Col xs="12" md="6" lg="6">
+                                                <ul className="no-list-style">
+                                                    <li>
+                                                        <span className="text-bold-500 primary">
+                                                            <Link to="#">Amount of Data</Link>
+                                                        </span>
+                                                        <span className="display-block overflow-hidden">{this.state.AmountOfData}</span>
+                                                    </li>
+                                                </ul>
+                                            </Col>
+                                        ) : ("")
+                                    }
+                                    
                                 </Row>
                             </Col>
                         </Row>
