@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CertiPath.BlockchainGateway.Model;
 using CertiPath.BlockchainGateway.DataLayer;
+using CertiPath.BlockchainGateway.Service.Helper.Chart;
 
 namespace CertiPath.BlockchainGateway.Service
 {
@@ -66,18 +67,17 @@ namespace CertiPath.BlockchainGateway.Service
                                .ToList();
 
             int index = -1;
-            Helper.Chart.ColorHelper ch = new Helper.Chart.ColorHelper();
             res.datasets = new List<NamespaceTranactionDataList>();
             foreach (var ns in namespaces)
             {
                 index++;
                 var data = new NamespaceTranactionDataList();
                 data.label = ns.NamespaceName;
-                data.backgroundColor = "rgba(" + ch.GetNextColor(index) + ", 0.65)";
+                data.backgroundColor = ColorHelper.GetNextColorRgba(index, "0.65");
                 data.borderColor = "transparent";
                 data.pointBackgroundColor = "#FFF";
-                data.pointBorderColor = "rgba(" + ch.GetNextColor(index) + ", ,1)";
-                data.pointHoverBackgroundColor = "rgba(" + ch.GetNextColor(index) + ", 1)";
+                data.pointBorderColor = ColorHelper.GetNextColorRgba(index, "1");
+                data.pointHoverBackgroundColor = ColorHelper.GetNextColorRgba(index, "1");
                 data.pointRadius = "5";
                 data.pointHoverBorderColor = "#FFF";
                 data.pointHoverRadius = "5";
@@ -99,11 +99,11 @@ namespace CertiPath.BlockchainGateway.Service
             index++;
             var data2 = new NamespaceTranactionDataList();
             data2.label = "Second one";
-            data2.backgroundColor = "rgba(" + ch.GetNextColor(index) + ", 0.65)";
+            data2.backgroundColor = ColorHelper.GetNextColorRgba(index, "0.65");
             data2.borderColor = "transparent";
             data2.pointBackgroundColor = "#FFF";
-            data2.pointBorderColor = "rgba(" + ch.GetNextColor(index) + ", 1)";
-            data2.pointHoverBackgroundColor = "rgba" + ch.GetNextColor(index) + ", 1)";
+            data2.pointBorderColor = ColorHelper.GetNextColorRgba(index, "1");
+            data2.pointHoverBackgroundColor = ColorHelper.GetNextColorRgba(index, "1");
             data2.pointRadius = "5";
             data2.pointHoverBorderColor = "#FFF";
             data2.pointHoverRadius = "5";
@@ -115,11 +115,11 @@ namespace CertiPath.BlockchainGateway.Service
             index++;
             var data3 = new NamespaceTranactionDataList();
             data3.label = "Third one";
-            data3.backgroundColor = "rgba(" + ch.GetNextColor(index) + ", 0.65)";
+            data3.backgroundColor = ColorHelper.GetNextColorRgba(index, "0.65");
             data3.borderColor = "transparent";
             data3.pointBackgroundColor = "#FFF";
-            data3.pointBorderColor = "rgba(" + ch.GetNextColor(index) + ", 1)";
-            data3.pointHoverBackgroundColor = "rgba(" + ch.GetNextColor(index) + ", 1)";
+            data3.pointBorderColor = ColorHelper.GetNextColorRgba(index, "1");
+            data3.pointHoverBackgroundColor = ColorHelper.GetNextColorRgba(index, "1");
             data3.pointRadius = "5";
             data3.pointHoverBorderColor = "#FFF";
             data3.pointHoverRadius = "5";

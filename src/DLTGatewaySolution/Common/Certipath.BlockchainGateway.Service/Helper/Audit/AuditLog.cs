@@ -10,10 +10,17 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Audit
 {
     public class AuditLog
     {
+        private DataModelContainer _context;
+
+        public AuditLog(DataModelContainer context)
+        {
+            _context = context;
+        }
+
         internal void Save(AuditLogModel model)
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
             CertiPath.BlockchainGateway.DataLayer.AuditLog alo = new CertiPath.BlockchainGateway.DataLayer.AuditLog();
+            var currentUser = _context.User.Take(1).SingleOrDefault();     // TODO: FIX THIS
 
             alo.GUID = Guid.NewGuid();
             alo.OperationType = model.OperationType.ToString();
@@ -24,15 +31,14 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Audit
 
             alo.NewRecordValue = model.NewRecordValue;
             alo.OldRecordValue = model.OldRecordValue;
-
             alo.ServerName = System.Environment.MachineName;
             alo.ServerUTC = DateTime.UtcNow;
-            alo.UserGUID = new Guid("4E8E2AD7-B4D9-4EF5-AC01-6B75B99ADBD0");        // TODO: FIX THIS
-            alo.UserName = "TODO";
+            alo.UserGUID = currentUser.GUID;
+            alo.UserName = String.Format("{0} {1}", currentUser.FirstName, currentUser.LastName);
             alo.TransactionSequence = 0;
 
-            context.AuditLog.Add(alo);
-            context.SaveChanges();
+            _context.AuditLog.Add(alo);
+            _context.SaveChanges();
         }
     }
 }

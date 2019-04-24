@@ -8,8 +8,15 @@ using System.Threading.Tasks;
 
 namespace CertiPath.BlockchainGateway.Service.Helper.DataStore
 {
-    internal static class Common
+    internal class Common
     {
+        private DataLayer.DataModelContainer _context;
+
+        public Common(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// This method is in charge of doing the followings things:
         /// 1) Exclude properties that are deleted
@@ -19,10 +26,9 @@ namespace CertiPath.BlockchainGateway.Service.Helper.DataStore
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        internal static List<PropertyModel> Extract(Guid businessNetworkObjectGUID, string values)
+        internal List<PropertyModel> Extract(Guid businessNetworkObjectGUID, string values)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            var properties = context.BusinessNetworkObjectProperty
+            var properties = _context.BusinessNetworkObjectProperty
                                     .Where(w => w.BusinessNetworkObjectGUID == businessNetworkObjectGUID)
                                     .Where(w => w.Deleted == false)
                                     .Where(w => w.Visible == true)

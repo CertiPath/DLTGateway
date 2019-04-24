@@ -12,7 +12,8 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public AuthenticationResponseModel Login(AuthenticationModel model)
         {
-            CertiPath.BlockchainGateway.Service.Authenticate authSrv = new Service.Authenticate();
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.Authenticate authSrv = new Service.Authenticate(context);
             var res = authSrv.Login(model);
             return res;
         }

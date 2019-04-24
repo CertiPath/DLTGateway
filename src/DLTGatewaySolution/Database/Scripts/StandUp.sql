@@ -307,6 +307,16 @@ BEGIN
 	INSERT INTO ChartCategory ([GUID], Name, Code, [Description], [Enabled])
 	VALUES ('244532E5-DCFE-415B-9F49-740B6B491580', 'Pie', 'PIE', '', 1)
 END
+GO
+
+UPDATE ChartCategory 
+SET [Description ] = 'Presentation of a chronological sequence of events along a timeline that enables a viewer to understand historical data relationships quickly.'
+WHERE CODE = 'TIMELINE'
+
+UPDATE ChartCategory 
+SET [Description ] = 'Describes how a whole is divided into various parts. Applicable only to current object state and not historical data.'
+WHERE CODE = 'PIE'
+GO
 
 -- ChartTypes
 -- timeline - straight line

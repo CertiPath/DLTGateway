@@ -10,12 +10,19 @@ namespace CertiPath.BlockchainGateway.Service
 {
     public class BusinessNetworkObject
     {
+        private DataModelContainer _context;
+        private Helper.Common.EntityConverter _converter;
+
+        public BusinessNetworkObject(DataModelContainer context)
+        {
+            _context = context;
+            _converter = new Helper.Common.EntityConverter();
+        }
+
         public List<BusinessNetworkObjectViewModel> GetDetailsByNamespace(Guid businessNetworkNamespaceGUID)
         {
             List<BusinessNetworkObjectViewModel> res = new List<BusinessNetworkObjectViewModel>();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
-            var list = context.vBusinessNetworkObject
+            var list = _context.vBusinessNetworkObject
                                     .Where(w => w.BusinessNetworkNamespaceGUID == businessNetworkNamespaceGUID)
                                     .ToList();
             foreach (var item in list)
@@ -33,15 +40,13 @@ namespace CertiPath.BlockchainGateway.Service
 
         public void Delete(BusinessNetworkObjectViewModel obj)
         {
-            Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var bno = context.BusinessNetworkObject.Where(w => w.GUID == obj.BusinessNetworkObjectGUID).SingleOrDefault();
-            string originalObject = converter.GetJson(bno);
+            var bno = _context.BusinessNetworkObject.Where(w => w.GUID == obj.BusinessNetworkObjectGUID).SingleOrDefault();
+            string originalObject = _converter.GetJson(bno);
             bno.Deleted = true;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = AuditLogOperationType.Delete;
@@ -49,25 +54,22 @@ namespace CertiPath.BlockchainGateway.Service
             alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObject;
             alm.SecondaryObjectGUID = bno.BusinessNetworkNamespaceGUID;
             alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkNamespace;
-            alm.NewRecordValue = converter.GetJson(bno);
+            alm.NewRecordValue = _converter.GetJson(bno);
             alm.OldRecordValue = originalObject;
             alo.Save(alm);
         }
 
         public void Save(BusinessNetworkObjectViewModel obj)
         {
-            Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
             DataLayer.BusinessNetworkObject bno = new DataLayer.BusinessNetworkObject();
             bool lAddNew = true;
             string originalObject = "";
             if (obj.BusinessNetworkObjectGUID != null && obj.BusinessNetworkObjectGUID != Guid.Empty)
             {
                 lAddNew = false;
-                bno = context.BusinessNetworkObject.Where(w => w.GUID == obj.BusinessNetworkObjectGUID).SingleOrDefault();
+                bno = _context.BusinessNetworkObject.Where(w => w.GUID == obj.BusinessNetworkObjectGUID).SingleOrDefault();
             }
-            originalObject = converter.GetJson(bno);
+            originalObject = _converter.GetJson(bno);
 
             bno.Name = obj.BusinessNetworkObjectName;
             bno.ClassName = obj.BusinessNetworkObjectClassName;
@@ -75,12 +77,12 @@ namespace CertiPath.BlockchainGateway.Service
             {
                 bno.GUID = Guid.NewGuid();
                 bno.BusinessNetworkNamespaceGUID = obj.BusinessNetworkNamespaceGUID;
-                context.BusinessNetworkObject.Add(bno);
+                _context.BusinessNetworkObject.Add(bno);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = lAddNew ? AuditLogOperationType.Create : AuditLogOperationType.Update;
@@ -88,21 +90,19 @@ namespace CertiPath.BlockchainGateway.Service
             alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObject;
             alm.SecondaryObjectGUID = bno.BusinessNetworkNamespaceGUID;
             alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkNamespace;
-            alm.NewRecordValue = converter.GetJson(bno);
+            alm.NewRecordValue = _converter.GetJson(bno);
             alm.OldRecordValue = originalObject;
             alo.Save(alm);
         }
-        
+
         public BusinessNetworkObjectDetailsModel GetDetails(Guid businessNetworkObjectGUID)
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
             BusinessNetworkObjectDetailsModel res = new BusinessNetworkObjectDetailsModel();
-
             res.GUID = businessNetworkObjectGUID;
             
             // property list
             res.PropertyList = new List<BusinessNetworkObjectPropertyModel>();
-            var properties = context.BusinessNetworkObjectProperty
+            var properties = _context.BusinessNetworkObjectProperty
                                             .Where(w => w.Deleted == false)
                                             .Where(w => w.BusinessNetworkObjectGUID == businessNetworkObjectGUID)
                                             .OrderBy(o => o.SortOrder)
@@ -123,20 +123,19 @@ namespace CertiPath.BlockchainGateway.Service
             }
             return res;
         }
+
         public void SaveProperty(BusinessNetworkObjectPropertyModel obj)
         {
-            Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
             DataLayer.BusinessNetworkObjectProperty bnop = new DataLayer.BusinessNetworkObjectProperty();
+
             bool lAddNew = true;
             string originalObject = "";
             if (obj.GUID != null && obj.GUID != Guid.Empty)
             {
                 lAddNew = false;
-                bnop = context.BusinessNetworkObjectProperty.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+                bnop = _context.BusinessNetworkObjectProperty.Where(w => w.GUID == obj.GUID).SingleOrDefault();
             }
-            originalObject = converter.GetJson(bnop);
+            originalObject = _converter.GetJson(bnop);
 
             bnop.Name = obj.Name;
             bnop.Disabled = obj.Disabled;
@@ -153,12 +152,12 @@ namespace CertiPath.BlockchainGateway.Service
                 bnop.IsImported = false;
                 bnop.BusinessNetworkObjectGUID = obj.BusinessNetworkObjectGUID;
                 bnop.SortOrder = getNextSortOrder(obj.BusinessNetworkObjectGUID);
-                context.BusinessNetworkObjectProperty.Add(bnop);
+                _context.BusinessNetworkObjectProperty.Add(bnop);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = lAddNew ? AuditLogOperationType.Create : AuditLogOperationType.Update;
@@ -166,22 +165,20 @@ namespace CertiPath.BlockchainGateway.Service
             alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectProperty;
             alm.SecondaryObjectGUID = bnop.BusinessNetworkObjectGUID;
             alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkObject;
-            alm.NewRecordValue = converter.GetJson(bnop);
+            alm.NewRecordValue = _converter.GetJson(bnop);
             alm.OldRecordValue = originalObject;
             alo.Save(alm);
         }
 
         public void DeleteProperty(BusinessNetworkObjectPropertyModel obj)
         {
-            Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var objProp = context.BusinessNetworkObjectProperty.Where(w => w.GUID == obj.GUID).SingleOrDefault();
-            string originalObject = converter.GetJson(objProp);
+            var objProp = _context.BusinessNetworkObjectProperty.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+            string originalObject = _converter.GetJson(objProp);
             objProp.Deleted = true;
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // Audit Log
-            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog();
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
             AuditLogModel alm = new AuditLogModel();
 
             alm.OperationType = AuditLogOperationType.Delete;
@@ -189,19 +186,135 @@ namespace CertiPath.BlockchainGateway.Service
             alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectProperty;
             alm.SecondaryObjectGUID = objProp.BusinessNetworkObjectGUID;
             alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkObject;
-            alm.NewRecordValue = converter.GetJson(objProp);
+            alm.NewRecordValue = _converter.GetJson(objProp);
             alm.OldRecordValue = originalObject;
             alo.Save(alm);
         }
 
         private int getNextSortOrder(Guid objGUID)
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var last = context.BusinessNetworkObjectProperty
+            var last = _context.BusinessNetworkObjectProperty
                         .Where(w => w.BusinessNetworkObjectGUID == objGUID)
                         .OrderByDescending(o => o.SortOrder)
                         .Take(1).SingleOrDefault();
             return last == null ? 0 : last.SortOrder + 1;
+        }
+
+        public List<BusinessNetworkObjectChartModel> GetCharts(Guid objGUID)
+        {
+            var configuredCharts = _context.BusinessNetworkObjectChart
+                                        .Where(w => w.BusinessNetworkObjectGUID == objGUID)
+                                        .Where(w => w.Deleted == false)
+                                        .OrderBy(O => O.SortOrder)
+                                        .ToList();
+
+            List<BusinessNetworkObjectChartModel> result = new List<BusinessNetworkObjectChartModel>();
+            foreach (var chart in configuredCharts)
+            {
+                result.Add(new BusinessNetworkObjectChartModel()
+                {
+                    BusinessNetworkObjectGUID = chart.BusinessNetworkObjectGUID,
+                    ChartSettings = chart.ChartSettings,
+                    Description = chart.Description,
+                    Disabled = chart.Disabled,
+                    GUID = chart.GUID,
+                    Name = chart.Name,
+                    SortOrder = chart.SortOrder,
+                    ChartTypeGUID = chart.ChartTypeGUID,
+                    ChartTypeCode = chart.ChartType.Code,
+                    ChartTypeName = chart.ChartType.Name,
+                    ChartCategoryGUID = chart.ChartType.ChartCategory.GUID,
+                    ChartCategoryCode = chart.ChartType.ChartCategory.Code,
+                    ChartCategoryName = chart.ChartType.ChartCategory.Name
+                });
+            }
+            return result;
+        }
+
+        public void DisableChart(Guid GUID)
+        {
+            enableDisableChart(true, GUID);
+        }
+
+        public void EnableChart(Guid GUID)
+        {
+            enableDisableChart(false, GUID);
+        }
+
+        private void enableDisableChart(bool disable, Guid GUID)
+        {
+            var chart = _context.BusinessNetworkObjectChart.Where(w => w.GUID == GUID).SingleOrDefault();
+            string originalObject = _converter.GetJson(chart);
+            chart.Disabled = disable;
+            _context.SaveChanges();
+
+            // Audit Log
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
+            AuditLogModel alm = new AuditLogModel();
+
+            alm.OperationType = AuditLogOperationType.Update;
+            alm.PrimaryObjectGUID = chart.GUID;
+            alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectChart;
+            alm.SecondaryObjectGUID = chart.BusinessNetworkObjectGUID;
+            alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkObject;
+            alm.NewRecordValue = _converter.GetJson(chart);
+            alm.OldRecordValue = originalObject;
+            alo.Save(alm);
+        }
+
+        public void DeleteChart(Guid GUID)
+        {
+            var chart = _context.BusinessNetworkObjectChart.Where(w => w.GUID == GUID).SingleOrDefault();
+            string originalObject = _converter.GetJson(chart);
+            chart.Deleted = true;
+            _context.SaveChanges();
+
+            // Audit Log
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
+            AuditLogModel alm = new AuditLogModel();
+
+            alm.OperationType = AuditLogOperationType.Delete;
+            alm.PrimaryObjectGUID = chart.GUID;
+            alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectChart;
+            alm.SecondaryObjectGUID = chart.BusinessNetworkObjectGUID;
+            alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkObject;
+            alm.NewRecordValue = _converter.GetJson(chart);
+            alm.OldRecordValue = originalObject;
+            alo.Save(alm);
+        }
+
+        public List<ChartCategoryModel> GetChartCategories()
+        {
+            var list = _context.ChartCategory.OrderBy(o => o.Name).ToList();
+            List<ChartCategoryModel> res = new List<ChartCategoryModel>();
+            foreach (var item in list)
+            {
+                res.Add(new ChartCategoryModel() {
+                    Code = item.Code,
+                    Description = item.Description,
+                    GUID = item.GUID,
+                    Name = item.Name
+                });
+            }
+            return res;
+        }
+
+        public List<ChartTypeModel> GetChartTypes()
+        {
+            var list = _context.ChartType.OrderBy(o => o.Name).ToList();
+            List<ChartTypeModel> res = new List<ChartTypeModel>();
+            foreach (var item in list)
+            {
+                res.Add(new ChartTypeModel()
+                {
+                    ChartCategoryGUID = item.ChartCategoryGUID,
+                    Code = item.Code,
+                    Description = item.Description,
+                    GUID = item.GUID,
+                    Name = item.Name
+                });
+            }
+            return res;
         }
     }
 }

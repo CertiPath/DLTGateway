@@ -8,8 +8,15 @@ using CertiPath.BlockchainGateway.Model;
 
 namespace CertiPath.BlockchainGateway.Service.Helper.Chart
 {
-    internal class DataBuilder
+    internal class DataBuilderLineChart
     {
+        private DataLayer.DataModelContainer _context;
+
+        public DataBuilderLineChart(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
+
         internal ObjectChartDataModel Get(Guid dataStoreGUID, BusinessNetworkObjectChart chartDef, NetworkObjectChartSetting chartSettings)
         {
             ObjectChartDataModel chartData = new ObjectChartDataModel();
@@ -28,12 +35,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
             chartData.LabelList = new List<string>();
             chartData.SeriesList = new List<ChartDataSeriesModel>();
 
-
-            foreach (var series in chartSettings.Series)
-            {
-                
-            }
-
+            Helper.DataStore.Common dataStoreCommon = new DataStore.Common(_context);
             foreach (var record in historyList)
             {
                 chartData.LabelList.Add(record.CreatedOn.ToShortDateString() + " " + record.CreatedOn.ToShortTimeString());
@@ -41,7 +43,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                 string objectValue = record.Value;
                 
                 // TODO: extract keeps querying for each element in the list. this must be changed/improved
-                List<Model.PropertyModel> propertyValues = Helper.DataStore.Common.Extract(chartDef.BusinessNetworkObjectGUID, objectValue);
+                List<Model.PropertyModel> propertyValues = dataStoreCommon.Extract(chartDef.BusinessNetworkObjectGUID, objectValue);
 
                 foreach (var series in chartSettings.Series)
                 {

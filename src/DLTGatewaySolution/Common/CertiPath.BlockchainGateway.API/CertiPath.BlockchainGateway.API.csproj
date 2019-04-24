@@ -277,6 +277,10 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Database\CertiPath.BlockchainGateway.DataLayer\CertiPath.BlockchainGateway.DataLayer.csproj">
+      <Project>{3530dd53-7b66-4592-8df5-fb063723815c}</Project>
+      <Name>CertiPath.BlockchainGateway.DataLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CertiPath.BlockchainGateway.Model\CertiPath.BlockchainGateway.Model.csproj">
       <Project>{c1ca53d6-8de9-45fe-ba7c-7b59dbcf3c57}</Project>
       <Name>CertiPath.BlockchainGateway.Model</Name>

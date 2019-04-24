@@ -7,6 +7,8 @@
     [ChartTypeGUID] UNIQUEIDENTIFIER NOT NULL, 
     [ChartSettings] NVARCHAR(MAX) NOT NULL, 
     [SortOrder] INT NOT NULL DEFAULT 0, 
+    [Deleted] BIT NOT NULL DEFAULT 0, 
+    [Disabled] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [FK_BusinessNetworkObjectChart_BusinessNetworkObject] FOREIGN KEY ([BusinessNetworkObjectGUID]) REFERENCES [dbo].[BusinessNetworkObject]([GUID]), 
     CONSTRAINT [FK_BusinessNetworkObjectChart_ChartType] FOREIGN KEY ([ChartTypeGUID]) REFERENCES [ChartType]([GUID])
 )
