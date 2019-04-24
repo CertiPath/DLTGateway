@@ -30,7 +30,7 @@ const createEventHub = ({
   channel.addPeer(peer);
   const eventHub = channel.newChannelEventHub(peer);
 
-  const storePath = path.join(__dirname, '..', cryptoMaterialDirectory);
+  const storePath = path.join('/tmp', cryptoMaterialDirectory);
   info(`Calculated path for crypto material to be "${storePath}".`);
 
   const loadUser = () => FabricClient.newDefaultKeyValueStore({ path: storePath })
@@ -75,16 +75,35 @@ const createEventHub = ({
   const saveToDisk = files => Promise.all(files.map(({
     FileUploadContent: fileContent,
     FileUploadFileName: filename,
-  }) => new Promise((resolve, reject) => {
-    const filePath = path.join(storePath, filename);
-    fs.writeFile(filePath, fileContent, (err) => {
-      if (err) {
-        reject(err);
-      }
-      info(`File saved to disk: ${filePath}`);
-      resolve(filePath);
+  }) => {
+    const promiseMakeDir = new Promise((resolve, reject) => {
+      fs.mkdir(storePath, { recursive: true }, (err) => {
+        if (err) {
+          log.error(`[${networkName}] Failed to make directory (recursively) "${storePath}".`);
+          reject(err);
+          return;
+        }
+
+        info(`Directory created: "${storePath}".`);
+        resolve(storePath);
+      });
     });
-  })));
+
+    const promiseWriteFile = new Promise((resolve, reject) => {
+      const filePath = path.join(storePath, filename);
+      fs.writeFile(filePath, fileContent, (err) => {
+        if (err) {
+          log.error(`[${networkName}] Failed to write file to "${filePath}".`);
+          reject(err);
+          return;
+        }
+        info(`File saved to disk: ${filePath}`);
+        resolve(filePath);
+      });
+    });
+
+    return promiseMakeDir.then(() => promiseWriteFile);
+  }));
 
   return db.businessNetworks
     .loadFiles(networkGUID)
