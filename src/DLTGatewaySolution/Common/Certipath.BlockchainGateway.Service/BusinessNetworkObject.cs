@@ -316,5 +316,55 @@ namespace CertiPath.BlockchainGateway.Service
             }
             return res;
         }
+
+        public void SaveChart(BusinessNetworkObjectChartModel obj)
+        {
+            obj.GUID = obj.GUID == null ? Guid.Empty : obj.GUID;
+            var chart = _context.BusinessNetworkObjectChart.Where(w => w.GUID == obj.GUID).SingleOrDefault();
+            string originalObject = chart == null ? "" : _converter.GetJson(chart);
+            bool lAddNew = false;
+            if (chart == null)
+            {
+                lAddNew = true;
+                chart = new BusinessNetworkObjectChart();
+                chart.GUID = Guid.NewGuid();
+                chart.Deleted = false;
+                chart.Disabled = false;
+                chart.BusinessNetworkObjectGUID = obj.BusinessNetworkObjectGUID;
+            }
+            chart.Name = obj.Name;
+            chart.Description = obj.Description;
+            chart.ChartTypeGUID = obj.ChartTypeGUID;
+            chart.SortOrder = getNextChartSortOrder(obj.BusinessNetworkObjectGUID);
+            chart.ChartSettings = Newtonsoft.Json.JsonConvert.SerializeObject(obj.ChartSettingsObject);
+
+            if (lAddNew)
+            {
+                _context.BusinessNetworkObjectChart.Add(chart);
+            }
+            _context.SaveChanges();
+
+            // Audit Log
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
+            AuditLogModel alm = new AuditLogModel();
+
+            alm.OperationType = AuditLogOperationType.Delete;
+            alm.PrimaryObjectGUID = chart.GUID;
+            alm.PrimaryObjectType = AuditLogObjectType.BusinessNetworkObjectChart;
+            alm.SecondaryObjectGUID = chart.BusinessNetworkObjectGUID;
+            alm.SecondaryObjectType = AuditLogObjectType.BusinessNetworkObject;
+            alm.NewRecordValue = _converter.GetJson(chart);
+            alm.OldRecordValue = originalObject;
+            alo.Save(alm);
+        }
+
+        private int getNextChartSortOrder(Guid objGUID)
+        {
+            var last = _context.BusinessNetworkObjectChart
+                        .Where(w => w.BusinessNetworkObjectGUID == objGUID)
+                        .OrderByDescending(o => o.SortOrder)
+                        .Take(1).SingleOrDefault();
+            return last == null ? 0 : last.SortOrder + 1;
+        }
     }
 }

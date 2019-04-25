@@ -132,7 +132,8 @@ export default class TrackedObjectList extends React.Component {
                                                 />
                                             </TabPane>
                                             <TabPane tabId="2">
-                                                <TabChartList
+                                               <TabChartList
+                                                    BusinessNetworkObjectGUID={this.state.ObjectGUID}
                                                     ChartList={this.state.ObjectChartList}
                                                     ChartCategoryList={this.state.ChartCategoryList}
                                                     ChartTypeList={this.state.ChartTypeList}

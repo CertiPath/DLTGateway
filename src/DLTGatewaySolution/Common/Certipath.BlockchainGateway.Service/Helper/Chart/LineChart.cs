@@ -69,25 +69,34 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
             // options - scales
             chartOptions.Scales = new Model.Scales();
             chartOptions.Scales.XAxes = new List<Model.Ax>();
-            chartOptions.Scales.XAxes.Add(new Model.Ax()
+            if (chartSettings.XAxes != null)
             {
-                Display = true,
-                GridLines = new Model.GridLines() { Color = "#f3f3f3", DrawTicks = false },
-                ScaleLabel = new Model.ScaleLabel() {
-                    Display = chartSettings.XAxes.Title == "" ? false : true,
-                    LabelString = chartSettings.XAxes.Title
-                }
-            });
+                chartOptions.Scales.XAxes.Add(new Model.Ax()
+                {
+                    Display = true,
+                    GridLines = new Model.GridLines() { Color = "#f3f3f3", DrawTicks = false },
+                    ScaleLabel = new Model.ScaleLabel()
+                    {
+                        Display = chartSettings.XAxes.Title == "" ? false : true,
+                        LabelString = chartSettings.XAxes.Title
+                    }
+                });
+            }
+
             chartOptions.Scales.YAxes = new List<Model.Ax>();
-            chartOptions.Scales.YAxes.Add(new Model.Ax()
+            if (chartSettings.YAxes != null)
             {
-                Display = true,
-                GridLines = new Model.GridLines() { Color = "#f3f3f3", DrawTicks = false },
-                ScaleLabel = new Model.ScaleLabel() {
-                    Display = chartSettings.YAxes.Title == "" ? false : true,
-                    LabelString = chartSettings.YAxes.Title
-                }
-            });
+                chartOptions.Scales.YAxes.Add(new Model.Ax()
+                {
+                    Display = true,
+                    GridLines = new Model.GridLines() { Color = "#f3f3f3", DrawTicks = false },
+                    ScaleLabel = new Model.ScaleLabel()
+                    {
+                        Display = chartSettings.YAxes.Title == "" ? false : true,
+                        LabelString = chartSettings.YAxes.Title
+                    }
+                });
+            }
             model.Options = chartOptions;
 
             Model.ObjectChartReturnModel res = new Model.ObjectChartReturnModel();

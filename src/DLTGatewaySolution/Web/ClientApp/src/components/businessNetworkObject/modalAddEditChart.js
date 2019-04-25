@@ -27,7 +27,8 @@ class ModalAddEditChart extends Component {
         this.ChartCategoryChangedAction = this.ChartCategoryChangedAction.bind(this);
         this.onSeriesUpdated = this.onSeriesUpdated.bind(this);
         this.onUpdateStep4Action = this.onUpdateStep4Action.bind(this);
-        
+        this.handleSaveClick = this.handleSaveClick.bind(this);
+
         this.state = {
             modal: false,
             CurrentStep: 0,
@@ -92,6 +93,33 @@ class ModalAddEditChart extends Component {
         this.setState({
             ChartSeries: series
         });
+    }
+    handleSaveClick() {
+        this.toggle();
+        apiClient.post('BusinessNetworkObject/SaveChart', {
+            GUID: this.state.ChartGUID,
+            BusinessNetworkObjectGUID: this.props.BusinessNetworkObjectGUID,
+            Name: this.state.ChartName,
+            Description: this.state.ChartDescription,
+            ChartTypeGUID: this.state.ChartTypeGUID,
+            ChartSettingsObject: {
+                ShowGridlines: this.state.ChartShowGridlines,
+                XAxes: {
+                    Title: "",
+                    Category: "TIMELINE",
+                    Type: this.state.ChartDataType,
+                    Value: this.state.ChartDataValue
+                },
+                Series: this.state.ChartSeries
+            }
+        })
+            .then(res => {
+                toastr.success('Success', 'Object chart successfully saved.', { position: 'top-right' });
+                this.props.OnFinishedAction();
+            })
+            .catch(function (error) {
+                toastr.error('Error', 'There was an error trying to save chart.', { position: 'top-right' });
+            });
     }
     
     render() {
@@ -227,10 +255,11 @@ class ModalAddEditChart extends Component {
                     </ModalBody>
                     <ModalFooter>
                         {
-                            this.state.CurrentStep == 4 ? 
+                            (this.state.CurrentStep == 4 && this.state.ChartCategoryCode == 'TIMELINE') ||
+                                (this.state.CurrentStep == 3) ? 
                             ( 
                                     <Button color="primary" onClick={() => {
-                                        this.handleButtonClick();
+                                        this.handleSaveClick();
                                     }}>
                                         {this.props.ButtonText}
                                     </Button>
