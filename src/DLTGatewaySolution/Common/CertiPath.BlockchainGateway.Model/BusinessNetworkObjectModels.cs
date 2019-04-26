@@ -46,6 +46,8 @@ namespace CertiPath.BlockchainGateway.Model
         public System.Guid ChartTypeGUID { get; set; }
         public string ChartTypeCode { get; set; }
         public string ChartTypeName { get; set; }
+
+        public NetworkObjectChartSetting ChartSettingsObject { get; set; }
     }
 
     #region Object Chart Data

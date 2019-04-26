@@ -19,6 +19,7 @@ export default class TrackedObjectChartList extends React.Component {
         this.handleClickDelete = this.handleClickDelete.bind(this);
         this.handleEnable = this.handleEnable.bind(this);
         this.handleDisable = this.handleDisable.bind(this);
+        this.onFinishedAddEdit = this.onFinishedAddEdit.bind(this);
     }
     
     handleEnable(chartGUID) {
@@ -61,6 +62,10 @@ export default class TrackedObjectChartList extends React.Component {
             .catch(function (error) {
                 toastr.error('Error', 'There was an error trying to delete chart.', { position: 'top-right' });
             });
+    }
+
+    onFinishedAddEdit() {
+        this.props.ReloadListAction();
     }
     
     render() {
@@ -155,6 +160,7 @@ export default class TrackedObjectChartList extends React.Component {
                                             CategoryList={this.props.ChartCategoryList}
                                             TypeList={this.props.ChartTypeList}
                                             PropertyList={this.props.PropertyList}
+                                            BusinessNetworkObjectGUID={this.props.BusinessNetworkObjectGUID}
 
                                             OnFinishedAction={this.onFinishedAddEdit}
                                             GUID={null}

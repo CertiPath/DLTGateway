@@ -102,6 +102,15 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
             bno.DeleteChart(obj.GUID);
         }
+
+        [HttpPost]
+        public void SaveChart(BusinessNetworkObjectChartModel obj)
+        {
+            // TODO: Deal with response object and do error handling
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            bno.SaveChart(obj);
+        }
     }
 
 }
