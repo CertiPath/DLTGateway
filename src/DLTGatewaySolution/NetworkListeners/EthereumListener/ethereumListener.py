@@ -1,7 +1,12 @@
+import hashlib
 import logging
 from collections import namedtuple
 from functools import reduce
 from os import getenv
+
+import pymssql
+
+from constants import DOCKER_SECRET_SQL_LOGIN_PWD, DOCKER_SECRET_DIR
 
 
 class ConfigurationException(RuntimeError):
@@ -36,9 +41,31 @@ def load_env(sql_cns='DLT_SQL_CNS'):
     return parse_mssql_cns(cns_val)
 
 
+def load_secrets(parsed_env_cns, secret_name=DOCKER_SECRET_SQL_LOGIN_PWD):
+    pwd_field = 'password'
+    # Python namedtuple uses "_" to prevent collision, not for access protection.
+    # noinspection PyProtectedMember
+    d = parsed_env_cns._asdict()
+    if pwd_field in d:
+        return parsed_env_cns
+
+    file_path = f"{DOCKER_SECRET_DIR}/{secret_name}"
+    logging.info(f'Reading docker secret at "{file_path}"')
+    with open(file_path, 'r') as f:
+        pwd = f.read()
+        md5 = hashlib.md5(pwd.encode('utf-8'))
+        logging.info(f'Hashed password: {md5}')
+    logging.info(f'Closing file at "{file_path}"')
+    f.close()
+    d[pwd_field] = pwd
+    return namedtuple('ParsedCns', d.keys())(**d)
+
+
 def main():
     logging.basicConfig(level=logging.INFO)
-    load_env()
+
+    parsed_cns = load_secrets(load_env())
+    conn = pymssql.connect(parsed_cns.server, parsed_cns.user, parsed_cns.password, parsed_cns.database)
 
 
 if __name__ == '__main__':
