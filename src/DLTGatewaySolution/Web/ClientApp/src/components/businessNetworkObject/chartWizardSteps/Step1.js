@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { Row, Col, Form, FormGroup, Label, Input, Alert } from "reactstrap";
+import { toastr } from 'react-redux-toastr';
 
 export default class Step1 extends Component {
 
     constructor(props) {
 
         super();
+        
+        //this.isValidated = this.isValidated.bind(this);
 
         this.state = {
             SelectedCategoryGUID: props.ChartCategoryGUID,
@@ -18,11 +21,15 @@ export default class Step1 extends Component {
     
     componentDidMount() {
 
+        this.props.onRef(this);
         if (this.state.SelectedCategoryGUID != null) {
             this.categoryChange(null);
         }
     }
-    
+    componentWillUnmount() {
+        this.props.onRef(undefined);
+    }
+   
     categoryChange(event) {
 
         let categoryGUID = event != null ? event.target.value : this.state.SelectedCategoryGUID
@@ -53,7 +60,9 @@ export default class Step1 extends Component {
             TypeList: typeList
         })
         if (event != null) {
-            this.props.ChartTypeChangedAction(typeList[0].GUID, typeList[0].Name);
+            if (typeList.length > 0) {
+                this.props.ChartTypeChangedAction(typeList[0].GUID, typeList[0].Name);
+            }
         }
         this.props.ChartCategoryChangedAction(categoryGUID, categoryName, categoryCode);
     }
@@ -69,6 +78,16 @@ export default class Step1 extends Component {
         });
 
         this.props.ChartTypeChangedAction(typeGUID, typeName);
+    }
+
+    isValidated() {
+        if (this.state.SelectedCategoryGUID == null || this.state.SelectedCategoryGUID == '' ||
+            this.state.SelectedTypeGUID == null || this.state.SelectedTypeGUID == '') {
+
+            toastr.warning('Warning', 'Chart category and chart types are required selections.', { position: 'top-right' });
+            return false;
+        }
+        return true;
     }
 
     render() {
@@ -94,53 +113,53 @@ export default class Step1 extends Component {
             )
         });
 
-      return (
-         <div className="step step1">
-              <Form>
-                  <div className="form-body">
-                      <Row>
-                          <Col md="12">
-                              <FormGroup>
-                                  <Label for="chartCategory">Chart Category</Label>
-                                  <Input type="select" id="chartCategory" name="chartCategory" onChange={this.categoryChange.bind(this)} >
-                                      <option value="" defaultValue="">
-                                          
-                                      </option>
-                                      {categoryOptions}
-                                  </Input>
-                              </FormGroup>
-                          </Col>
-                          <Col md="12">
-                              <FormGroup>
-                                  {
-                                      this.state.SelectedCategoryDescription == '' ? '' : (
-                                          <Alert color="dark">
-                                              {this.state.SelectedCategoryDescription}
-                                          </Alert>       
-                                      )
-                                  }
-                              </FormGroup>
-                          </Col>
-                      </Row>
+        return (
+            <div className="step step1">
+                <Form>
+                    <div className="form-body">
+                        <Row>
+                            <Col md="12">
+                                <FormGroup>
+                                    <Label for="chartCategory">Chart Category</Label>
+                                    <Input type="select" id="chartCategory" name="chartCategory" onChange={this.categoryChange.bind(this)} >
+                                        <option value="" defaultValue="">
 
-                      {
-                          this.state.SelectedCategoryGUID == null || this.state.SelectedCategoryGUID == '' ? '' : 
-                              (
-                                  <Row>
-                                      <Col md="12">
-                                          <FormGroup>
-                                              <Label for="chartType">Chart Type</Label>
-                                              <Input type="select" id="chartType" name="chartType" onChange={this.typeChange.bind(this)}>
-                                                  {typeOptions}
-                                              </Input>
-                                          </FormGroup>
-                                      </Col>
-                                  </Row>           
-                              )
-                      }
-                  </div>
-              </Form>
-         </div>
-      );
+                                        </option>
+                                        {categoryOptions}
+                                    </Input>
+                                </FormGroup>
+                            </Col>
+                            <Col md="12">
+                                <FormGroup>
+                                    {
+                                        this.state.SelectedCategoryDescription == '' ? '' : (
+                                            <Alert color="dark">
+                                                {this.state.SelectedCategoryDescription}
+                                            </Alert>
+                                        )
+                                    }
+                                </FormGroup>
+                            </Col>
+                        </Row>
+
+                        {
+                            this.state.SelectedCategoryGUID == null || this.state.SelectedCategoryGUID == '' ? '' :
+                                (
+                                    <Row>
+                                        <Col md="12">
+                                            <FormGroup>
+                                                <Label for="chartType">Chart Type</Label>
+                                                <Input type="select" id="chartType" name="chartType" onChange={this.typeChange.bind(this)}>
+                                                    {typeOptions}
+                                                </Input>
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                )
+                        }
+                    </div>
+                </Form>
+            </div>
+        );
    }
 }

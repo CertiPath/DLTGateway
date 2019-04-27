@@ -30,9 +30,7 @@ export default class StepZilla extends Component {
          } else {
             // check if isValidated was exposed in the step, if yes then set initial state as not validated (false) or vice versa
             // if HOCValidation is used for the step then mark it as "requires to be validated. i.e. false"
-
-             // TODO: FIX THIS
-             //i.validated = typeof i.component.type === "undefined" || (typeof i.component.type.prototype.isValidated === "undefined" && !this.isStepAtIndexHOCValidationBased(idx)) ? true : false;
+             i.validated = typeof i.component.type === "undefined" || typeof i.component.type.prototype === "undefined" || (typeof i.component.type.prototype.isValidated === "undefined" && !this.isStepAtIndexHOCValidationBased(idx)) ? true : false;
          }
 
          return i;
@@ -235,8 +233,7 @@ export default class StepZilla extends Component {
 
    // are we allowed to move forward? via the next button or via jumpToStep?
    stepMoveAllowed(skipValidationExecution = false) {
-      let proceed = false;
-
+       let proceed = false;
       if (this.props.dontValidate) {
          proceed = true;
       } else {
@@ -244,9 +241,17 @@ export default class StepZilla extends Component {
             // we are moving backwards in steps, in this case dont validate as it means the user is not commiting to "save"
             proceed = true;
          } else if (this.isStepAtIndexHOCValidationBased(this.state.compState)) {
-            // the user is using a higer order component (HOC) for validation (e.g react-validation-mixin), this wraps the StepZilla steps as a HOC,
-            // so use hocValidationAppliedTo to determine if this step needs the aync validation as per react-validation-mixin interface
-            proceed = this.refs.activeComponent.refs.component.isValidated();
+             // the user is using a higer order component (HOC) for validation (e.g react-validation-mixin), this wraps the StepZilla steps as a HOC,
+             // so use hocValidationAppliedTo to determine if this step needs the aync validation as per react-validation-mixin interface
+
+             // NB: my hack here
+             // proceed = this.refs.activeComponent.refs.component.isValidated();
+             if (this.props.StepRefs[this.state.compState] != undefined) {
+                 proceed = this.props.StepRefs[this.state.compState].isValidated();
+             }
+             else {
+                 proceed = true;
+             }
          } else if (Object.keys(this.refs).length === 0 || typeof this.refs.activeComponent.isValidated === "undefined") {
             // if its a form component, it should have implemeted a public isValidated class (also pure componenets wont even have refs - i.e. a empty object). If not then continue
             proceed = true;
@@ -283,8 +288,8 @@ export default class StepZilla extends Component {
    // render the steps as stepsNavigation
    renderSteps() {
       return this.props.steps.map((s, i) => (
-         <li
-            className={this.getClassName("progtrckr", i)}
+          <li
+              className={this.getClassName("progtrckr", i)}
             onClick={evt => {
                this.jumpToStep(evt);
             }}

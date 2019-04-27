@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col, Form, FormGroup, Label, Input, Alert, Table, Button } from "reactstrap";
 import { Trash2 } from 'react-feather';
+import { toastr } from 'react-redux-toastr';
 
 import Spinner from "../../../components/spinner/spinner"
 import ConfirmDelete from "../../../components/common/modal/ConfirmDialog";
@@ -29,10 +30,10 @@ export default class Step3 extends Component {
     }
 
     componentDidMount() {
-
-        //if (this.state.SelectedCategoryGUID != null) {
-        //    this.categoryChange(null);
-        //}
+        this.props.onRef(this)
+    }
+    componentWillUnmount() {
+        this.props.onRef(undefined)
     }
     
     handleClickDelete(propertyGUID) {
@@ -113,6 +114,14 @@ export default class Step3 extends Component {
         this.setState({
             PropertySelectedValue: propertyGUID
         });
+    }
+
+    isValidated() {
+        if (this.state.Series == null || this.state.Series.length == 0) {
+            toastr.warning('Warning', 'You must select at least one data point', { position: 'top-right' });
+            return false;
+        }
+        return true;
     }
 
     render() {

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Form, FormGroup, Label, Input, Alert } from "reactstrap";
+import { toastr } from 'react-redux-toastr';
 
 export default class Step2 extends Component {
 
@@ -14,20 +15,34 @@ export default class Step2 extends Component {
     }
 
     componentDidMount() {
-
-        //if (this.state.SelectedCategoryGUID != null) {
-        //    this.categoryChange(null);
-        //}
+        this.props.onRef(this)
+    }
+    componentWillUnmount() {
+        this.props.onRef(undefined)
     }
 
     nameChange(event) {
         const name = event.target.value
+        this.setState({
+            ChartName: name
+        })
         this.props.ChartNameChangedAction(name);
     }
 
     descriptionChange(event) {
         const desc = event.target.value
+        this.setState({
+            ChartDescription: desc
+        })
         this.props.ChartDescriptionChangedAction(desc);
+    }
+
+    isValidated() {
+        if (this.state.ChartName == null || this.state.ChartName == '') {
+            toastr.warning('Warning', 'Chart name is required value.', { position: 'top-right' });
+            return false;
+        }
+        return true;
     }
 
     render() {
