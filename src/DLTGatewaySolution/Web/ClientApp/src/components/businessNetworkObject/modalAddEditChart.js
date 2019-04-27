@@ -28,7 +28,7 @@ class ModalAddEditChart extends Component {
         this.onSeriesUpdated = this.onSeriesUpdated.bind(this);
         this.onUpdateStep4Action = this.onUpdateStep4Action.bind(this);
         this.handleSaveClick = this.handleSaveClick.bind(this);
-
+        
         this.state = {
             modal: false,
             CurrentStep: 0,
@@ -130,6 +130,8 @@ class ModalAddEditChart extends Component {
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step1
+                            onRef={ref => (this.step1 = ref)}
+
                             ChartGUID={this.props.GUID}
                             ChartCategoryGUID={this.state.ChartCategoryGUID}
                             ChartTypeGUID={this.state.ChartTypeGUID}
@@ -143,13 +145,17 @@ class ModalAddEditChart extends Component {
                         />
                     </div>
                 ),
-                visible: true
+                visible: true,
+                isValidated: () => this.step1Validate()
+
             },
             {
                 name: "Name and Description",
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step2
+                            onRef={ref => (this.step2 = ref)}
+
                             ChartName={this.state.ChartName}
                             ChartDescription={this.state.ChartDescription}
                             ChartNameChangedAction={this.ChartNameChangedAction}
@@ -157,16 +163,18 @@ class ModalAddEditChart extends Component {
                         />
                     </div>
                 ),
-                visible: true
+                visible: true,
+                isValidated: false
             },
             {
                 name: "Data",
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step3
+                            onRef={ref => (this.step3 = ref)}
+
                             ChartSeries={this.state.ChartSeries}
                             PropertyList={this.props.PropertyList}
-
                             OnSeriesUpdated={this.onSeriesUpdated}
                         />
                     </div>
@@ -178,6 +186,7 @@ class ModalAddEditChart extends Component {
                 component: (
                     <div style={{ height: '400px' }}>
                         <Step4
+                            onRef={ref => (this.step4 = ref)}
                             DataValue={this.state.ChartDataValue}
                             DataType={this.state.ChartDataType}
                             ShowGridlines={this.state.ChartShowGridlines}
@@ -248,15 +257,16 @@ class ModalAddEditChart extends Component {
                             steps={stepsFinal}
                             preventEnterSubmission={true}
                             nextTextOnFinalActionStep={"Save"}
-                            //hocValidationAppliedTo={[3]}
+                            hocValidationAppliedTo={[0, 1, 2, 3]}
                             startAtStep={0}
-                            onStepChange={step => this.setState({ CurrentStep: step }) }
+                            onStepChange={step => this.setState({ CurrentStep: step })}
+                            StepRefs={[this.step1, this.step2, this.step3, this.step4]}
                     />
                     </ModalBody>
                     <ModalFooter>
                         {
                             (this.state.CurrentStep == 4 && this.state.ChartCategoryCode == 'TIMELINE') ||
-                                (this.state.CurrentStep == 3) ? 
+                                (this.state.CurrentStep == 3 && this.state.ChartCategoryCode != 'TIMELINE') ? 
                             ( 
                                     <Button color="primary" onClick={() => {
                                         this.handleSaveClick();

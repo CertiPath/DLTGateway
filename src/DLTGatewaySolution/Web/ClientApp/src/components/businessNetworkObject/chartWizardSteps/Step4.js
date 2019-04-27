@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Form, FormGroup, Label, Input, Alert, Table, Button, CustomInput, } from "reactstrap";
+import { toastr } from 'react-redux-toastr';
 
 export default class Step4 extends Component {
     constructor(props) {
@@ -13,9 +14,12 @@ export default class Step4 extends Component {
         };
     }
     
-    componentDidMount() {}
-
-    componentWillUnmount() {}
+    componentDidMount() {
+        this.props.onRef(this)
+    }
+    componentWillUnmount() {
+        this.props.onRef(undefined)
+    }
 
     dataValueChange(event) {
         const value = event.target.value
@@ -39,6 +43,18 @@ export default class Step4 extends Component {
             ShowGridlines: value
         });
         this.props.OnUpdateStep4Action(this.state.DataValue, this.state.DataType, value);
+    }
+
+    isValidated() {
+        if (this.state.DataValue == null || this.state.DataValue == '') {
+            toastr.warning('Warning', 'Number of records/length of time is a required numeric value.', { position: 'top-right' });
+            return false;
+        }
+        else if (!Number.isInteger(parseInt(this.state.DataValue))) {
+            toastr.warning('Warning', 'Must be an integer value.', { position: 'top-right' });
+            return false;
+        }
+        return true;
     }
 
    render() {
