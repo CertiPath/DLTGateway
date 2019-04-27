@@ -1,5 +1,4 @@
-﻿using CertiPath.BlockchainGateway.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,10 +8,9 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 {
     public class HomeController : Controller
     {
+        // GET: Home
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
-
             return View();
         }
     }

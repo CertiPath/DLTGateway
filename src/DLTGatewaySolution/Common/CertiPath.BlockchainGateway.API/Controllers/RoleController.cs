@@ -9,6 +9,7 @@ using System.Web.Http.Cors;
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [Authorize]
     public class RoleController : ApiController
     {
         [HttpPost]

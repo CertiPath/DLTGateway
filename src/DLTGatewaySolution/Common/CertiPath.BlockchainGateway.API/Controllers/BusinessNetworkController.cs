@@ -10,6 +10,7 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
+    [Authorize]
     public class BusinessNetworkController : ApiController
     {
         //[HttpGet()]

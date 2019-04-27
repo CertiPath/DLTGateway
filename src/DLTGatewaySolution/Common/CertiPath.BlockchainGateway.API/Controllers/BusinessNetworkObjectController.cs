@@ -5,6 +5,7 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
+    [Authorize]
     public class BusinessNetworkObjectController : ApiController
     {
         public List<BusinessNetworkObjectViewModel> GetAllByNamespace(Guid BusinessNetworkNamespaceGUID)

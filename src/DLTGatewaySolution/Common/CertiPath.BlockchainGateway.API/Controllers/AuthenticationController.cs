@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
+    [AllowAnonymous]
     public class AuthenticationController : ApiController
     {
         [HttpPost]

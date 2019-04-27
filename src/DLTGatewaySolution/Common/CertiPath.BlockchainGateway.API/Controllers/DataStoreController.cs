@@ -9,6 +9,7 @@ using System.Web.Http.Cors;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
+    [Authorize]
     public class User
     {
         public string LastName { get; set; }
