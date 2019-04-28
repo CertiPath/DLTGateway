@@ -16,7 +16,7 @@ const MainLayoutRoute = ({ render, ...rest }) => {
             Email: ""
         }
     }
-    const isLoggedIn = user.IsAuthenticated;
+    const isLoggedIn = user.IsAuthenticated.toString().toUpperCase() == 'TRUE';
     
     return (
         <Route

@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
+    [Authorize]
     public class DashboardController : ApiController
     {
         public Model.BasicStatsModel GetBasicStats()

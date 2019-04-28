@@ -4,6 +4,8 @@ import { Button, Card, CardBody, CardHeader, Col, FormGroup, Row } from "reactst
 import { Field, Form, Formik } from "formik";
 // import external modules
 import React, { Component } from "react";
+import qs from 'qs';
+import { toastr } from 'react-redux-toastr';
 
 import Footer from "../../layouts/components/footer/footer";
 import Spinner from "../../components/spinner/spinner";
@@ -28,10 +30,14 @@ class Login extends Component {
             isLoading: false
         };
 
-        // TODO: fix all of this
-        // should not be here but for now each visit to login page will log us out.. I think that is ok
-        sessionStorage.setItem('userAuth', JSON.stringify({ IsAuthenticated: false, FirstName: "", LastName: "", Email: "" }));
-
+        sessionStorage.setItem('userAuth', JSON.stringify(
+            {
+                IsAuthenticated: false,
+                Token: "",
+                FirstName: "",
+                LastName: "",
+                Email: ""
+            }));
     }
 
    render() {
@@ -50,19 +56,26 @@ class Login extends Component {
 
                               <Formik
                                   initialValues={{
+                                      grant_type: "password",
                                       Username: "",
                                       Password: ""
                                   }}
                                   validationSchema={formSchema}
                                   onSubmit={values => {
-
+                                      var self = this
                                       this.setState({ invalidUsernameOrPassword: false, isLoading: true });
                                       apiClient
-                                          .post('Authentication/Login', values)
+                                          .post('oauth2/token',
+                                              qs.stringify(values),
+                                                  {
+                                                  headers: {
+                                                            'Content-Type': 'application/x-www-form-urlencoded',
+                                                            'Accept': "*/*"
+                                                            }
+                                                        })
                                           .then(res => {
-                                             
                                               this.setState({ isLoading: false });
-                                              if (res.data.IsAuthenticated) {
+                                              if (res.data.IsAuthenticated.toUpperCase() == 'TRUE') {
                                                   sessionStorage.setItem('userAuth', JSON.stringify(res.data));
                                                   //this.props.history.push('/Dashboard'); 
                                                   window.location = '/Dashboard';       //TODO: fix this, just so it can get new values for user until I figure it out
@@ -72,7 +85,16 @@ class Login extends Component {
                                               }
                                           })
                                           .catch(function (error) {
-                                              alert(error);
+                                              self.setState({ isLoading: false });
+                                              if (error.request.response != undefined && error.request.response != null) {
+                                                  toastr.warning('Authentication Failure', 'Could not authenticate user. Check username and password.', {
+                                                      position: 'top-left', width: '100%', 'align-items': 'center'});
+                                              }
+                                              else {
+                                                  toastr.warning('Authentication Failure', error, {
+                                                      position: 'top-left', width: '100%', 'align-items': 'center'
+                                                  });
+                                              }
                                           });
                                   }}
                               >
