@@ -14,11 +14,10 @@ namespace CertiPath.BlockchainGateway.API
         
         public void ConfigureAuth(IAppBuilder app)
         {
-
             var OAuthOptions = new OAuthAuthorizationServerOptions
             {
-                AllowInsecureHttp = true,
-                TokenEndpointPath = new PathString("/token"),
+                AllowInsecureHttp = true,                       // TODO: Should probably change this in production
+                TokenEndpointPath = new PathString("/api/oauth2/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(20),
                 Provider = new AuthorizationServerProvider()
             };

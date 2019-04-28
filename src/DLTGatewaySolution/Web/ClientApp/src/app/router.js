@@ -36,7 +36,7 @@ class Router extends Component {
             }
         }
         this.state = {
-            dashboardWelcomeMessage: strings.Dashboard.WelcomeMessage + ', ' + user.FirstName,
+            dashboardWelcomeMessage: strings.Dashboard.WelcomeMessage + ', ' + user.UserFirstName,
         };
     }
 

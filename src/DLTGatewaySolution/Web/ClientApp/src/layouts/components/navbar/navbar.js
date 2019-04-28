@@ -244,7 +244,7 @@ class ThemeNavbar extends Component {
                            <DropdownMenu right>
                               <DropdownItem>
                                  <span className="font-small-3">
-                                    {user.FirstName} {user.LastName} <span className="text-muted">(Admin)</span>
+                                    {user.UserFirstName} {user.UserLastName} <span className="text-muted">(Admin)</span>
                                  </span>
                               </DropdownItem>
                               <DropdownItem divider />

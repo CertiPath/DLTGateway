@@ -36,28 +36,26 @@ namespace CertiPath.BlockchainGateway.API.Auth
                     identity.AddClaim(new Claim("sub", context.UserName));
                     identity.AddClaim(new Claim("role", "user"));
 
-                    context.Validated(identity);
+                    var props = new AuthenticationProperties(new Dictionary<string, string>());
+                    props.Dictionary.Add("IsAuthenticated", Boolean.TrueString);
+                    props.Dictionary.Add("UserFirstName", res.FirstName);
+                    props.Dictionary.Add("UserLastName", res.LastName);
+                    props.Dictionary.Add("UserEmail", res.Email);
+
+                    var ticket = new AuthenticationTicket(identity, props);
+                    context.Validated(ticket);
                 }
             }
+        }
 
-            /* TODO: consider code below and working with IdentityUser
-            using (AuthRepository _repo = new AuthRepository())
+        public override Task TokenEndpoint(OAuthTokenEndpointContext context)
+        {
+            // for additional properties I want to return alongside the token
+            foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
             {
-                IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
-
-                if (user == null)
-                {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
-                    return;
-                }
+                context.AdditionalResponseParameters.Add(property.Key, property.Value);
             }
-            var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim("sub", context.UserName));
-            identity.AddClaim(new Claim("role", "user"));
-
-            context.Validated(identity);
-            */
-
+            return Task.FromResult<object>(null);
         }
     }
 }
