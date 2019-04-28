@@ -4,8 +4,9 @@ from collections import namedtuple
 from unittest import mock
 from unittest.mock import mock_open, patch
 
-from ethereumListener import load_env, ConfigurationException, parse_mssql_cns, load_secrets
-from constants import DOCKER_SECRET_DIR
+from ethereumListener import load_env, ConfigurationException, parse_mssql_cns, load_secrets, db_query_network, \
+    fetch_all
+from constants import DOCKER_SECRET_SQL_LOGIN_PWD, DOCKER_SECRET_DIR, FRAMEWORK_NAME_ETH
 
 
 class TestClass(unittest.TestCase):
@@ -55,6 +56,53 @@ class TestClass(unittest.TestCase):
             actual = load_secrets(parsed_cns, secret_name)
         m.assert_called_once_with(f'{DOCKER_SECRET_DIR}/{secret_name}', 'r')
         self.assertEqual(actual.password, password)
+
+    @patch('ethereumListener.fetch_all')
+    def test_db_query_network_with_network_name(self, mock_fetch_all):
+        env_dict = {'server': 'dummy_server', 'database': 'dummy_database', 'user': 'dummy_user',
+                    'password': 'dummy_password'}
+        parsed_cns = namedtuple('ParsedCns', env_dict.keys())(**env_dict)
+        network_name = 'dummy_network'
+        db_query_network(parsed_cns, network_name)
+        mock_fetch_all.assert_called_with(parsed_cns, f"""
+        SELECT N.GUID,
+               N.BlockchainFrameworkGUID,
+               N.Name,
+               N.Endpoint,
+               N.Deleted,
+               N.LastBlockProcessed,
+               N.Disabled
+        FROM   BusinessNetwork AS N
+               INNER JOIN BlockchainFramework AS F
+                       ON N.BlockchainFrameworkGUID = F.GUID
+        WHERE  N.Deleted = 0
+               AND F.Deleted = 0
+               AND F.Name = '{FRAMEWORK_NAME_ETH}'
+               AND N.Name = '{network_name}'
+       """)
+
+    @patch('ethereumListener.fetch_all')
+    def test_db_query_network_without_network_name(self, mock_fetch_all):
+        env_dict = {'server': 'dummy_server', 'database': 'dummy_database', 'user': 'dummy_user',
+                    'password': 'dummy_password'}
+        parsed_cns = namedtuple('ParsedCns', env_dict.keys())(**env_dict)
+        db_query_network(parsed_cns)
+        mock_fetch_all.assert_called_with(parsed_cns, f"""
+        SELECT N.GUID,
+               N.BlockchainFrameworkGUID,
+               N.Name,
+               N.Endpoint,
+               N.Deleted,
+               N.LastBlockProcessed,
+               N.Disabled
+        FROM   BusinessNetwork AS N
+               INNER JOIN BlockchainFramework AS F
+                       ON N.BlockchainFrameworkGUID = F.GUID
+        WHERE  N.Deleted = 0
+               AND F.Deleted = 0
+               AND F.Name = '{FRAMEWORK_NAME_ETH}'
+               
+       """)
 
 
 if __name__ == '__main__':

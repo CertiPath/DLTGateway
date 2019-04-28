@@ -6,7 +6,7 @@ from os import getenv
 
 import pymssql
 
-from constants import DOCKER_SECRET_SQL_LOGIN_PWD, DOCKER_SECRET_DIR
+from constants import DOCKER_SECRET_SQL_LOGIN_PWD, DOCKER_SECRET_DIR, FRAMEWORK_NAME_ETH
 
 
 class ConfigurationException(RuntimeError):
@@ -61,11 +61,46 @@ def load_secrets(parsed_env_cns, secret_name=DOCKER_SECRET_SQL_LOGIN_PWD):
     return namedtuple('ParsedCns', d.keys())(**d)
 
 
+def fetch_all(parsed_cns, sql):
+    with pymssql.connect(parsed_cns.server, parsed_cns.user, parsed_cns.password, parsed_cns.database) as conn:
+        with conn.cursor(as_dict=True) as cursor:
+            cursor.execute(sql)
+            rows = []
+            for row in cursor:
+                rows.append(row)
+            return rows
+
+
+def db_query_network(parsed_cns, network_name='', framework_name=FRAMEWORK_NAME_ETH):
+    and_network_name_condition = f"AND N.Name = '{network_name}'" if network_name else ''
+    sql = f"""
+        SELECT N.GUID,
+               N.BlockchainFrameworkGUID,
+               N.Name,
+               N.Endpoint,
+               N.Deleted,
+               N.LastBlockProcessed,
+               N.Disabled
+        FROM   BusinessNetwork AS N
+               INNER JOIN BlockchainFramework AS F
+                       ON N.BlockchainFrameworkGUID = F.GUID
+        WHERE  N.Deleted = 0
+               AND F.Deleted = 0
+               AND F.Name = '{framework_name}'
+               {and_network_name_condition}
+       """
+    logging.debug(f'Querying business network table: "{sql}"')
+    rows = fetch_all(parsed_cns, sql)
+    for row in rows:
+        logging.info(f'[{row["Name"]}] Endpoint: {row["Endpoint"]}')
+    return rows
+
+
 def main():
     logging.basicConfig(level=logging.INFO)
 
     parsed_cns = load_secrets(load_env())
-    conn = pymssql.connect(parsed_cns.server, parsed_cns.user, parsed_cns.password, parsed_cns.database)
+    db_query_network(parsed_cns)
 
 
 if __name__ == '__main__':
