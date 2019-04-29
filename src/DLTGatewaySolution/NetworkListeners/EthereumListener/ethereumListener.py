@@ -62,8 +62,9 @@ def load_secrets(parsed_env_cns, secret_name=DOCKER_SECRET_SQL_LOGIN_PWD):
     return namedtuple('ParsedCns', d.keys())(**d)
 
 
-def fetch_all(parsed_cns, sql):
-    with pymssql.connect(parsed_cns.server, parsed_cns.user, parsed_cns.password, parsed_cns.database) as conn:
+def db_fetch_all(sql):
+    cns = db_get_cns()
+    with pymssql.connect(cns.server, cns.user, cns.password, cns.database) as conn:
         with conn.cursor(as_dict=True) as cursor:
             cursor.execute(sql)
             rows = []
@@ -72,7 +73,7 @@ def fetch_all(parsed_cns, sql):
             return rows
 
 
-def db_query_network(parsed_cns, network_name='', framework_name=FRAMEWORK_NAME_ETH):
+def db_query_network(network_name='', framework_name=FRAMEWORK_NAME_ETH):
     and_network_name_condition = f"AND N.Name = '{network_name}'" if network_name else ''
     sql = f"""
         SELECT N.GUID,
@@ -91,7 +92,7 @@ def db_query_network(parsed_cns, network_name='', framework_name=FRAMEWORK_NAME_
                {and_network_name_condition}
        """
     logging.debug(f'Querying business network table: "{sql}"')
-    rows = fetch_all(parsed_cns, sql)
+    rows = db_fetch_all(sql)
     for row in rows:
         logging.info(f"[{row['Name']}] Endpoint: {row['Endpoint']}")
     return rows
@@ -108,8 +109,14 @@ def eth_get_latest_block_number(web3):
     return web3.eth.blockNumber
 
 
-# web3.eth
-# noinspection PyUnresolvedReferences
+def eth_get_block(web3, block_number):
+    return web3.eth.getBlock(block_number)
+
+
+def eth_get_tran_count(web3, block_number):
+    return web3.eth.getBlockTransactionCount(block_number)
+
+
 def eth_get_blocks(network_dict, num_blocks=10):
     web3 = eth_connect(network_dict)
 
@@ -119,7 +126,9 @@ def eth_get_blocks(network_dict, num_blocks=10):
     delta = min(max(latest_block_number - last_block_number, 0), num_blocks)
     for offset in range(delta):
         block_number = last_block_number + offset
-        logging.info(f'[{network_dict["Name"]}] Requesting block #{block_number}')
+        tran_count = eth_get_tran_count(web3, block_number)
+        logging.info(f'[{network_dict["Name"]}] Block #{block_number} contains {tran_count} transactions.')
+        # block = eth_get_block(web3, block_number)
 
 
 def process_networks(networks):
@@ -127,10 +136,23 @@ def process_networks(networks):
         eth_get_blocks(network)
 
 
+parsed_cns = None
+
+
+def db_set_cns(cns):
+    global parsed_cns
+    parsed_cns = cns
+
+
+def db_get_cns():
+    global parsed_cns
+    return parsed_cns
+
+
 def main():
     logging.basicConfig(level=logging.INFO)
-    parsed_cns = load_secrets(load_env())
-    process_networks(db_query_network(parsed_cns))
+    db_set_cns(load_secrets(load_env()))
+    process_networks(db_query_network())
 
 
 if __name__ == '__main__':
