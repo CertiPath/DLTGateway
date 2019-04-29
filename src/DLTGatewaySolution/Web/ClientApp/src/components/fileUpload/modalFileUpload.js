@@ -32,12 +32,18 @@ class ModalFileUpload extends Component {
     handleSaveFileClick = () => {
         
         this.toggle();
-        let data = new FormData();
-        data.append('file', this.state.FileData);
-        data.append('name', this.state.FileGivenName);
-        data.append('BusinessNetworkGUID', this.props.BusinessNetworkGUID);
+        let form = new FormData();
+        form.append('file', this.state.FileData);
+        form.append('name', this.state.FileGivenName);
+        form.append('BusinessNetworkGUID', this.props.BusinessNetworkGUID);
 
-        apiClient.post('BusinessNetwork/SaveConnectionFile', data)
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data' //'application/x-www-form-urlencoded' //'multipart/form-data'
+            }
+        }
+
+        apiClient.post('BusinessNetwork/SaveConnectionFile', form, config)
         .then(res => {
             toastr.success('Success', 'Connection file successfully uploaded.', { position: 'top-right' });
             this.props.HandleUploadFinished();
@@ -70,7 +76,7 @@ class ModalFileUpload extends Component {
             <div>
                 <div class="upload-btn-wrapper" title="Upload a file">
                     <Upload size={20} color="#212529" style={{ cursor: "pointer" }} />
-                    <input type="file" name="myfile" onChange={(e) => this.UploadFileSelected(e.target.files)} />
+                    <input type="file" name="myfile" id="myfile" onChange={(e) => this.UploadFileSelected(e.target.files)} />
                 </div>
                 <Modal
                     isOpen={this.state.modal}
