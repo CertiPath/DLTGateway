@@ -1,4 +1,5 @@
 import hashlib
+import json
 import logging
 from collections import namedtuple
 from functools import reduce
@@ -130,6 +131,19 @@ def db_cursor(conn):
     return conn.cursor(as_dict=True)
 
 
+def db_call_proc(sp_name, sp_params_dict, cursor):
+    cursor.callproc(sp_name, sp_params_dict.values())
+
+
+def save_tran(network_guid, block_number, tran, cursor):
+    db_call_proc('AddTransaction', {
+        'networkGUID': network_guid,
+        'blockNumber': block_number,
+        'transactionID': tran['hash'],
+        'data': json.dumps(tran)
+    }, cursor)
+
+
 def eth_get_blocks(network_dict, num_blocks=10):
     web3 = eth_connect(network_dict)
     last_block_number = network_dict["LastBlockProcessed"]
@@ -146,14 +160,14 @@ def eth_get_blocks(network_dict, num_blocks=10):
     with db_connect() as conn:
         with db_cursor(conn) as cursor:
             for offset in range(delta):
-                block_number = last_block_number + offset
+                block_number = last_block_number + offset + 1
                 tran_count = eth_get_tran_count(web3, block_number)
                 block = eth_get_block(web3, block_number)
                 block_hash = block['hash']
-                logging.info(
-                    f'[{network_name}] Block #{block_number} ({block_hash}) contains {tran_count} transactions.')
+                logging.info(f'[{network_name}] Block #{block_number} ({block_hash}) '
+                             f'contains {tran_count} transactions.')
                 for ti in range(tran_count):
-                    eth_get_tran(web3, block_number, ti)
+                    save_tran(network_dict['GUID'], block_number, eth_get_tran(web3, block_number, ti), cursor)
 
 
 def process_networks(networks):

@@ -1,8 +1,9 @@
+import json
 import os
 import unittest
 from collections import namedtuple
 from unittest import mock
-from unittest.mock import mock_open, patch
+from unittest.mock import mock_open, patch, ANY
 
 from ethereumListener import load_env, ConfigurationException, parse_mssql_cns, load_secrets, db_query_network, \
     db_fetch_all, eth_get_blocks, process_networks
@@ -159,6 +160,7 @@ class TestClass(unittest.TestCase):
                        'LastBlockProcessed': 0}
         eth_get_blocks(network_row)
 
+    @patch('ethereumListener.db_call_proc')
     @patch('ethereumListener.db_cursor')
     @patch('ethereumListener.db_connect')
     @patch('ethereumListener.eth_get_tran')
@@ -169,12 +171,14 @@ class TestClass(unittest.TestCase):
     def test_eth_get_blocks_single_block_single_tran(self, mock_eth_connect, mock_eth_get_latest_block_number,
                                                      mock_eth_get_tran_count, mock_eth_get_block, mock_eth_get_tran,
                                                      mock_db_connect,
-                                                     mock_db_cursor):
+                                                     mock_db_cursor,
+                                                     mock_db_call_proc):
+        block = dummy_block()
         mock_eth_connect.return_value = {}
-        mock_eth_get_latest_block_number.return_value = 1
+        mock_eth_get_latest_block_number.return_value = int(block['number'])
         mock_eth_get_tran_count.return_value = 1
-        mock_eth_get_block.return_value = dummy_block()
-        mock_eth_get_tran.return_value = {
+        mock_eth_get_block.return_value = block
+        dummy_tran = {
             'blockHash': '0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd',
             'blockNumber': 46147,
             'from': '0xa1e4380a3b1f749673e270229993ee55f35663b4',
@@ -187,14 +191,21 @@ class TestClass(unittest.TestCase):
             'transactionIndex': 0,
             'value': 31337,
         }
-        # mock_db_connect.return_value = {}
-        # mock_db_cursor.return_value = {}
+        mock_eth_get_tran.return_value = dummy_tran
 
-        network_row = {'Name': 'dummy_eth_network', 'Endpoint': 'http://dummy.endpoint.com/dummy_token',
-                       'LastBlockProcessed': 0}
+        network_row = {'GUID': 'dummy_network_guid', 'Name': 'dummy_eth_network',
+                       'Endpoint': 'http://dummy.endpoint.com/dummy_token',
+                       'LastBlockProcessed': int(block['number']) - 1}
         eth_get_blocks(network_row)
-        self.assertEqual(1, mock_eth_get_tran_count.call_count)
-        self.assertEqual(1, mock_eth_get_tran.call_count)
+        mock_eth_get_tran_count.assert_called_once()
+        mock_eth_get_tran.assert_called_once()
+        sp_params_dict = {
+            'networkGUID': network_row['GUID'],
+            'blockNumber': block['number'],
+            'transactionID': dummy_tran['hash'],
+            'data': json.dumps(dummy_tran)
+        }
+        mock_db_call_proc.assert_called_once_with('AddTransaction', sp_params_dict, ANY)
 
 
 if __name__ == '__main__':
