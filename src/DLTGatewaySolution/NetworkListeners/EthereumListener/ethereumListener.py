@@ -5,6 +5,7 @@ from functools import reduce
 from os import getenv
 
 import pymssql
+from web3 import Web3
 
 from constants import DOCKER_SECRET_SQL_LOGIN_PWD, DOCKER_SECRET_DIR, FRAMEWORK_NAME_ETH
 
@@ -92,15 +93,44 @@ def db_query_network(parsed_cns, network_name='', framework_name=FRAMEWORK_NAME_
     logging.debug(f'Querying business network table: "{sql}"')
     rows = fetch_all(parsed_cns, sql)
     for row in rows:
-        logging.info(f'[{row["Name"]}] Endpoint: {row["Endpoint"]}')
+        logging.info(f"[{row['Name']}] Endpoint: {row['Endpoint']}")
     return rows
+
+
+def eth_connect(network_dict):
+    end_point = network_dict['Endpoint']
+    logging.info(f'[{network_dict["Name"]}] Connecting to endpoint "{end_point}"')
+    web3 = Web3(end_point)
+    return web3
+
+
+def eth_get_latest_block_number(web3):
+    return web3.eth.blockNumber
+
+
+# web3.eth
+# noinspection PyUnresolvedReferences
+def eth_get_blocks(network_dict, num_blocks=10):
+    web3 = eth_connect(network_dict)
+
+    last_block_number = network_dict["LastBlockProcessed"]
+    logging.info(f'[{network_dict["Name"]}] LastBlockProcessed: {last_block_number}')
+    latest_block_number = eth_get_latest_block_number(web3)
+    delta = min(max(latest_block_number - last_block_number, 0), num_blocks)
+    for offset in range(delta):
+        block_number = last_block_number + offset
+        logging.info(f'[{network_dict["Name"]}] Requesting block #{block_number}')
+
+
+def process_networks(networks):
+    for network in networks:
+        eth_get_blocks(network)
 
 
 def main():
     logging.basicConfig(level=logging.INFO)
-
     parsed_cns = load_secrets(load_env())
-    db_query_network(parsed_cns)
+    process_networks(db_query_network(parsed_cns))
 
 
 if __name__ == '__main__':

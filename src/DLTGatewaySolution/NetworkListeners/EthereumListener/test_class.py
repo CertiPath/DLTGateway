@@ -5,7 +5,7 @@ from unittest import mock
 from unittest.mock import mock_open, patch
 
 from ethereumListener import load_env, ConfigurationException, parse_mssql_cns, load_secrets, db_query_network, \
-    fetch_all
+    fetch_all, eth_get_blocks, process_networks
 from constants import DOCKER_SECRET_SQL_LOGIN_PWD, DOCKER_SECRET_DIR, FRAMEWORK_NAME_ETH
 
 
@@ -103,6 +103,20 @@ class TestClass(unittest.TestCase):
                AND F.Name = '{FRAMEWORK_NAME_ETH}'
                
        """)
+
+    def test_process_networks_when_no_networks_found(self):
+        network_rows = []
+        process_networks(network_rows)
+
+    @patch('ethereumListener.eth_get_latest_block_number')
+    @patch('ethereumListener.eth_connect')
+    def test_eth_get_blocks(self, mock_eth_connect, mock_eth_get_latest_block_number):
+        mock_eth_connect.return_value = {}
+        mock_eth_get_latest_block_number.return_value = 0
+
+        network_row = {'Name': 'dummy_eth_network', 'Endpoint': 'http://dummy.endpoint.com/dummy_token',
+                       'LastBlockProcessed': 0}
+        eth_get_blocks(network_row)
 
 
 if __name__ == '__main__':
