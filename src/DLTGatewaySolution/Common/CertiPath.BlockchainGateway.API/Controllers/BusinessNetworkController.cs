@@ -1,12 +1,19 @@
 ﻿using CertiPath.BlockchainGateway.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
@@ -83,9 +90,9 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(context);
             bnet.DeleteConnectionFile(file.GUID);
         }
-
+        
         [HttpPost]
-        public void SaveConnectionFile(BusinessNetworkModel obj)
+        public void SaveConnectionFile()
         {
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             // TODO: Deal with response object and do error handling
@@ -114,5 +121,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
                 }
             }
         }
+        
     }
+    
 }
