@@ -35,6 +35,12 @@ def dummy_block(block_number=2000000):
     return next(b for b in dummy_blocks if b['number'] == block_number)
 
 
+def dummy_cns():
+    env_dict = {'server': 'dummy_server', 'database': 'dummy_database', 'user': 'dummy_user',
+                'password': 'dummy_password'}
+    return namedtuple('ParsedCns', env_dict.keys())(**env_dict)
+
+
 class TestClass(unittest.TestCase):
     def test_load_env_empty_string(self):
         dlt_sql_cns = 'DLT_SQL_CNS'
@@ -86,9 +92,7 @@ class TestClass(unittest.TestCase):
     @patch('ethereumListener.db_get_cns')
     @patch('ethereumListener.db_fetch_all')
     def test_db_query_network_with_network_name(self, mock_db_fetch_all, mock_db_get_cns):
-        env_dict = {'server': 'dummy_server', 'database': 'dummy_database', 'user': 'dummy_user',
-                    'password': 'dummy_password'}
-        mock_db_get_cns.return_value = namedtuple('ParsedCns', env_dict.keys())(**env_dict)
+        mock_db_get_cns.return_value = dummy_cns()
         network_name = 'dummy_network'
 
         db_query_network(network_name)
@@ -112,9 +116,7 @@ class TestClass(unittest.TestCase):
     @patch('ethereumListener.db_get_cns')
     @patch('ethereumListener.db_fetch_all')
     def test_db_query_network_without_network_name(self, mock_db_fetch_all, mock_db_get_cns):
-        env_dict = {'server': 'dummy_server', 'database': 'dummy_database', 'user': 'dummy_user',
-                    'password': 'dummy_password'}
-        mock_db_get_cns.return_value = namedtuple('ParsedCns', env_dict.keys())(**env_dict)
+        mock_db_get_cns.return_value = dummy_cns()
         db_query_network()
         mock_db_fetch_all.assert_called_with(f"""
         SELECT N.GUID,
@@ -157,19 +159,42 @@ class TestClass(unittest.TestCase):
                        'LastBlockProcessed': 0}
         eth_get_blocks(network_row)
 
+    @patch('ethereumListener.db_cursor')
+    @patch('ethereumListener.db_connect')
+    @patch('ethereumListener.eth_get_tran')
+    @patch('ethereumListener.eth_get_block')
     @patch('ethereumListener.eth_get_tran_count')
     @patch('ethereumListener.eth_get_latest_block_number')
     @patch('ethereumListener.eth_connect')
-    def test_eth_get_blocks_positive_latest_block_number(self, mock_eth_connect, mock_eth_get_latest_block_number,
-                                                         mock_eth_get_tran_count):
+    def test_eth_get_blocks_single_block_single_tran(self, mock_eth_connect, mock_eth_get_latest_block_number,
+                                                     mock_eth_get_tran_count, mock_eth_get_block, mock_eth_get_tran,
+                                                     mock_db_connect,
+                                                     mock_db_cursor):
         mock_eth_connect.return_value = {}
-        mock_eth_get_latest_block_number.return_value = 2
+        mock_eth_get_latest_block_number.return_value = 1
         mock_eth_get_tran_count.return_value = 1
+        mock_eth_get_block.return_value = dummy_block()
+        mock_eth_get_tran.return_value = {
+            'blockHash': '0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd',
+            'blockNumber': 46147,
+            'from': '0xa1e4380a3b1f749673e270229993ee55f35663b4',
+            'gas': 21000,
+            'gasPrice': 50000000000000,
+            'hash': '0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060',
+            'input': '0x',
+            'nonce': 0,
+            'to': '0x5df9b87991262f6ba471f09758cde1c0fc1de734',
+            'transactionIndex': 0,
+            'value': 31337,
+        }
+        # mock_db_connect.return_value = {}
+        # mock_db_cursor.return_value = {}
 
         network_row = {'Name': 'dummy_eth_network', 'Endpoint': 'http://dummy.endpoint.com/dummy_token',
                        'LastBlockProcessed': 0}
         eth_get_blocks(network_row)
-        self.assertEqual(2, mock_eth_get_tran_count.call_count)
+        self.assertEqual(1, mock_eth_get_tran_count.call_count)
+        self.assertEqual(1, mock_eth_get_tran.call_count)
 
 
 if __name__ == '__main__':

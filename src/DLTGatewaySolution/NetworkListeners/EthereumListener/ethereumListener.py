@@ -117,18 +117,43 @@ def eth_get_tran_count(web3, block_number):
     return web3.eth.getBlockTransactionCount(block_number)
 
 
+def eth_get_tran(web3, block_number, tran_index):
+    return web3.eth.getBlockTransactionByBlock(block_number, tran_index)
+
+
+def db_connect():
+    cns = db_get_cns()
+    return pymssql.connect(cns.server, cns.user, cns.password, cns.database)
+
+
+def db_cursor(conn):
+    return conn.cursor(as_dict=True)
+
+
 def eth_get_blocks(network_dict, num_blocks=10):
     web3 = eth_connect(network_dict)
-
     last_block_number = network_dict["LastBlockProcessed"]
-    logging.info(f'[{network_dict["Name"]}] LastBlockProcessed: {last_block_number}')
+    network_name = network_dict["Name"]
+    logging.info(f'[{network_name}] LastBlockProcessed: {last_block_number}')
     latest_block_number = eth_get_latest_block_number(web3)
     delta = min(max(latest_block_number - last_block_number, 0), num_blocks)
-    for offset in range(delta):
-        block_number = last_block_number + offset
-        tran_count = eth_get_tran_count(web3, block_number)
-        logging.info(f'[{network_dict["Name"]}] Block #{block_number} contains {tran_count} transactions.')
-        # block = eth_get_block(web3, block_number)
+    logging.debug(f'Delta = latest - last = {delta}')
+    if delta < 1:
+        logging.warning(f'[{network_name}] Last block processed is the same as the latest block number. '
+                        f'Skipping network "{network_name}".')
+        return
+
+    with db_connect() as conn:
+        with db_cursor(conn) as cursor:
+            for offset in range(delta):
+                block_number = last_block_number + offset
+                tran_count = eth_get_tran_count(web3, block_number)
+                block = eth_get_block(web3, block_number)
+                block_hash = block['hash']
+                logging.info(
+                    f'[{network_name}] Block #{block_number} ({block_hash}) contains {tran_count} transactions.')
+                for ti in range(tran_count):
+                    eth_get_tran(web3, block_number, ti)
 
 
 def process_networks(networks):
