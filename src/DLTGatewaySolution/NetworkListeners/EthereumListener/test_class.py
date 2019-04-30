@@ -5,8 +5,10 @@ from collections import namedtuple
 from unittest import mock
 from unittest.mock import mock_open, patch, ANY
 
+from hexbytes import HexBytes
+
 from ethereumListener import load_env, ConfigurationException, parse_mssql_cns, load_secrets, db_query_network, \
-    db_fetch_all, eth_get_blocks, process_networks
+    db_fetch_all, eth_get_blocks, process_networks, HexJsonEncoder
 from constants import DOCKER_SECRET_DIR, FRAMEWORK_NAME_ETH
 
 
@@ -164,12 +166,11 @@ class TestClass(unittest.TestCase):
     @patch('ethereumListener.db_cursor')
     @patch('ethereumListener.db_connect')
     @patch('ethereumListener.eth_get_tran')
-    @patch('ethereumListener.eth_get_block')
     @patch('ethereumListener.eth_get_tran_count')
     @patch('ethereumListener.eth_get_latest_block_number')
     @patch('ethereumListener.eth_connect')
     def test_eth_get_blocks_single_block_single_tran(self, mock_eth_connect, mock_eth_get_latest_block_number,
-                                                     mock_eth_get_tran_count, mock_eth_get_block, mock_eth_get_tran,
+                                                     mock_eth_get_tran_count, mock_eth_get_tran,
                                                      mock_db_connect,
                                                      mock_db_cursor,
                                                      mock_db_call_proc):
@@ -177,14 +178,13 @@ class TestClass(unittest.TestCase):
         mock_eth_connect.return_value = {}
         mock_eth_get_latest_block_number.return_value = int(block['number'])
         mock_eth_get_tran_count.return_value = 1
-        mock_eth_get_block.return_value = block
         dummy_tran = {
             'blockHash': '0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd',
             'blockNumber': 46147,
             'from': '0xa1e4380a3b1f749673e270229993ee55f35663b4',
             'gas': 21000,
             'gasPrice': 50000000000000,
-            'hash': '0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060',
+            'hash': HexBytes('0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060'),
             'input': '0x',
             'nonce': 0,
             'to': '0x5df9b87991262f6ba471f09758cde1c0fc1de734',
@@ -199,13 +199,9 @@ class TestClass(unittest.TestCase):
         eth_get_blocks(network_row)
         mock_eth_get_tran_count.assert_called_once()
         mock_eth_get_tran.assert_called_once()
-        sp_params_dict = {
-            'networkGUID': network_row['GUID'],
-            'blockNumber': block['number'],
-            'transactionID': dummy_tran['hash'],
-            'data': json.dumps(dummy_tran)
-        }
-        mock_db_call_proc.assert_called_once_with('AddTransaction', sp_params_dict, ANY)
+        sp_params = (
+        str(network_row['GUID']), block['number'], dummy_tran['hash'].hex(), json.dumps(dummy_tran, cls=HexJsonEncoder))
+        mock_db_call_proc.assert_called_once_with('AddTransaction', sp_params, ANY)
 
 
 if __name__ == '__main__':
