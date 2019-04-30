@@ -1,0 +1,1238 @@
+{
+	"info": {
+		"_postman_id": "72ffb37c-7477-4de8-8d15-303671a0350b",
+		"name": "DLT Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "BusinessNetwork",
+			"item": [
+				{
+					"name": "Connection Files ",
+					"item": [
+						{
+							"name": "BusinessNetwork - File Upload",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{dlt_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "multipart/form-data",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": ""
+										},
+										{
+											"key": "name",
+											"value": "MyFile",
+											"type": "text"
+										},
+										{
+											"key": "BusinessNetworkGUID",
+											"value": "12e073a0-1aef-49be-8357-f64006650f61",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetwork/SaveConnectionFile",
+									"host": [
+										"{{api_protocol}}{{api_baseurl}}"
+									],
+									"path": [
+										"BusinessNetwork",
+										"SaveConnectionFile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "BusinessNetwork - Delete File",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{dlt_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"GUID\": \"0d95bc85-7747-4004-9674-765d44695c16\"\n}"
+								},
+								"url": {
+									"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetwork/DeleteConnectionFile",
+									"host": [
+										"{{api_protocol}}{{api_baseurl}}"
+									],
+									"path": [
+										"BusinessNetwork",
+										"DeleteConnectionFile"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "BusinessNetwork - GetAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetwork/GetAll",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetwork",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BusinessNetwork - GetDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetwork/GetDetails?GUID=12e073a0-1aef-49be-8357-f64006650f61",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetwork",
+								"GetDetails"
+							],
+							"query": [
+								{
+									"key": "GUID",
+									"value": "12e073a0-1aef-49be-8357-f64006650f61"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BusinessNetwork - Enable",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "GUID",
+									"value": "12e073a0-1aef-49be-8357-f64006650f61",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetwork/Enable",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetwork",
+								"Enable"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BusinessNetwork - Disable",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "GUID",
+									"value": "12e073a0-1aef-49be-8357-f64006650f61",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetwork/Disable",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetwork",
+								"Disable"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BusinessNetwork - Get Metadata",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetwork/GetMetadata",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetwork",
+								"GetMetadata"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BusinessNetwork - Save (Updated Existing)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"GUID\": \"12e073a0-1aef-49be-8357-f64006650f61\",\n\t\"Name\": \"ComposerChannel - Ubuntu 12\",\n\t\"BlockchainFrameworkGUID\": \"77fc57a8-08d3-4542-9700-0d3f3e01e628\",\n\t\"BlockchainFrameworkName\": \"Hyperledger Fabric\",\n\t\"PeerAddress\": \"sa\",\n\t\"ChannelName\": \"xz\",\n\t\"Disabled\": false,\n\t\"Username\": \"userUbuntu12\"\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetwork/Save",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetwork",
+								"Save"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Dashboard - GetBasicStats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/Dashboard/GetBasicStats",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"Dashboard",
+								"GetBasicStats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dashboard -  GetNamespaceTransactionsPerDay",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/Dashboard/GetNamespaceTransactionsPerDay",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"Dashboard",
+								"GetNamespaceTransactionsPerDay"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BusinessNetworkNamespace",
+			"item": [
+				{
+					"name": "Namespace - GetAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkNamespace/GetAll?BusinessNetworkGUID=12e073a0-1aef-49be-8357-f64006650f61",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkNamespace",
+								"GetAll"
+							],
+							"query": [
+								{
+									"key": "BusinessNetworkGUID",
+									"value": "12e073a0-1aef-49be-8357-f64006650f61"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Namespace - GetDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkNamespace/GetDetails?GUID=244b066d-88c9-46c5-af91-22f30851fd3a",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkNamespace",
+								"GetDetails"
+							],
+							"query": [
+								{
+									"key": "GUID",
+									"value": "244b066d-88c9-46c5-af91-22f30851fd3a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Namespace - Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"GUID\": \"12e073a0-1aef-49be-8357-f64006650f61\"\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkNamespace/Delete",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkNamespace",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Namespace - Save - Add New",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"BusinessNetworkGUID\": \"12e073a0-1aef-49be-8357-f64006650f61\",\r\n\t\"GUID\":\tnull,\r\n\t\"Name\":\t\"New Namespace\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkNamespace/Save",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkNamespace",
+								"Save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Namespace - Save - Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"BusinessNetworkGUID\": \"12e073a0-1aef-49be-8357-f64006650f61\",\n\t\"GUID\":\t\"a23834f8-32ec-428f-a26d-9478b16ffc2c\",\n\t\"Name\":\t\"New Namespace - Update\"\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkNamespace/Save",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkNamespace",
+								"Save"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BusinessNetworkObject",
+			"item": [
+				{
+					"name": "Object - GetAllByNamespace",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/GetAllByNamespace?BusinessNetworkNamespaceGUID=244b066d-88c9-46c5-af91-22f30851fd3a",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"GetAllByNamespace"
+							],
+							"query": [
+								{
+									"key": "BusinessNetworkNamespaceGUID",
+									"value": "244b066d-88c9-46c5-af91-22f30851fd3a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - Save - AddNew",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"BusinessNetworkNamespaceGUID\": \"9104915d-4fdf-4156-80af-d019cfcdc078\",\r\n\t\"BusinessNetworkObjectClassName\": \"Test\",\r\n\t\"BusinessNetworkObjectGUID\":\tnull,\r\n\t\"BusinessNetworkObjectName\": \"Name\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/Save",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"Save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - Save - Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"BusinessNetworkObjectClassName\": \"Test Class - UPDATE\",\r\n\t\"BusinessNetworkObjectGUID\": \"e47939f7-2a82-4fcf-a5e4-72afa91cb9a3\",\r\n\t\"BusinessNetworkObjectName\": \"Test Display\",\r\n\t\"ObjectCount\": 0\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/Save",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"Save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"BusinessNetworkObjectGUID\": \"e47939f7-2a82-4fcf-a5e4-72afa91cb9a3\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/Delete",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - GetDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/GetDetails?BusinessNetworkObjectGUID=e21eb49f-7712-4576-98f8-f9bbfa1385ff",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"GetDetails"
+							],
+							"query": [
+								{
+									"key": "BusinessNetworkObjectGUID",
+									"value": "e21eb49f-7712-4576-98f8-f9bbfa1385ff"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - SaveProperty",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"BusinessNetworkGUID\": \"12e073a0-1aef-49be-8357-f64006650f61\",\r\n\t\"GUID\":\tnull,\r\n\t\"Name\":\t\"New Namespace\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkNamespace/Save",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkNamespace",
+								"Save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - SaveProperty - Add New",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"BusinessNetworkObjectGUID\": \"e9848c10-934c-4bbf-be06-d2c7a806bb57\",\r\n\t\"Disabled\":\tfalse,\r\n\t\"GUID\":\tnull,\r\n\t\"Name\": \"My New Property\",\r\n\t\"PropertyTypeCode\":\t\"NUMERIC\",\r\n\t\"PropertyTypeName\": \"\",\t\r\n\t\"Visible\": true\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/SaveProperty",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"SaveProperty"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - SaveProperty - Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"BusinessNetworkObjectGUID\": \"e9848c10-934c-4bbf-be06-d2c7a806bb57\",\r\n\t\"Disabled\":\tfalse,\r\n\t\"GUID\":\t\"0cf02be6-5071-4cab-8b72-fc1f1df6254e\",\r\n\t\"Name\": \"Updated Name\",\r\n\t\"PropertyTypeCode\":\t\"NUMERIC\",\r\n\t\"PropertyTypeName\": \"\",\t\r\n\t\"Visible\": true\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/SaveProperty",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"SaveProperty"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - DeleteProperty",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"GUID\":\t\"0cf02be6-5071-4cab-8b72-fc1f1df6254e\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/DeleteProperty",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"DeleteProperty"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - GetCharts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/GetCharts?BusinessNetworkObjectGUID=e21eb49f-7712-4576-98f8-f9bbfa1385ff",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"GetCharts"
+							],
+							"query": [
+								{
+									"key": "BusinessNetworkObjectGUID",
+									"value": "e21eb49f-7712-4576-98f8-f9bbfa1385ff"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - DisableChart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"GUID\": \"d9201e44-4ed1-4aaf-9fbb-66bb6b5bf122\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/DisableChart",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"DisableChart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - EnableChart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"GUID\": \"d9201e44-4ed1-4aaf-9fbb-66bb6b5bf122\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/EnableChart",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"EnableChart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - DeleteChart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"GUID\": \"99201e44-4ed1-4aaf-9fbb-66bb6b5bf122\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/EnableChart",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"EnableChart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Object - SaveChart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{dlt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"ChartTypeGUID\": \"39e2c8ff-9ca7-474b-b12b-2d5ca35507a6\",\r\n\t\"Description\":\t\"My description 2\",\r\n\t\"GUID\": \"b8ae219d-e8d3-4efc-bcd5-e9b171c6a0cb\",\r\n\t\"Name\":\t\"Temperature & Humidity - last 10 records\",\r\n\t\"ChartSettingsObject\": {\r\n\t\t\"ShowGridlines\": true,\r\n\t\t\"Series\": [\r\n\t\t\t{\r\n\t\t\t\t\"ObjectPropertyGUID\": \"472c7cbf-76fa-43f7-ab6d-2608c288b154\",\r\n\t\t\t\t\"ObjectPropertyName\": \"temperature\"\r\n\t\t\t},\r\n\t\t\t{\r\n\t\t\t\t\"ObjectPropertyGUID\": \"d39f2e02-aef9-4d18-9bbf-ad3fa762a268\",\r\n\t\t\t\t\"ObjectPropertyName\": \"humidity\"\r\n\t\t\t},\r\n\t\t]\r\n\t},\r\n\t\"XAxes\": {\r\n\t\t\"Category\": \"TIMELINE\",\r\n\t\t\"Title\": \"\",\t\r\n\t\t\"Type\": \"RECORD\",\r\n\t\t\"Value\": 12\r\n\t}\r\n}"
+						},
+						"url": {
+							"raw": "{{api_protocol}}{{api_baseurl}}/BusinessNetworkObject/SaveChart",
+							"host": [
+								"{{api_protocol}}{{api_baseurl}}"
+							],
+							"path": [
+								"BusinessNetworkObject",
+								"SaveChart"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login - Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "16650c38-a5ac-4d65-b0ae-8852852f49a4",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"dlt_token\", jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "nebojsa.bogdanovic@certipath.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "mapassword",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/CertiPath.BlockchainGateway.API/api/oauth2/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"CertiPath.BlockchainGateway.API",
+						"api",
+						"oauth2",
+						"token"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

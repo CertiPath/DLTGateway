@@ -35,6 +35,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsService", "WindowsSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertiPath.BlockchainGateway.BackgroundService", "WindowsService\CertiPath.BlockchainGateway.BackgroundService\CertiPath.BlockchainGateway.BackgroundService.csproj", "{567D34A5-D73D-49AE-900C-9A940D7C5E2D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{1D6F6A90-E7D7-4AB2-9539-06EF11E5483F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanCollections", "PostmanCollections", "{81B59B3B-C580-4491-A2F5-7DD9EC45A976}"
+	ProjectSection(SolutionItems) = preProject
+		Misc\PostmanCollections\DLT_Gateway.postman_collection.json = Misc\PostmanCollections\DLT_Gateway.postman_collection.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +132,7 @@ Global
 		{C1CA53D6-8DE9-45FE-BA7C-7B59DBCF3C57} = {4A42B75D-0979-4EC6-825E-3BD9CB22B83C}
 		{421287CD-E6EC-4F61-A18B-2F6B618C2F38} = {66829CD4-DFEF-42F3-A0D7-667AC277B4D5}
 		{567D34A5-D73D-49AE-900C-9A940D7C5E2D} = {CE224D92-C707-42E7-B392-1036117E842A}
+		{81B59B3B-C580-4491-A2F5-7DD9EC45A976} = {1D6F6A90-E7D7-4AB2-9539-06EF11E5483F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C1682D3-F1BA-46D0-8C3C-13EFEF321188}
