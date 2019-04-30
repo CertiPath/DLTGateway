@@ -84,7 +84,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Common\Certipath.BlockchainGateway.Service\Certipath.BlockchainGateway.Service.csproj">
       <Project>{400eb50f-4097-49b3-a45f-139c1c594dcd}</Project>
-      <Name>CertiPath.BlockchainGateway.Service</Name>
+      <Name>Certipath.BlockchainGateway.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Database\CertiPath.BlockchainGateway.DataLayer\CertiPath.BlockchainGateway.DataLayer.csproj">
       <Project>{3530dd53-7b66-4592-8df5-fb063723815c}</Project>
