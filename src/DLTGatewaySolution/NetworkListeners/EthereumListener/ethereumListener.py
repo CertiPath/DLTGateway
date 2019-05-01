@@ -6,6 +6,7 @@ from functools import reduce
 from os import getenv
 
 import pymssql
+from hexbytes import HexBytes
 from web3 import Web3
 
 from constants import DOCKER_SECRET_SQL_LOGIN_PWD, DOCKER_SECRET_DIR, FRAMEWORK_NAME_ETH
@@ -102,16 +103,11 @@ def db_query_network(network_name='', framework_name=FRAMEWORK_NAME_ETH):
 def eth_connect(network_dict):
     end_point = network_dict['Endpoint']
     logging.info(f'[{network_dict["Name"]}] Connecting to endpoint "{end_point}"')
-    web3 = Web3(end_point)
-    return web3
+    return Web3(Web3.HTTPProvider(end_point))
 
 
 def eth_get_latest_block_number(web3):
     return web3.eth.blockNumber
-
-
-def eth_get_block(web3, block_number):
-    return web3.eth.getBlock(block_number)
 
 
 def eth_get_tran_count(web3, block_number):
@@ -119,7 +115,7 @@ def eth_get_tran_count(web3, block_number):
 
 
 def eth_get_tran(web3, block_number, tran_index):
-    return web3.eth.getBlockTransactionByBlock(block_number, tran_index)
+    return web3.eth.getTransactionByBlock(block_number, tran_index)
 
 
 def db_connect():
@@ -131,22 +127,27 @@ def db_cursor(conn):
     return conn.cursor(as_dict=True)
 
 
-def db_call_proc(sp_name, sp_params_dict, cursor):
-    cursor.callproc(sp_name, sp_params_dict.values())
+def db_call_proc(sp_name, sp_params, cursor):
+    cursor.callproc(sp_name, sp_params)
+
+
+class HexJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, HexBytes):
+            return obj.hex()
+        return super().default(obj)
 
 
 def save_tran(network_guid, block_number, tran, cursor):
-    db_call_proc('AddTransaction', {
-        'networkGUID': network_guid,
-        'blockNumber': block_number,
-        'transactionID': tran['hash'],
-        'data': json.dumps(tran)
-    }, cursor)
+    tx_dict = dict(tran)
+    db_call_proc('AddTransaction',
+                 (str(network_guid), block_number, tran['hash'].hex(), json.dumps(tx_dict, cls=HexJsonEncoder)),
+                 cursor)
 
 
-def eth_get_blocks(network_dict, num_blocks=10):
+def eth_get_blocks(network_dict, num_blocks=100):
     web3 = eth_connect(network_dict)
-    last_block_number = network_dict["LastBlockProcessed"]
+    last_block_number = network_dict["LastBlockProcessed"] or 0
     network_name = network_dict["Name"]
     logging.info(f'[{network_name}] LastBlockProcessed: {last_block_number}')
     latest_block_number = eth_get_latest_block_number(web3)
@@ -162,10 +163,7 @@ def eth_get_blocks(network_dict, num_blocks=10):
             for offset in range(delta):
                 block_number = last_block_number + offset + 1
                 tran_count = eth_get_tran_count(web3, block_number)
-                block = eth_get_block(web3, block_number)
-                block_hash = block['hash']
-                logging.info(f'[{network_name}] Block #{block_number} ({block_hash}) '
-                             f'contains {tran_count} transactions.')
+                logging.info(f'[{network_name}] Block #{block_number} contains {tran_count} transactions.')
                 for ti in range(tran_count):
                     save_tran(network_dict['GUID'], block_number, eth_get_tran(web3, block_number, ti), cursor)
 
@@ -191,7 +189,8 @@ def db_get_cns():
 def main():
     logging.basicConfig(level=logging.INFO)
     db_set_cns(load_secrets(load_env()))
-    process_networks(db_query_network())
+    while True:
+        process_networks(db_query_network())
 
 
 if __name__ == '__main__':
