@@ -181,7 +181,6 @@ namespace CertiPath.BlockchainGateway.Service
             //result.IsSuccess = true;
             //result.Key = network.GUID;
             //return result;
-
         }
 
         public ApiResult Save(BusinessNetworkModel obj)
@@ -201,9 +200,10 @@ namespace CertiPath.BlockchainGateway.Service
 
             network.Name = obj.Name;
             network.BlockchainFrameworkGUID = obj.BlockchainFrameworkGUID;
-            network.ChannelName = obj.ChannelName;
-            network.PeerAddress = obj.PeerAddress;
-            network.Username = obj.Username;
+            network.ChannelName = obj.ChannelName == null ? "" : obj.ChannelName;
+            network.PeerAddress = obj.PeerAddress == null ? "" : obj.PeerAddress;
+            network.Username = obj.Username == null ? "" : obj.Username;
+            network.Endpoint = obj.Endpoint == null ? "" : obj.Endpoint; 
 
             if (lAddNew)
             {
@@ -263,12 +263,13 @@ namespace CertiPath.BlockchainGateway.Service
             var bne = _context.BusinessNetwork.Where(w => w.GUID == GUID).SingleOrDefault();
             res.GUID = bne.GUID;
             res.Name = bne.Name;
-            res.ChannelName = bne.ChannelName;
-            res.PeerAddress = bne.PeerAddress;
-            res.BlockchainFrameworkName = bne.BlockchainFramework.DisplayName;
+            res.ChannelName = bne.ChannelName == null ? "" : bne.ChannelName;
+            res.PeerAddress = bne.PeerAddress == null ? "" : bne.PeerAddress;
+            res.BlockchainFrameworkName = bne.BlockchainFramework.Name;
             res.BlockchainFrameworkGUID = bne.BlockchainFrameworkGUID;
             res.Disabled = bne.Disabled;
-            res.Username = bne.Username;
+            res.Username = bne.Username == null ? "" : bne.Username;
+            res.Endpoint = bne.Endpoint == null ? "" : bne.Endpoint;
 
             // get frameworks
             List<SelectModel> frameworkList = new List<SelectModel>();

@@ -43,6 +43,7 @@
           <Property Name="PeerAddress" Type="nvarchar" MaxLength="100" />
           <Property Name="CryptoMaterialDirectory" Type="nvarchar" MaxLength="100" />
           <Property Name="Username" Type="nvarchar" MaxLength="100" />
+          <Property Name="Endpoint" Type="nvarchar" MaxLength="250" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="LastBlockProcessed" Type="int" />
           <Property Name="Disabled" Type="bit" Nullable="false" />
@@ -990,6 +991,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <NavigationProperty Name="TransactionHistory" Relationship="DataModel.FK_TransactionHistory_BusinessNetwork" FromRole="BusinessNetwork" ToRole="TransactionHistory" />
           <Property Name="Disabled" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="BusinessNetwork_FileUpload" Relationship="DataModel.FK_BusinessNetwork_FileUpload_BusinessNetwork" FromRole="BusinessNetwork" ToRole="BusinessNetwork_FileUpload" />
+          <Property Name="Endpoint" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BusinessNetworkNamespace">
           <Key>
@@ -1669,6 +1671,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySetMapping Name="BusinessNetwork">
             <EntityTypeMapping TypeName="DataModel.BusinessNetwork">
               <MappingFragment StoreEntitySet="BusinessNetwork">
+                <ScalarProperty Name="Endpoint" ColumnName="Endpoint" />
                 <ScalarProperty Name="Disabled" ColumnName="Disabled" />
                 <ScalarProperty Name="LastBlockProcessed" ColumnName="LastBlockProcessed" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />

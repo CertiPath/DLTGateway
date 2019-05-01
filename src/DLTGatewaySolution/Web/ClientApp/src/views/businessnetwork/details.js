@@ -9,7 +9,6 @@ import { NavLink } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 
-
 import Spinner from "../../components/spinner/spinner";
 import apiClient from "../../utility/apiClient";
 
@@ -29,8 +28,15 @@ const formBasicDetailsSchema = Yup.object().shape({
         .required()
         .max(100),
     PeerAddress: Yup.string()
-        .required()
-        .max(100),
+        .when("BlockchainFrameworkGUID", {
+            is: (val) => val.toUpperCase() == '77FC57A8-08D3-4542-9700-0D3F3E01E628',
+            then: Yup.string().required().max(100)
+        }),
+    Endpoint: Yup.string()
+        .when("BlockchainFrameworkGUID", {
+            is: (val) => val.toUpperCase() == '69BEF4F9-0342-45B4-A557-4B4B74C5A471',
+            then: Yup.string().required().max(250)
+        }),
     BlockchainFrameworkGUID: Yup.string()
         .required()
 });
@@ -49,6 +55,7 @@ class BusinessNetworkDetails extends Component {
 
     state = {
         BusinessNetworkGUID: 'New',
+        BusinessNetworkType: '',
         businessNetworkDetails: null,
         businessNetworkData: null,
         FormikTest: null
@@ -79,13 +86,13 @@ class BusinessNetworkDetails extends Component {
         apiClient.get('BusinessNetwork/GetDetails?GUID=' + this.state.BusinessNetworkGUID, {})
             .then(res => {
                 this.setState({
-                    businessNetworkData: res.data
+                    businessNetworkData: res.data,
+                    BusinessNetworkType: res.data.BlockchainFrameworkName
                 });
             });
     }
 
     loadMetadata() {
-
         this.setState({
             businessNetworkData: null
         });
@@ -93,7 +100,7 @@ class BusinessNetworkDetails extends Component {
             .then(res => {
                 res.data.BlockchainFrameworkGUID = '';
                 this.setState({
-                    businessNetworkData: res.data
+                    businessNetworkData: res.dat
                 });
             });
     }
@@ -107,10 +114,25 @@ class BusinessNetworkDetails extends Component {
         });
     }
 
+    onTypeChange(event) {
+        // TODO: change this - must lookup the values or something of that kind
+        const inputName = event.target.value.toUpperCase();
+        let type = '';
+        if (inputName == '77FC57A8-08D3-4542-9700-0D3F3E01E628') {
+            type = 'HLF';
+        }
+        else if (inputName == '69BEF4F9-0342-45B4-A557-4B4B74C5A471') {
+            type = 'ETH';
+        }
+        this.setState({
+            BusinessNetworkType: type
+        });
+    }
+
     saveBasicInformation(details) {
         
         const page = this;
-        
+
         // validate first
         formBasicDetailsSchema
             .isValid(details)
@@ -118,12 +140,12 @@ class BusinessNetworkDetails extends Component {
                 if (valid) {
                     apiClient.post('BusinessNetwork/Save', {
                         GUID: page.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? null : page.state.BusinessNetworkGUID,
-                        //this.props.match.params.id.toUpperCase() == 'NEW' ? null : this.props.match.params.id,
                         Name: details.Name,
                         ChannelName: details.ChannelName,
                         PeerAddress: details.PeerAddress,
                         BlockchainFrameworkGUID: details.BlockchainFrameworkGUID,
-                        Username: details.Username
+                        Username: details.Username,
+                        Endpoint: details.Endpoint
 
                     })
                         .then(res => {
@@ -265,7 +287,10 @@ class BusinessNetworkDetails extends Component {
                                                             <Col md="6">
                                                                 <FormGroup>
                                                                     <Label for="BlockchainFrameworkGUID">Framework Type</Label>
-                                                                    <Field component="select" onChange={props.handleChange}
+                                                                    <Field component="select" onChange={e => {
+                                                                            props.handleChange(e);
+                                                                            this.onTypeChange(e);
+                                                                        }}  
                                                                         className={`form-control ${props.errors.BlockchainFrameworkGUID && props.touched.BlockchainFrameworkGUID && 'is-invalid'}`}
                                                                         value={props.values.BlockchainFrameworkGUID}
                                                                         name="BlockchainFrameworkGUID"
@@ -283,30 +308,55 @@ class BusinessNetworkDetails extends Component {
                                                                 </FormGroup>
                                                             </Col>
                                                         </Row>
+                                                        {
+                                                            this.state.BusinessNetworkType == 'HLF' ?
+                                                                (
+                                                                    <Row>
+                                                                        <Col md="6">
+                                                                            <FormGroup>
+                                                                                <Label for="ChannelName">Channel Name</Label>
+                                                                                <Field type="text" id="ChannelName" value={props.values.ChannelName} onChange={props.handleChange} name="ChannelName" className={`form-control ${props.errors.ChannelName && props.touched.ChannelName && 'is-invalid'}`} />
+                                                                                {props.errors.ChannelName && props.touched.ChannelName ? <div className="invalid-feedback">{props.errors.ChannelName}</div> : null}
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                        <Col md="6">
+                                                                            <FormGroup>
+                                                                                <Label for="Username">Username</Label>
+                                                                                <Field type="text" id="Username" value={props.values.Username} onChange={props.handleChange} name="Username" className={`form-control ${props.errors.Username && props.touched.Username && 'is-invalid'}`} />
+                                                                                {props.errors.Username && props.touched.Username ? <div className="invalid-feedback">{props.errors.Username}</div> : null}
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                    </Row>
+                                                                )
+                                                                : ("")
+                                                        }
                                                         <Row>
-                                                            <Col md="6">
-                                                                <FormGroup>
-                                                                    <Label for="ChannelName">Channel Name</Label>
-                                                                    <Field type="text" id="ChannelName" value={props.values.ChannelName} onChange={props.handleChange}  name="ChannelName" className={`form-control ${props.errors.ChannelName && props.touched.ChannelName && 'is-invalid'}`} />
-                                                                    {props.errors.ChannelName && props.touched.ChannelName ? <div className="invalid-feedback">{props.errors.ChannelName}</div> : null}
-                                                                </FormGroup>
-                                                            </Col>
-                                                            <Col md="6">
-                                                                <FormGroup>
-                                                                    <Label for="Username">Username</Label>
-                                                                    <Field type="text" id="Username" value={props.values.Username} onChange={props.handleChange}  name="Username" className={`form-control ${props.errors.Username && props.touched.Username && 'is-invalid'}`} />
-                                                                    {props.errors.Username && props.touched.Username ? <div className="invalid-feedback">{props.errors.Username}</div> : null}
-                                                                </FormGroup>
-                                                            </Col>
-                                                        </Row>
-                                                        <Row>
-                                                            <Col md="12">
-                                                                <FormGroup>
-                                                                    <Label for="PeerAddress">Peer Address</Label>
-                                                                    <Field type="text" id="PeerAddress" value={props.values.PeerAddress} onChange={props.handleChange} name="PeerAddress" className={`form-control ${props.errors.PeerAddress && props.touched.PeerAddress && 'is-invalid'}`} />
-                                                                    {props.errors.PeerAddress && props.touched.PeerAddress ? <div className="invalid-feedback">{props.errors.PeerAddress}</div> : null}
-                                                                </FormGroup>
-                                                            </Col>
+                                                            {
+                                                                this.state.BusinessNetworkType == 'HLF' ?
+                                                                    (
+                                                                        <Col md="12">
+                                                                            <FormGroup>
+                                                                                <Label for="PeerAddress">Peer Address</Label>
+                                                                                <Field type="text" id="PeerAddress" value={props.values.PeerAddress} onChange={props.handleChange} name="PeerAddress" className={`form-control ${props.errors.PeerAddress && props.touched.PeerAddress && 'is-invalid'}`} />
+                                                                                {props.errors.PeerAddress && props.touched.PeerAddress ? <div className="invalid-feedback">{props.errors.PeerAddress}</div> : null}
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                    )
+                                                                    : ("")
+                                                            }
+                                                            {
+                                                                this.state.BusinessNetworkType == 'ETH' ?
+                                                                    (
+                                                                        <Col md="12">
+                                                                            <FormGroup>
+                                                                                <Label for="Endpoint">Endpoint</Label>
+                                                                                <Field type="text" id="Endpoint" value={props.values.Endpoint} onChange={props.handleChange} name="Endpoint" className={`form-control ${props.errors.Endpoint && props.touched.Endpoint && 'is-invalid'}`} />
+                                                                                {props.errors.Endpoint && props.touched.Endpoint ? <div className="invalid-feedback">{props.errors.Endpoint}</div> : null}
+                                                                            </FormGroup>
+                                                                        </Col>
+                                                                    )
+                                                                    : ("")
+                                                            }
                                                         </Row>
 
                                                         <div className="form-actions bottom clearfix">
@@ -325,7 +375,7 @@ class BusinessNetworkDetails extends Component {
                                 </CardBody>
                             </Card>
                             {
-                                this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? '' : 
+                                this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' || this.state.BusinessNetworkType != 'HLF' ? '' : 
                                     (
                                         <ConnectionFilesCard
                                             HandleFileUploaded={this.reloadPage}

@@ -32,6 +32,7 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public bool Deleted { get; set; }
         public Nullable<int> LastBlockProcessed { get; set; }
         public bool Disabled { get; set; }
+        public string Endpoint { get; set; }
     
         public virtual BlockchainFramework BlockchainFramework { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
