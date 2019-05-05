@@ -20,6 +20,8 @@ namespace CertiPath.BlockchainGateway.Model
     public class ObjectChartReturnModel {
         public string ChartType { get; set; }
         public dynamic ChartData { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
     #endregion
 

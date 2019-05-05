@@ -34,6 +34,9 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
 
             result.ChartType = chartType.ToString();
             result.ChartData = model;
+            result.Name = chartDef.Name;
+            result.Description = chartDef.Description;
+
             return result;
         }
     }

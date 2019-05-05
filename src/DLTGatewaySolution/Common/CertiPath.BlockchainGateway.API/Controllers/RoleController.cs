@@ -12,12 +12,40 @@ namespace CertiPath.BlockchainGateway.API.Controllers
     [Authorize]
     public class RoleController : ApiController
     {
-        [HttpPost]
-        public Model.RoleTableModel GetAll([FromBody]Model.TableModel model)
+        /// <summary>
+        /// This will get only global roles
+        /// </summary>
+        /// <returns></returns>
+        public List<Model.RoleViewModel> GetAll()
         {
-            Service.Role roleSrv = new Service.Role();
-            var list = roleSrv.GetAll(model);
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            Service.Role roleSrv = new Service.Role(context);
+            var list = roleSrv.GetAll();
             return list;
+        }
+
+        public List<Model.UserGroupRoleModel> GetUserGroups(Guid RoleGUID)
+        {
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            Service.Role roleSrv = new Service.Role(context);
+            var list = roleSrv.GetUserGroups(RoleGUID);
+            return list;
+        }
+
+        [HttpPost]
+        public void DeleteUserGroup(Model.UserGroupRoleModel m)
+        {
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            Service.Role roleSrv = new Service.Role(context);
+            roleSrv.DeleteUserGroup(m.GUID);
+        }
+
+        [HttpPost]
+        public void AddActiveDirectoryGroup(Model.RoleADGroupModel model)
+        {
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            Service.Role roleSrv = new Service.Role(context);
+            roleSrv.AddUserGroup(model);
         }
     }
 }

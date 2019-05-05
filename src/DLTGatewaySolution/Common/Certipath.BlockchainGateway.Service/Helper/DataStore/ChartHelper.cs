@@ -27,6 +27,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.DataStore
                 {
                     GUID = chart.GUID,
                     Name = chart.Name,
+                    Description = chart.Description,
                     TypeCode = chart.ChartType.Code
                 });
             }

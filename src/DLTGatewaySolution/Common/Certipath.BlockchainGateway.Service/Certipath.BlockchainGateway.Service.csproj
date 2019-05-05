@@ -78,6 +78,7 @@
     <Compile Include="BusinessNetworkObject.cs" />
     <Compile Include="Dashboard.cs" />
     <Compile Include="DataStore.cs" />
+    <Compile Include="Helper\ActiveDirectory\Group.cs" />
     <Compile Include="Helper\Audit\AuditLog.cs" />
     <Compile Include="Helper\BusinessNetworkObject\ObjectPropertyType.cs" />
     <Compile Include="Helper\BusinessNetwork\DataStore.cs" />

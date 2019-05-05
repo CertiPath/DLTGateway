@@ -41,12 +41,12 @@ VALUES ('D716ECEB-367F-47A1-AA86-399E253CE363', 'LOG_ERROR', 'Log Error', '82108
 GO
 
 -- Global Admin
-IF NOT EXISTS (SELECT * FROM [Role] WHERE Name = 'Global Admin' AND IsSystemRole = 1) 
+IF NOT EXISTS (SELECT * FROM [Role] WHERE Code = 'GLOBALADMIN' AND IsSystemRole = 1) 
 BEGIN
 	PRINT 'Inserting Global Admin role...'
-	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted)
+	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted, Code)
 	VALUES ('4EB0771C-1A22-4941-9A89-A013E676F962', 'Global Admin',
-		'System wide administration rights', 1, 0)
+		'System wide administration rights', 1, 0, 'GLOBALADMIN')
 END
 ELSE
 BEGIN
@@ -54,16 +54,42 @@ BEGIN
 END
 
 -- Global View
-IF NOT EXISTS (SELECT * FROM [Role] WHERE Name = 'Global View' AND IsSystemRole = 1) 
+IF NOT EXISTS (SELECT * FROM [Role] WHERE Code = 'GLOBALVIEW' AND IsSystemRole = 1) 
 BEGIN
 	PRINT 'Inserting Global View role...'
-	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted)
+	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted, Code)
 	VALUES ('1FAC7817-2CF3-41C2-A34F-C1227EA5F8DF', 'Global View',
-		'System wide view rights', 1, 0)
+		'System wide view rights', 1, 0, 'GLOBALVIEW')
 END
 ELSE
 BEGIN
 	PRINT 'Global View role already exists.'
+END
+GO
+-- Local Admin
+IF NOT EXISTS (SELECT * FROM [Role] WHERE Code = 'LOCALADMIN' AND IsSystemRole = 0) 
+BEGIN
+	PRINT 'Inserting Local Admin role...'
+	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted, Code)
+	VALUES ('AF552A1A-C80A-455C-A854-1A330E7AC01C', 'Local Admin',
+		'Business Network Admin Rights', 0, 0, 'LOCALADMIN')
+END
+ELSE
+BEGIN
+	PRINT 'Local Admin role already exists.'
+END
+
+-- Local View
+IF NOT EXISTS (SELECT * FROM [Role] WHERE Code = 'LOCALVIEW' AND IsSystemRole = 0) 
+BEGIN
+	PRINT 'Inserting Local View role...'
+	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted, Code)
+	VALUES ('B67C7040-2E2A-4BE2-8B95-3414F3B36AB8', 'Local View',
+		'Business Network View Rights', 0, 0, 'LOCALVIEW')
+END
+ELSE
+BEGIN
+	PRINT 'Local View role already exists.'
 END
 GO
 

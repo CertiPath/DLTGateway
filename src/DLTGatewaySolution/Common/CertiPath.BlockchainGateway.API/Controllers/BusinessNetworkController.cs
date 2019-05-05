@@ -12,15 +12,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
     [Authorize]
     public class BusinessNetworkController : ApiController
     {
-        //[HttpGet()]
         public BusinessNetworkTableModel GetAll()
         {
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();

@@ -42,11 +42,7 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public virtual DbSet<Setting> Setting { get; set; }
         public virtual DbSet<SettingType> SettingType { get; set; }
         public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<Policy> Policy { get; set; }
-        public virtual DbSet<PolicyType> PolicyType { get; set; }
         public virtual DbSet<Role> Role { get; set; }
-        public virtual DbSet<Role_Policy> Role_Policy { get; set; }
-        public virtual DbSet<Role_UserGroup> Role_UserGroup { get; set; }
         public virtual DbSet<User_UserGroup> User_UserGroup { get; set; }
         public virtual DbSet<BusinessNetwork_FileUpload> BusinessNetwork_FileUpload { get; set; }
         public virtual DbSet<FileUpload> FileUpload { get; set; }
@@ -57,6 +53,8 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public virtual DbSet<ChartCategory> ChartCategory { get; set; }
         public virtual DbSet<ChartType> ChartType { get; set; }
         public virtual DbSet<BusinessNetworkObjectChart> BusinessNetworkObjectChart { get; set; }
+        public virtual DbSet<Role_UserGroup> Role_UserGroup { get; set; }
+        public virtual DbSet<UserGroup> UserGroup { get; set; }
     
         public virtual ObjectResult<GetSystemStats_Result> GetSystemStats(Nullable<int> offsetHours)
         {

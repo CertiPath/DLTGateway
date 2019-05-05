@@ -21,23 +21,15 @@
         <EntityTypeShape EntityType="DataModel.vDataStore" Width="1.5" PointX="3.375" PointY="5.75" />
         <EntityTypeShape EntityType="DataModel.vNamespaceTransactionsPerDay" Width="1.5" PointX="0.75" PointY="8.75" />
         <EntityTypeShape EntityType="DataModel.vBusinessNetworkNamespace" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DataModel.vBusinessNetworkObject" Width="1.5" PointX="5.75" PointY="9.75" />
+        <EntityTypeShape EntityType="DataModel.vBusinessNetworkObject" Width="1.5" PointX="10.25" PointY="9.875" />
         <EntityTypeShape EntityType="DataModel.vNamespaceAndObjectTree" Width="1.5" PointX="8.375" PointY="9.75" />
         <EntityTypeShape EntityType="DataModel.Setting" Width="1.5" PointX="12.625" PointY="6" />
         <EntityTypeShape EntityType="DataModel.SettingType" Width="1.5" PointX="10.375" PointY="6.625" />
         <AssociationConnector Association="DataModel.FK_Setting_SettingType" />
         <EntityTypeShape EntityType="DataModel.User" Width="1.5" PointX="0.75" PointY="12.375" />
         <AssociationConnector Association="DataModel.FK_AuditLog_CreatedBy" />
-        <EntityTypeShape EntityType="DataModel.Policy" Width="1.5" PointX="10.375" PointY="16.25" />
-        <EntityTypeShape EntityType="DataModel.PolicyType" Width="1.5" PointX="8.125" PointY="16.5" />
         <EntityTypeShape EntityType="DataModel.Role" Width="1.5" PointX="10.375" PointY="12.375" />
-        <EntityTypeShape EntityType="DataModel.Role_Policy" Width="1.5" PointX="12.625" PointY="12.375" />
-        <EntityTypeShape EntityType="DataModel.Role_UserGroup" Width="1.5" PointX="12.625" PointY="15.5" />
         <EntityTypeShape EntityType="DataModel.User_UserGroup" Width="1.5" PointX="3" PointY="12.75" />
-        <AssociationConnector Association="DataModel.FK_Policy_PolicyType" />
-        <AssociationConnector Association="DataModel.FK_Role_Policy_Policy" />
-        <AssociationConnector Association="DataModel.FK_Role_Policy_Role" />
-        <AssociationConnector Association="DataModel.FK_Role_UserGroup_RoleGUID" />
         <AssociationConnector Association="DataModel.FK_User_UserGroup_User" />
         <EntityTypeShape EntityType="DataModel.BusinessNetwork_FileUpload" Width="1.5" PointX="7.875" PointY="0.75" />
         <EntityTypeShape EntityType="DataModel.FileUpload" Width="1.5" PointX="5.625" PointY="9.375" />
@@ -57,7 +49,13 @@
         <EntityTypeShape EntityType="DataModel.BusinessNetworkObjectChart" Width="1.5" PointX="19.875" PointY="5.25" />
         <AssociationConnector Association="DataModel.FK_BusinessNetworkObjectChart_BusinessNetworkObject" />
         <AssociationConnector Association="DataModel.FK_BusinessNetworkObjectChart_ChartType" />
-      </Diagram>
+        <EntityTypeShape EntityType="DataModel.Role_UserGroup" Width="1.5" PointX="14.625" PointY="12" />
+        <EntityTypeShape EntityType="DataModel.UserGroup" Width="1.5" PointX="12.375" PointY="13" />
+        <AssociationConnector Association="DataModel.FK_Role_UserGroup_BusinessNetwork" />
+        <AssociationConnector Association="DataModel.FK_Role_UserGroup_RoleGUID" />
+        <AssociationConnector Association="DataModel.FK_Role_UserGroup_UserGroupGUID" />
+        <AssociationConnector Association="DataModel.FK_User_UserGroup_UserGroup" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -91,9 +91,6 @@
     <Build Include="dbo\Views\vBusinessNetworkObject.sql" />
     <Build Include="dbo\Views\vNamespaceAndObjectTree.sql" />
     <Build Include="dbo\Tables\Role.sql" />
-    <Build Include="dbo\Tables\PolicyType.sql" />
-    <Build Include="dbo\Tables\Policy.sql" />
-    <Build Include="dbo\Tables\Role_Policy.sql" />
     <Build Include="dbo\Tables\Role_UserGroup.sql" />
     <Build Include="dbo\Tables\UserGroup.sql" />
     <Build Include="dbo\Tables\User_UserGroup.sql" />

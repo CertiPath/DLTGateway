@@ -20,6 +20,7 @@ namespace CertiPath.BlockchainGateway.DataLayer
             this.BusinessNetworkNamespace = new HashSet<BusinessNetworkNamespace>();
             this.TransactionHistory = new HashSet<TransactionHistory>();
             this.BusinessNetwork_FileUpload = new HashSet<BusinessNetwork_FileUpload>();
+            this.Role_UserGroup = new HashSet<Role_UserGroup>();
         }
     
         public System.Guid GUID { get; set; }
@@ -41,5 +42,7 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public virtual ICollection<TransactionHistory> TransactionHistory { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BusinessNetwork_FileUpload> BusinessNetwork_FileUpload { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Role_UserGroup> Role_UserGroup { get; set; }
     }
 }

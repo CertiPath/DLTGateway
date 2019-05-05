@@ -17,7 +17,9 @@ namespace CertiPath.BlockchainGateway.Model
         DataStore,
         LedgerServer,
         User,
-        FileUpload
+        FileUpload,
+        Role_UserGroup,
+        Role
     }
 
     public enum AuditLogOperationType

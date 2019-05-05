@@ -17,7 +17,6 @@ namespace CertiPath.BlockchainGateway.DataLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Role()
         {
-            this.Role_Policy = new HashSet<Role_Policy>();
             this.Role_UserGroup = new HashSet<Role_UserGroup>();
         }
     
@@ -26,9 +25,8 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public string Description { get; set; }
         public bool IsSystemRole { get; set; }
         public bool Deleted { get; set; }
+        public string Code { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Role_Policy> Role_Policy { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role_UserGroup> Role_UserGroup { get; set; }
     }

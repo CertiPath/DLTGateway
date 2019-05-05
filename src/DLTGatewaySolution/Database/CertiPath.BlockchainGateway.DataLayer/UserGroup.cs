@@ -12,23 +12,26 @@ namespace CertiPath.BlockchainGateway.DataLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class Policy
+    public partial class UserGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Policy()
+        public UserGroup()
         {
-            this.Role_Policy = new HashSet<Role_Policy>();
+            this.Role_UserGroup = new HashSet<Role_UserGroup>();
+            this.User_UserGroup = new HashSet<User_UserGroup>();
         }
     
         public System.Guid GUID { get; set; }
         public string Name { get; set; }
-        public string Code { get; set; }
-        public System.Guid PolicyTypeGUID { get; set; }
-        public int SortOrder { get; set; }
-        public bool Deleted_ { get; set; }
+        public string SID { get; set; }
+        public bool Deleted { get; set; }
+        public bool IsActiveDirectory { get; set; }
+        public bool IsSecurityGroup { get; set; }
+        public string msDSPrincipalName { get; set; }
     
-        public virtual PolicyType PolicyType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Role_Policy> Role_Policy { get; set; }
+        public virtual ICollection<Role_UserGroup> Role_UserGroup { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<User_UserGroup> User_UserGroup { get; set; }
     }
 }

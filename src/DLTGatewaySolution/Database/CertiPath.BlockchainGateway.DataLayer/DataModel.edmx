@@ -170,26 +170,6 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="Policy">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Code" Type="nvarchar" MaxLength="50" />
-          <Property Name="PolicyTypeGUID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="SortOrder" Type="int" Nullable="false" />
-          <Property Name="Deleted " Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="PolicyType">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Deleted" Type="bit" Nullable="false" />
-        </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="GUID" />
@@ -199,15 +179,7 @@
           <Property Name="Description" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="IsSystemRole" Type="bit" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Role_Policy">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="RoleGUID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="PolicyGUID" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="Allow" Type="bit" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Role_UserGroup">
           <Key>
@@ -217,6 +189,7 @@
           <Property Name="RoleGUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserGroupGUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="Setting">
           <Key>
@@ -281,6 +254,18 @@
           <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserGroupGUID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UserGUID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="SID" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="IsActiveDirectory" Type="bit" Nullable="false" />
+          <Property Name="IsSecurityGroup" Type="bit" Nullable="false" />
+          <Property Name="msDSPrincipalName" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vBusinessNetworkFile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -570,39 +555,15 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Policy_PolicyType">
-          <End Role="PolicyType" Type="Self.PolicyType" Multiplicity="1" />
-          <End Role="Policy" Type="Self.Policy" Multiplicity="*" />
+        <Association Name="FK_Role_UserGroup_BusinessNetwork">
+          <End Role="BusinessNetwork" Type="Self.BusinessNetwork" Multiplicity="0..1" />
+          <End Role="Role_UserGroup" Type="Self.Role_UserGroup" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="PolicyType">
+            <Principal Role="BusinessNetwork">
               <PropertyRef Name="GUID" />
             </Principal>
-            <Dependent Role="Policy">
-              <PropertyRef Name="PolicyTypeGUID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Role_Policy_Policy">
-          <End Role="Policy" Type="Self.Policy" Multiplicity="1" />
-          <End Role="Role_Policy" Type="Self.Role_Policy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Policy">
-              <PropertyRef Name="GUID" />
-            </Principal>
-            <Dependent Role="Role_Policy">
-              <PropertyRef Name="PolicyGUID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Role_Policy_Role">
-          <End Role="Role" Type="Self.Role" Multiplicity="1" />
-          <End Role="Role_Policy" Type="Self.Role_Policy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="GUID" />
-            </Principal>
-            <Dependent Role="Role_Policy">
-              <PropertyRef Name="RoleGUID" />
+            <Dependent Role="Role_UserGroup">
+              <PropertyRef Name="BusinessNetworkGUID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -615,6 +576,18 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Principal>
             <Dependent Role="Role_UserGroup">
               <PropertyRef Name="RoleGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_UserGroup_UserGroupGUID">
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="1" />
+          <End Role="Role_UserGroup" Type="Self.Role_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_UserGroup">
+              <PropertyRef Name="UserGroupGUID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -654,6 +627,18 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_User_UserGroup_UserGroup">
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="1" />
+          <End Role="User_UserGroup" Type="Self.User_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="User_UserGroup">
+              <PropertyRef Name="UserGroupGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="GetSystemStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="offsetHours" Type="int" Mode="In" />
         </Function>
@@ -672,16 +657,14 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySet Name="DataStoreHistory" EntityType="Self.DataStoreHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FileUpload" EntityType="Self.FileUpload" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ObjectPropertyType" EntityType="Self.ObjectPropertyType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Policy" EntityType="Self.Policy" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PolicyType" EntityType="Self.PolicyType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Role_Policy" EntityType="Self.Role_Policy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role_UserGroup" EntityType="Self.Role_UserGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SettingType" EntityType="Self.SettingType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TransactionHistory" EntityType="Self.TransactionHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User_UserGroup" EntityType="Self.User_UserGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserGroup" EntityType="Self.UserGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vBusinessNetworkFile" EntityType="Self.vBusinessNetworkFile" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [vBusinessNetworkFile].[BusinessNetworkGUID] AS [BusinessNetworkGUID], 
@@ -807,20 +790,16 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="TransactionHistory" EntitySet="TransactionHistory" />
             <End Role="DataStoreHistory" EntitySet="DataStoreHistory" />
           </AssociationSet>
-          <AssociationSet Name="FK_Policy_PolicyType" Association="Self.FK_Policy_PolicyType">
-            <End Role="PolicyType" EntitySet="PolicyType" />
-            <End Role="Policy" EntitySet="Policy" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Role_Policy_Policy" Association="Self.FK_Role_Policy_Policy">
-            <End Role="Policy" EntitySet="Policy" />
-            <End Role="Role_Policy" EntitySet="Role_Policy" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Role_Policy_Role" Association="Self.FK_Role_Policy_Role">
-            <End Role="Role" EntitySet="Role" />
-            <End Role="Role_Policy" EntitySet="Role_Policy" />
+          <AssociationSet Name="FK_Role_UserGroup_BusinessNetwork" Association="Self.FK_Role_UserGroup_BusinessNetwork">
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+            <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
           </AssociationSet>
           <AssociationSet Name="FK_Role_UserGroup_RoleGUID" Association="Self.FK_Role_UserGroup_RoleGUID">
             <End Role="Role" EntitySet="Role" />
+            <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_UserGroup_UserGroupGUID" Association="Self.FK_Role_UserGroup_UserGroupGUID">
+            <End Role="UserGroup" EntitySet="UserGroup" />
             <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
           </AssociationSet>
           <AssociationSet Name="FK_Setting_SettingType" Association="Self.FK_Setting_SettingType">
@@ -833,6 +812,10 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           </AssociationSet>
           <AssociationSet Name="FK_User_UserGroup_User" Association="Self.FK_User_UserGroup_User">
             <End Role="User" EntitySet="User" />
+            <End Role="User_UserGroup" EntitySet="User_UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_UserGroup_UserGroup" Association="Self.FK_User_UserGroup_UserGroup">
+            <End Role="UserGroup" EntitySet="UserGroup" />
             <End Role="User_UserGroup" EntitySet="User_UserGroup" />
           </AssociationSet>
         </EntityContainer>
@@ -891,28 +874,8 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="User" EntitySet="User" />
             <End Role="AuditLog" EntitySet="AuditLog" />
           </AssociationSet>
-          <EntitySet Name="Policy" EntityType="DataModel.Policy" />
-          <EntitySet Name="PolicyType" EntityType="DataModel.PolicyType" />
           <EntitySet Name="Role" EntityType="DataModel.Role" />
-          <EntitySet Name="Role_Policy" EntityType="DataModel.Role_Policy" />
-          <EntitySet Name="Role_UserGroup" EntityType="DataModel.Role_UserGroup" />
           <EntitySet Name="User_UserGroup" EntityType="DataModel.User_UserGroup" />
-          <AssociationSet Name="FK_Policy_PolicyType" Association="DataModel.FK_Policy_PolicyType">
-            <End Role="PolicyType" EntitySet="PolicyType" />
-            <End Role="Policy" EntitySet="Policy" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Role_Policy_Policy" Association="DataModel.FK_Role_Policy_Policy">
-            <End Role="Policy" EntitySet="Policy" />
-            <End Role="Role_Policy" EntitySet="Role_Policy" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Role_Policy_Role" Association="DataModel.FK_Role_Policy_Role">
-            <End Role="Role" EntitySet="Role" />
-            <End Role="Role_Policy" EntitySet="Role_Policy" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Role_UserGroup_RoleGUID" Association="DataModel.FK_Role_UserGroup_RoleGUID">
-            <End Role="Role" EntitySet="Role" />
-            <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
-          </AssociationSet>
           <AssociationSet Name="FK_User_UserGroup_User" Association="DataModel.FK_User_UserGroup_User">
             <End Role="User" EntitySet="User" />
             <End Role="User_UserGroup" EntitySet="User_UserGroup" />
@@ -962,7 +925,25 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="ChartType" EntitySet="ChartType" />
             <End Role="BusinessNetworkObjectChart" EntitySet="BusinessNetworkObjectChart" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="Role_UserGroup" EntityType="DataModel.Role_UserGroup" />
+          <EntitySet Name="UserGroup" EntityType="DataModel.UserGroup" />
+          <AssociationSet Name="FK_Role_UserGroup_BusinessNetwork" Association="DataModel.FK_Role_UserGroup_BusinessNetwork">
+            <End Role="BusinessNetwork" EntitySet="BusinessNetwork" />
+            <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_UserGroup_RoleGUID" Association="DataModel.FK_Role_UserGroup_RoleGUID">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Role_UserGroup_UserGroupGUID" Association="DataModel.FK_Role_UserGroup_UserGroupGUID">
+            <End Role="UserGroup" EntitySet="UserGroup" />
+            <End Role="Role_UserGroup" EntitySet="Role_UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_UserGroup_UserGroup" Association="DataModel.FK_User_UserGroup_UserGroup">
+            <End Role="UserGroup" EntitySet="UserGroup" />
+            <End Role="User_UserGroup" EntitySet="User_UserGroup" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="BlockchainFramework">
           <Key>
             <PropertyRef Name="GUID" />
@@ -992,6 +973,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="Disabled" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="BusinessNetwork_FileUpload" Relationship="DataModel.FK_BusinessNetwork_FileUpload_BusinessNetwork" FromRole="BusinessNetwork" ToRole="BusinessNetwork_FileUpload" />
           <Property Name="Endpoint" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Role_UserGroup" Relationship="DataModel.FK_Role_UserGroup_BusinessNetwork" FromRole="BusinessNetwork" ToRole="Role_UserGroup" />
         </EntityType>
         <EntityType Name="BusinessNetworkNamespace">
           <Key>
@@ -1298,29 +1280,6 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Policy">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PolicyTypeGUID" Type="Guid" Nullable="false" />
-          <Property Name="SortOrder" Type="Int32" Nullable="false" />
-          <Property Name="Deleted_" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="PolicyType" Relationship="DataModel.FK_Policy_PolicyType" FromRole="Policy" ToRole="PolicyType" />
-          <NavigationProperty Name="Role_Policy" Relationship="DataModel.FK_Role_Policy_Policy" FromRole="Policy" ToRole="Role_Policy" />
-        </EntityType>
-        <EntityType Name="PolicyType">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Policy" Relationship="DataModel.FK_Policy_PolicyType" FromRole="PolicyType" ToRole="Policy" />
-        </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="GUID" />
@@ -1330,29 +1289,8 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="Description" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="IsSystemRole" Type="Boolean" Nullable="false" />
           <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Role_Policy" Relationship="DataModel.FK_Role_Policy_Role" FromRole="Role" ToRole="Role_Policy" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Role_UserGroup" Relationship="DataModel.FK_Role_UserGroup_RoleGUID" FromRole="Role" ToRole="Role_UserGroup" />
-        </EntityType>
-        <EntityType Name="Role_Policy">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="Guid" Nullable="false" />
-          <Property Name="RoleGUID" Type="Guid" Nullable="false" />
-          <Property Name="PolicyGUID" Type="Guid" Nullable="false" />
-          <Property Name="Allow" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Policy" Relationship="DataModel.FK_Role_Policy_Policy" FromRole="Role_Policy" ToRole="Policy" />
-          <NavigationProperty Name="Role" Relationship="DataModel.FK_Role_Policy_Role" FromRole="Role_Policy" ToRole="Role" />
-        </EntityType>
-        <EntityType Name="Role_UserGroup">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="Guid" Nullable="false" />
-          <Property Name="RoleGUID" Type="Guid" Nullable="false" />
-          <Property Name="UserGroupGUID" Type="Guid" Nullable="false" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Role" Relationship="DataModel.FK_Role_UserGroup_RoleGUID" FromRole="Role_UserGroup" ToRole="Role" />
         </EntityType>
         <EntityType Name="User_UserGroup">
           <Key>
@@ -1362,55 +1300,8 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="UserGroupGUID" Type="Guid" Nullable="false" />
           <Property Name="UserGUID" Type="Guid" Nullable="false" />
           <NavigationProperty Name="User" Relationship="DataModel.FK_User_UserGroup_User" FromRole="User_UserGroup" ToRole="User" />
+          <NavigationProperty Name="UserGroup" Relationship="DataModel.FK_User_UserGroup_UserGroup" FromRole="User_UserGroup" ToRole="UserGroup" />
         </EntityType>
-        <Association Name="FK_Policy_PolicyType">
-          <End Type="DataModel.PolicyType" Role="PolicyType" Multiplicity="1" />
-          <End Type="DataModel.Policy" Role="Policy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PolicyType">
-              <PropertyRef Name="GUID" />
-            </Principal>
-            <Dependent Role="Policy">
-              <PropertyRef Name="PolicyTypeGUID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Role_Policy_Policy">
-          <End Type="DataModel.Policy" Role="Policy" Multiplicity="1" />
-          <End Type="DataModel.Role_Policy" Role="Role_Policy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Policy">
-              <PropertyRef Name="GUID" />
-            </Principal>
-            <Dependent Role="Role_Policy">
-              <PropertyRef Name="PolicyGUID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Role_Policy_Role">
-          <End Type="DataModel.Role" Role="Role" Multiplicity="1" />
-          <End Type="DataModel.Role_Policy" Role="Role_Policy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="GUID" />
-            </Principal>
-            <Dependent Role="Role_Policy">
-              <PropertyRef Name="RoleGUID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Role_UserGroup_RoleGUID">
-          <End Type="DataModel.Role" Role="Role" Multiplicity="1" />
-          <End Type="DataModel.Role_UserGroup" Role="Role_UserGroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="GUID" />
-            </Principal>
-            <Dependent Role="Role_UserGroup">
-              <PropertyRef Name="RoleGUID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_User_UserGroup_User">
           <End Type="DataModel.User" Role="User" Multiplicity="1" />
           <End Type="DataModel.User_UserGroup" Role="User_UserGroup" Multiplicity="*" />
@@ -1650,6 +1541,81 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Role_UserGroup">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="RoleGUID" Type="Guid" Nullable="false" />
+          <Property Name="UserGroupGUID" Type="Guid" Nullable="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="BusinessNetworkGUID" Type="Guid" />
+          <NavigationProperty Name="BusinessNetwork" Relationship="DataModel.FK_Role_UserGroup_BusinessNetwork" FromRole="Role_UserGroup" ToRole="BusinessNetwork" />
+          <NavigationProperty Name="Role" Relationship="DataModel.FK_Role_UserGroup_RoleGUID" FromRole="Role_UserGroup" ToRole="Role" />
+          <NavigationProperty Name="UserGroup" Relationship="DataModel.FK_Role_UserGroup_UserGroupGUID" FromRole="Role_UserGroup" ToRole="UserGroup" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="SID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="IsActiveDirectory" Type="Boolean" Nullable="false" />
+          <Property Name="IsSecurityGroup" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Role_UserGroup" Relationship="DataModel.FK_Role_UserGroup_UserGroupGUID" FromRole="UserGroup" ToRole="Role_UserGroup" />
+          <NavigationProperty Name="User_UserGroup" Relationship="DataModel.FK_User_UserGroup_UserGroup" FromRole="UserGroup" ToRole="User_UserGroup" />
+          <Property Name="msDSPrincipalName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Role_UserGroup_BusinessNetwork">
+          <End Type="DataModel.BusinessNetwork" Role="BusinessNetwork" Multiplicity="0..1" />
+          <End Type="DataModel.Role_UserGroup" Role="Role_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BusinessNetwork">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_UserGroup">
+              <PropertyRef Name="BusinessNetworkGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_UserGroup_RoleGUID">
+          <End Type="DataModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="DataModel.Role_UserGroup" Role="Role_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_UserGroup">
+              <PropertyRef Name="RoleGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Role_UserGroup_UserGroupGUID">
+          <End Type="DataModel.UserGroup" Role="UserGroup" Multiplicity="1" />
+          <End Type="DataModel.Role_UserGroup" Role="Role_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Role_UserGroup">
+              <PropertyRef Name="UserGroupGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_UserGroup_UserGroup">
+          <End Type="DataModel.UserGroup" Role="UserGroup" Multiplicity="1" />
+          <End Type="DataModel.User_UserGroup" Role="User_UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="User_UserGroup">
+              <PropertyRef Name="UserGroupGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1875,55 +1841,14 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Policy">
-            <EntityTypeMapping TypeName="DataModel.Policy">
-              <MappingFragment StoreEntitySet="Policy">
-                <ScalarProperty Name="Deleted_" ColumnName="Deleted " />
-                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
-                <ScalarProperty Name="PolicyTypeGUID" ColumnName="PolicyTypeGUID" />
-                <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="GUID" ColumnName="GUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PolicyType">
-            <EntityTypeMapping TypeName="DataModel.PolicyType">
-              <MappingFragment StoreEntitySet="PolicyType">
-                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="GUID" ColumnName="GUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Role">
             <EntityTypeMapping TypeName="DataModel.Role">
               <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="IsSystemRole" ColumnName="IsSystemRole" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="GUID" ColumnName="GUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Role_Policy">
-            <EntityTypeMapping TypeName="DataModel.Role_Policy">
-              <MappingFragment StoreEntitySet="Role_Policy">
-                <ScalarProperty Name="Allow" ColumnName="Allow" />
-                <ScalarProperty Name="PolicyGUID" ColumnName="PolicyGUID" />
-                <ScalarProperty Name="RoleGUID" ColumnName="RoleGUID" />
-                <ScalarProperty Name="GUID" ColumnName="GUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Role_UserGroup">
-            <EntityTypeMapping TypeName="DataModel.Role_UserGroup">
-              <MappingFragment StoreEntitySet="Role_UserGroup">
-                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="UserGroupGUID" ColumnName="UserGroupGUID" />
-                <ScalarProperty Name="RoleGUID" ColumnName="RoleGUID" />
                 <ScalarProperty Name="GUID" ColumnName="GUID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2041,6 +1966,30 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
                 <ScalarProperty Name="ChartTypeGUID" ColumnName="ChartTypeGUID" />
                 <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role_UserGroup">
+            <EntityTypeMapping TypeName="DataModel.Role_UserGroup">
+              <MappingFragment StoreEntitySet="Role_UserGroup">
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="UserGroupGUID" ColumnName="UserGroupGUID" />
+                <ScalarProperty Name="RoleGUID" ColumnName="RoleGUID" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroup">
+            <EntityTypeMapping TypeName="DataModel.UserGroup">
+              <MappingFragment StoreEntitySet="UserGroup">
+                <ScalarProperty Name="msDSPrincipalName" ColumnName="msDSPrincipalName" />
+                <ScalarProperty Name="IsSecurityGroup" ColumnName="IsSecurityGroup" />
+                <ScalarProperty Name="IsActiveDirectory" ColumnName="IsActiveDirectory" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="SID" ColumnName="SID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="GUID" ColumnName="GUID" />
               </MappingFragment>
