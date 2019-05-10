@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CertiPath.BlockchainGateway.Model;
 using CertiPath.BlockchainGateway.DataLayer;
-using System.Linq.Dynamic;
+
 
 namespace CertiPath.BlockchainGateway.Service
 {
@@ -24,13 +24,13 @@ namespace CertiPath.BlockchainGateway.Service
         /// will always get only global/system roles
         /// </summary>
         /// <returns></returns>
-        public List<RoleViewModel> GetAll()
+        public List<RoleViewModel> GetAll(bool isGlobal)
         {
             List<RoleViewModel> list = new List<RoleViewModel>();
             
             var data = _context.Role
                             .Where(w => w.Deleted == false)
-                            .Where(w => w.IsSystemRole == true)
+                            .Where(w => w.IsSystemRole == isGlobal)
                             .OrderBy(o => o.Name)
                             .ToList();
             
@@ -47,7 +47,7 @@ namespace CertiPath.BlockchainGateway.Service
             }
             return list;
         }
-
+        
         public void DeleteUserGroup(Guid GUID)
         {
             Helper.Common.EntityConverter converter = new Helper.Common.EntityConverter();
@@ -74,22 +74,23 @@ namespace CertiPath.BlockchainGateway.Service
         {
             Helper.ActiveDirectory.Group adGroup = new Helper.ActiveDirectory.Group(_context);
             var grp = adGroup.Save(model.Group);
-            addUserGroup(model.RoleGUID, grp);
+            addUserGroup(model.RoleGUID, grp, model.BusinessNetworkGUID);
         }
 
-        private DataLayer.Role_UserGroup addUserGroup(Guid RoleGUID, UserGroupModel userGroup)
+        private DataLayer.Role_UserGroup addUserGroup(Guid RoleGUID, UserGroupModel userGroup, Guid? BusinessNetworkGUID)
         {
             var rug = _context.Role_UserGroup
                                         .Where(w => w.Deleted == false)
                                         .Where(w => w.RoleGUID == RoleGUID)
                                         .Where(w => w.UserGroupGUID == userGroup.GUID)
+                                        .Where(w => w.BusinessNetworkGUID == BusinessNetworkGUID)
                                         .SingleOrDefault();
 
             if (rug == null)
             {
                 rug = new Role_UserGroup()
                 {
-                    BusinessNetworkGUID = null,
+                    BusinessNetworkGUID = BusinessNetworkGUID,
                     Deleted = false,
                     GUID = Guid.NewGuid(),
                     RoleGUID = RoleGUID,
@@ -115,10 +116,11 @@ namespace CertiPath.BlockchainGateway.Service
             return rug;
         }
 
-        public List<Model.UserGroupRoleModel> GetUserGroups(Guid roleGUID)
+        public List<Model.UserGroupRoleModel> GetUserGroups(Guid roleGUID, Guid? businessNetworkGUID)
         {
             var groups = _context.Role_UserGroup
                 .Where(w => w.RoleGUID == roleGUID)
+                .Where(w => w.BusinessNetworkGUID == businessNetworkGUID)
                 .Where(w => w.Deleted == false)
                 .Where(w => w.Role.Deleted == false)
                 .ToList();

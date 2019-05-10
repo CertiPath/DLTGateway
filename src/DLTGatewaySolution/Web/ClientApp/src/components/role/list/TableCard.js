@@ -25,7 +25,7 @@ export default class Example extends React.Component {
     componentDidMount() {
         this.loadData();
     }
-
+    
     loadData() {
         if (this.props.IsGlobal) {
             apiClient.get('Role/GetAll', {})
@@ -36,7 +36,12 @@ export default class Example extends React.Component {
                 });
         }
         else {
-            alert('todo');
+            apiClient.get('Role/GetAllLocal', {})
+                .then(res => {
+                    this.setState({
+                        RoleList: res.data
+                    });
+                });
         }
     }
 
@@ -91,7 +96,11 @@ export default class Example extends React.Component {
                             <div className="px-3">
                                 <Form className="form-horizontal">
                                     <div className="form-body">
-                                        <h4 className="form-section"><UserX size={20} color="#212529" /> Global Roles</h4>
+
+                                        {
+                                            this.props.IsGlobal == true ? (<h4 className="form-section"><UserX size={20} color="#212529" /> Global Roles</h4>) : (<h4 className="form-section"><UserX size={20} color="#212529" /> Local Roles</h4>)
+                                        }
+                                        
                                         <Table striped responsive>
                                             <thead>
                                                 <tr>

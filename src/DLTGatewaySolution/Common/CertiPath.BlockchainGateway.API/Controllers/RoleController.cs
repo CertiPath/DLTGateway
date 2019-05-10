@@ -20,7 +20,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         {
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             Service.Role roleSrv = new Service.Role(context);
-            var list = roleSrv.GetAll();
+            var list = roleSrv.GetAll(true);
             return list;
         }
 
@@ -28,7 +28,15 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         {
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             Service.Role roleSrv = new Service.Role(context);
-            var list = roleSrv.GetUserGroups(RoleGUID);
+            var list = roleSrv.GetUserGroups(RoleGUID, null);
+            return list;
+        }
+
+        public List<Model.UserGroupRoleModel> GetUserGroupsLocal(Guid RoleGUID, Guid BusinessNetworkGUID)
+        {
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            Service.Role roleSrv = new Service.Role(context);
+            var list = roleSrv.GetUserGroups(RoleGUID, BusinessNetworkGUID);
             return list;
         }
 
@@ -42,10 +50,18 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 
         [HttpPost]
         public void AddActiveDirectoryGroup(Model.RoleADGroupModel model)
-        {
+        {         
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             Service.Role roleSrv = new Service.Role(context);
             roleSrv.AddUserGroup(model);
+        }
+
+        public List<Model.RoleViewModel> GetAllLocal()
+        {
+            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
+            Service.Role roleSrv = new Service.Role(context);
+            var list = roleSrv.GetAll(false);
+            return list;
         }
     }
 }

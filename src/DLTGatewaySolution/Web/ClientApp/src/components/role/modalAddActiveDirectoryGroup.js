@@ -37,19 +37,13 @@ class ModalAddADGroup extends Component {
 
     addGroup(group) {
         this.toggle();
+        let bizNetGUID = this.props.IsGlobal ? null : this.props.BusinessNetworkGUID;
         apiClient.post('Role/AddActiveDirectoryGroup', {
                 Group: group,
-                RoleGUID: this.state.RoleGUID
+                RoleGUID: this.state.RoleGUID,
+                BusinessNetworkGUID: bizNetGUID
             })
             .then(res => {
-                /*
-                if (this.state.Data.GUID == null) {
-                    toastr.success('Success', 'Active directory group successfully added.', { position: 'top-right' });
-                }
-                else {
-                    toastr.success('Success', 'Active directory group successfully updated.', { position: 'top-right' });
-                }
-                */
                 toastr.success('Success', 'Active directory group successfully added.', { position: 'top-right' });
                 this.props.ReloadListAction(this.state.RoleGUID);
             })

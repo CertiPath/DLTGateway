@@ -26,13 +26,17 @@ const formBasicDetailsSchema = Yup.object().shape({
         .required()
         .max(50),
     ChannelName: Yup.string()
-        .required()
-        .max(100),
-    Username: Yup.string()
-        .required()
-        .max(100),
-    PeerAddress: Yup.string()
         .when("BlockchainFrameworkGUID", {
+            is: (val) => val.toUpperCase() == '77FC57A8-08D3-4542-9700-0D3F3E01E628',
+            then: Yup.string().required().max(100)
+        }),
+    Username: Yup.string()
+        .when("BlockchainFrameworkGUID", {
+            is: (val) => val.toUpperCase() == '77FC57A8-08D3-4542-9700-0D3F3E01E628',
+            then: Yup.string().required().max(100)
+        }),
+        PeerAddress: Yup.string()
+            .when("BlockchainFrameworkGUID", {
             is: (val) => val.toUpperCase() == '77FC57A8-08D3-4542-9700-0D3F3E01E628',
             then: Yup.string().required().max(100)
         }),
@@ -116,7 +120,7 @@ class BusinessNetworkDetails extends Component {
             .then(res => {
                 res.data.BlockchainFrameworkGUID = '';
                 this.setState({
-                    businessNetworkData: res.dat
+                    businessNetworkData: res.data
                 });
             });
     }
@@ -165,9 +169,15 @@ class BusinessNetworkDetails extends Component {
 
                     })
                         .then(res => {
-                            page.setState({
-                                BusinessNetworkGUID: res.data.Key
-                            })
+                            if (page.state.BusinessNetworkGUID.toUpperCase() == 'NEW') {
+                                // just reload everthing
+                                page.props.history.push('/BusinessNetwork/Details/' + res.data.Key);
+                            }
+                            else {
+                                page.setState({
+                                    BusinessNetworkGUID: res.data.Key
+                                })
+                            }
                             toastr.success('Success', 'Business network successfully saved.', { position: 'top-right' });
                         })
                         .catch(function (error) {
@@ -235,7 +245,7 @@ class BusinessNetworkDetails extends Component {
     render() {
 
         let selectedIndexBlockchainFramework = -1;
-        if (this.state.businessNetworkData !== null) {
+        if (this.state.businessNetworkData != null && this.state.businessNetworkData != undefined) {
             for (var i = 0; i < this.state.businessNetworkData.BlockchainFrameworkList.length; i++) {
                 if (this.state.businessNetworkData.BlockchainFrameworkList[i].value.toUpperCase() == this.state.businessNetworkData.BlockchainFrameworkGUID.toString().toUpperCase()) {
                     selectedIndexBlockchainFramework = i;
@@ -257,7 +267,6 @@ class BusinessNetworkDetails extends Component {
                         <Col sm="12" md="12">
                             <Card>
                                 <CardBody>
-
                                     <div>
                                         <Nav tabs className="nav-border-bottom">
                                             <NavItem>
@@ -272,35 +281,48 @@ class BusinessNetworkDetails extends Component {
                                                     Basic Details & Credential Files
                                             </NavLink>
                                             </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({
-                                                        active: this.state.activeTab === "2"
-                                                    })}
-                                                    onClick={() => {
-                                                        this.toggleTab("2");
-                                                    }}
-                                                >
-                                                    Tracked Namespaces
-                                            </NavLink>
-                                            </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({
-                                                        active: this.state.activeTab === "3"
-                                                    })}
-                                                    onClick={() => {
-                                                        this.toggleTab("3");
-                                                    }}
-                                                >
-                                                    Roles/Permissions
-                                            </NavLink>
-                                            </NavItem>
+                                            {
+                                                this.state.BusinessNetworkGUID != null && this.state.BusinessNetworkGUID.toUpperCase() != 'NEW' ?
+                                                    (
+                                                        <NavItem>
+                                                            <NavLink
+                                                                className={classnames({
+                                                                    active: this.state.activeTab === "2"
+                                                                })}
+                                                                onClick={() => {
+                                                                    this.toggleTab("2");
+                                                                }}
+                                                            >
+                                                                Tracked Namespaces
+                                                            </NavLink>
+                                                        </NavItem>
+                                                        
+                                                    ) :
+                                                    ('')
+                                            }
+                                            {
+                                                this.state.BusinessNetworkGUID != null && this.state.BusinessNetworkGUID.toUpperCase() != 'NEW' ?
+                                                    (
+                                                        <NavItem>
+                                                            <NavLink
+                                                                className={classnames({
+                                                                    active: this.state.activeTab === "3"
+                                                                })}
+                                                                onClick={() => {
+                                                                    this.toggleTab("3");
+                                                                }}
+                                                            >
+                                                                Roles/Permissions
+                                                            </NavLink>
+                                                        </NavItem>        
+                                                    ) :
+                                                    ('')
+                                            }   
                                         </Nav>
                                         <TabContent activeTab={this.state.activeTab}>
                                             <TabPane tabId="1">
                                                 <Row>
-                                                    <Col sm="12" md="6">
+                                                    <Col sm="12" md={this.state.BusinessNetworkType == 'ETH' ? "12" : "6"}>
                                                         <div className="px-3">
                                                             <Formik
                                                                 enableReinitialize
@@ -469,14 +491,17 @@ class BusinessNetworkDetails extends Component {
                                                 <Row>
                                                     <Col sm="12" md={this.state.SelectedRoleGUID == null ? "12" : "3"}>
                                                         <RoleTableCard
-                                                            IsGlobal={true}
+                                                            IsGlobal={false}
                                                             OnRoleSelected={this.OnRoleSelected}
+                                                            BusinessNetworkGUID={this.state.BusinessNetworkGUID}
                                                         />
                                                     </Col>
                                                     <Col sm="12" md="9" style={this.state.SelectedRoleGUID == null ? { display: 'none' } : {}}>
                                                         <RoleDetails
                                                             SelectedRoleGUID={this.state.SelectedRoleGUID}
                                                             SelectedRoleName={this.state.SelectedRoleName}
+                                                            IsGlobal={false}
+                                                            BusinessNetworkGUID={this.state.BusinessNetworkGUID}
                                                         />
                                                     </Col>
                                                 </Row>

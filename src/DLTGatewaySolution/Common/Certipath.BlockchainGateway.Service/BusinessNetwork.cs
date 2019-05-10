@@ -299,7 +299,8 @@ namespace CertiPath.BlockchainGateway.Service
                 ChannelName = "",
                 PeerAddress = "",
                 BlockchainFrameworkName = "",
-                Username = ""
+                Username = "",
+                Endpoint = ""
             };
 
             // get frameworks

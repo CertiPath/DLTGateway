@@ -42,5 +42,6 @@ namespace CertiPath.BlockchainGateway.Model
     {
         public Guid RoleGUID { get; set; }
         public Model.LDAPGroupModel Group { get; set; }
+        public Guid? BusinessNetworkGUID { get; set; }
     }
 }

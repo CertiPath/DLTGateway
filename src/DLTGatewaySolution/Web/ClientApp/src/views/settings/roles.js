@@ -37,6 +37,7 @@ class RoleListPage extends Component {
                         <RoleDetails
                             SelectedRoleGUID={this.state.SelectedRoleGUID}
                             SelectedRoleName={this.state.SelectedRoleName}
+                            IsGlobal={true}
                         />
                     </Col>
                 </Row>

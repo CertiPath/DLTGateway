@@ -20,26 +20,40 @@ class RoleDetails extends Component {
         
         this.state = {
             RoleGUID: null,
-            UserGroups: null
+            UserGroups: null,
+            BusinessNetworkGUID: props.BusinessNetworkGUID
         };
     }
 
     componentWillReceiveProps(nextProps) {
-
-        this.setState({
-            RoleGUID: nextProps.SelectedRoleGUID,
-            UserGroups: null
-        });
-        this.loadData(nextProps.SelectedRoleGUID);
+        if (nextProps.SelectedRoleGUID != this.props.SelectedRoleGUID ||
+            this.props.BusinessNetworkGUID != nextProps.BusinessNetworkGUID) {
+            this.setState({
+                BusinessNetworkGUID: nextProps.BusinessNetworkGUID,
+                RoleGUID: nextProps.SelectedRoleGUID,
+                UserGroups: null
+            });
+            this.loadData(nextProps.SelectedRoleGUID);
+        }
     }
 
     loadData(roleGUID) {
-        apiClient.get('Role/GetUserGroups?RoleGUID=' + roleGUID, {})
-            .then(res => {
-                this.setState({
-                    UserGroups: res.data
+        if(this.props.IsGlobal) {
+            apiClient.get('Role/GetUserGroups?RoleGUID=' + roleGUID, {})
+                .then(res => {
+                    this.setState({
+                        UserGroups: res.data
+                    });
                 });
-            });
+        }
+        else {
+            apiClient.get('Role/GetUserGroupsLocal?RoleGUID=' + roleGUID + "&BusinessNetworkGUID=" + this.state.BusinessNetworkGUID, {})
+                .then(res => {
+                    this.setState({
+                        UserGroups: res.data
+                    });
+                });
+        }
     }
 
     onFinishedAddGroup(roleGUID) {
@@ -122,6 +136,8 @@ class RoleDetails extends Component {
                                                 <AddADGroup
                                                     RoleGUID={this.state.RoleGUID}
                                                     ReloadListAction={this.onFinishedAddGroup}
+                                                    IsGlobal={this.props.IsGlobal}
+                                                    BusinessNetworkGUID={this.state.BusinessNetworkGUID}
                                                 />
                                             </div>
                                         </div>
