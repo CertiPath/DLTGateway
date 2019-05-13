@@ -38,6 +38,21 @@ class Login extends Component {
                 LastName: "",
                 Email: ""
             }));
+
+        sessionStorage.setItem('userNotifications', JSON.stringify(
+            [
+                {
+                    Title: "Test",
+                    Text: "blah",
+                    Time: ""
+                },
+                {
+                    Title: "Test",
+                    Text: "blah",
+                    Time: ""
+                }
+            ]
+        ));
     }
 
    render() {

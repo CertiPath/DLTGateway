@@ -221,6 +221,8 @@
     <Compile Include="Controllers\BusinessNetworkController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\SettingController.cs" />
+    <Compile Include="Helper\ActiveDirectory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Auth\AuthorizationServerProvider.cs" />
     <Compile Include="Startup.cs" />

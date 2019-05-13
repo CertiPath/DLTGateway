@@ -19,7 +19,8 @@ namespace CertiPath.BlockchainGateway.Model
         User,
         FileUpload,
         Role_UserGroup,
-        Role
+        Role,
+        Setting
     }
 
     public enum AuditLogOperationType

@@ -1,6 +1,9 @@
 ﻿using CertiPath.BlockchainGateway.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Web;
 using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
@@ -11,16 +14,8 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpGet]
         public List<LDAPGroupModel> GroupSearch(string Name)
         {
-            LDAPConnectionModel connection = new LDAPConnectionModel() {
-                Username = "",
-                Password = "",
-                Server = "trust-test.local",
-                Port = 3268,
-                BaseDirectory = "DC=TRUST-Test,DC=local",
-                PageSize = 10,
-                AuthType = "NTLM"
-            };
-            
+            Helper.ActiveDirectory ad = new Helper.ActiveDirectory();
+            LDAPConnectionModel connection = ad.GetConnection();
             LDAP.Group ldapGroup = new LDAP.Group(connection, false);
 
             string filter = "(groupType:1.2.840.113556.1.4.803:=2147483648)";

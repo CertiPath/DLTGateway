@@ -30,14 +30,10 @@ import {
 
 import ContentHeader from "../../../components/contentHead/contentHeader";
 import ContentSubHeader from "../../../components/contentHead/contentSubHeader";
-
 import ReactCountryFlag from "react-country-flag";
 
-import userImage2 from "../../../assets/img/portrait/small/avatar-s-2.png";
-import userImage3 from "../../../assets/img/portrait/small/avatar-s-3.png";
-import userImage4 from "../../../assets/img/portrait/small/avatar-s-4.png";
-
 const user = JSON.parse(sessionStorage.getItem('userAuth'));
+const notifications = JSON.parse(sessionStorage.getItem('userNotifications'));
 
 class ThemeNavbar extends Component {
     handleClick = e => {
@@ -58,7 +54,30 @@ class ThemeNavbar extends Component {
         });
     }
 
-   render() {
+    render() {
+        let notificationRows = notifications == null || notifications == undefined || notifications.length == 0 ? '<div></div>' : notifications.map(notification => {
+            return (
+                <Media className="px-3 pt-2 pb-2 media  border-bottom-grey border-bottom-lighten-3">
+                    <Media left middle href="#" className="mr-2">
+                        <span className="bg-warning rounded-circle width-35 height-35 d-block">
+                            <AlertTriangle size={30} className="p-1 white margin-left-3" />
+                        </span>
+                    </Media>
+                    <Media body>
+                        <h6 className="mb-1 text-bold-500 font-small-3">
+                            <span className="warning">{notification.Title}</span>
+                            <span className="text-bold-300 font-small-2 text-muted float-right">
+                                {notification.Time}
+                            </span>
+                        </h6>
+                        <p className="font-small-3 line-height-2">
+                            {notification.Text}
+                        </p>
+                    </Media>
+                </Media>
+            )
+        });
+
       return (
          <Navbar className="navbar navbar-expand-lg navbar-light bg-faded">
             <div className="container-fluid px-0">
@@ -109,133 +128,30 @@ class ThemeNavbar extends Component {
                               <Mail size={20} color="#333" />
                            </Link>
                               </NavItem>
-                        <UncontrolledDropdown nav inNavbar className="pr-1" hidden>
-                           <DropdownToggle nav>
-                              <span className="notification-bell-blink" />
-                              <Bell size={21} className="text-dark notification-danger animate-shake" />
-                           </DropdownToggle>
-                           <DropdownMenu right className="notification-dropdown">
-                              <div className="p-2 text-center  border-bottom-grey border-bottom-lighten-2">
-                                 <h6 className="mb-0 text-bold-500">Notifications</h6>
-                              </div>
-                              <PerfectScrollbar className="noti-list bg-grey bg-lighten-5">
-                                 <Media className="px-3 pt-2 pb-2 media  border-bottom-grey border-bottom-lighten-3">
-                                    <Media left top href="#">
-                                       <Media
-                                          object
-                                          src={userImage2}
-                                          alt="Generic placeholder image"
-                                          className="rounded-circle width-35"
-                                       />
-                                    </Media>
-                                    <Media body>
-                                       <h6 className="mb-0 text-bold-500 font-small-3">
-                                          Selina sent you mail
-                                          <span className="text-bold-300 font-small-2 text-muted float-right">9:00 A.M</span>
-                                       </h6>
-                                       <span className="font-small-3 line-height-2">
-                                          Cras sit amet nibh libero, in gravida nulla.
-                                       </span>
-                                    </Media>
-                                 </Media>
-                                 <Media className="px-3 pt-2 pb-2 media  border-bottom-grey border-bottom-lighten-3">
-                                    <Media left middle href="#" className="mr-2">
-                                       <span className="bg-success rounded-circle width-35 height-35 d-block">
-                                          <Check size={30} className="p-1 white margin-left-3" />
-                                       </span>
-                                    </Media>
-                                    <Media body>
-                                       <h6 className="mb-1 text-bold-500 font-small-3">
-                                          <span className="success">Report generated successfully!</span>
-                                          <span className="text-bold-300 font-small-2 text-muted float-right">
-                                             10:15 A.M
-                                          </span>
-                                       </h6>
-                                       <span className="font-small-3 line-height-2">
-                                          Consectetur adipisicing elit sed do eiusmod.
-                                       </span>
-                                    </Media>
-                                 </Media>
-                                 <Media className="px-3 pt-2 pb-2 media  border-bottom-grey border-bottom-lighten-3">
-                                    <Media left middle href="#" className="mr-2">
-                                       <span className="bg-warning rounded-circle width-35 height-35 d-block">
-                                          <AlertTriangle size={30} className="p-1 white margin-left-3" />
-                                       </span>
-                                    </Media>
-                                    <Media body>
-                                       <h6 className="mb-1 text-bold-500 font-small-3">
-                                          <span className="warning">Warning notificatoin</span>
-                                          <span className="text-bold-300 font-small-2 text-muted float-right">
-                                             11:00 A.M
-                                          </span>
-                                       </h6>
-                                       <p className="font-small-3 line-height-2">
-                                          Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor.
-                                       </p>
-                                    </Media>
-                                 </Media>
-                                 <Media className="px-3 pt-2 pb-2 media  border-bottom-grey border-bottom-lighten-3">
-                                    <Media left top href="#">
-                                       <Media
-                                          object
-                                          src={userImage3}
-                                          alt="Generic placeholder image"
-                                          className="rounded-circle width-35"
-                                       />
-                                    </Media>
-                                    <Media body>
-                                       <h6 className="mb-0 text-bold-500 font-small-3">
-                                          John started task
-                                          <span className="text-bold-300 font-small-2 text-muted float-right">5:00 P.M</span>
-                                       </h6>
-                                       <span className="font-small-3 line-height-2">
-                                          Sit amet consectetur adipisicing elit sed.
-                                       </span>
-                                    </Media>
-                                 </Media>
-                                 <Media className="px-3 pt-2 pb-2 media  border-bottom-grey border-bottom-lighten-3">
-                                    <Media left middle href="#" className="mr-2">
-                                       <span className="bg-danger rounded-circle width-35 height-35 d-block">
-                                          <X size={30} className="p-1 white margin-left-3" />
-                                       </span>
-                                    </Media>
-                                    <Media body>
-                                       <h6 className="mb-1 text-bold-500 font-small-3">
-                                          <span className="danger">Error notificarion</span>
-                                          <span className="text-bold-300 font-small-2 text-muted float-right">
-                                             12:15 P.M
-                                          </span>
-                                       </h6>
-                                       <span className="font-small-3 line-height-2">
-                                          Consectetur adipisicing elit sed do eiusmod.
-                                       </span>
-                                    </Media>
-                                 </Media>
-                                 <Media className="px-3 pt-2 pb-2 media  border-bottom-grey border-bottom-lighten-3">
-                                    <Media left top href="#">
-                                       <Media
-                                          object
-                                          src={userImage4}
-                                          alt="Generic placeholder image"
-                                          className="rounded-circle width-35"
-                                       />
-                                    </Media>
-                                    <Media body>
-                                       <h6 className="mb-0 text-bold-500 font-small-3">
-                                          Lisa started task
-                                          <span className="text-bold-300 font-small-2 text-muted float-right">6:00 P.M</span>
-                                       </h6>
-                                       <span className="font-small-3 line-height-2">
-                                          Sit amet consectetur adipisicing elit sed.
-                                       </span>
-                                    </Media>
-                                 </Media>
-                              </PerfectScrollbar>
-                              <div className="p-1 text-center border-top-grey border-top-lighten-2">
-                                 <Link to="/">View All</Link>
-                              </div>
-                           </DropdownMenu>
-                        </UncontrolledDropdown>
+                        {
+                            notifications.length == 0 ? ('') :
+                            (
+                                          <UncontrolledDropdown nav inNavbar className="pr-1">
+                                              <DropdownToggle nav>
+                                                  <span className="notification-bell-blink" />
+                                                  <Bell size={21} className="text-dark notification-danger animate-shake" />
+                                              </DropdownToggle>
+
+                                              <DropdownMenu right className="notification-dropdown">
+                                                  <div className="p-2 text-center  border-bottom-grey border-bottom-lighten-2">
+                                                      <h6 className="mb-0 text-bold-500">Notifications</h6>
+                                                  </div>
+                                                  <PerfectScrollbar className="noti-list bg-grey bg-lighten-5">
+                                                      {notificationRows}
+                                                  </PerfectScrollbar>
+                                                  <div className="p-1 text-center border-top-grey border-top-lighten-2">
+                                                      <Link to="/">View All</Link>
+                                                  </div>
+                                              </DropdownMenu>
+                                          </UncontrolledDropdown>
+                            )       
+                        }
+                        
 
                               <UncontrolledDropdown nav inNavbar className="pr-1">
                                   <DropdownToggle nav>

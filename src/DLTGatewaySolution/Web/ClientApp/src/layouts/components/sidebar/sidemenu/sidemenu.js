@@ -55,7 +55,7 @@ class SideMenuContent extends Component {
                   ArrowRight={<ChevronRight size={16} />}
                   collapsedSidebar={this.props.collapsedSidebar}
               >
-                  <NavLink to="/Settings/System" className="item" style={{ display: "none"}} activeclassname="active">
+                  <NavLink to="/Settings/System" className="item" activeclassname="active">
                       <span className="menu-item-text">System</span>
                   </NavLink>
                  
