@@ -1,32 +1,13 @@
 // import external modules
 import React, { Component } from "react";
+import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
-import {
-   Form,
-   Media,
-   Collapse,
-   Navbar,
-   Nav,
-   NavItem,
-   UncontrolledDropdown,
-   DropdownToggle,
-   DropdownMenu,
-   DropdownItem
-} from "reactstrap";
+import { Form, Media, Collapse, Navbar, Nav, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {
-    // Moon,
-    Mail,
-    Menu,
-    MoreVertical,
-    Check,
-    Bell,
-    User,
-    AlertTriangle,
-    Lock,
-    X,
-    LogOut
-} from "react-feather";
+import {  Mail, Menu, MoreVertical, Check, Bell, User, AlertTriangle, Lock, X, LogOut } from "react-feather";
+
+import { userFirstName, userLastName } from '../../../redux/actions/user/userActions'
+
 
 import ContentHeader from "../../../components/contentHead/contentHeader";
 import ContentSubHeader from "../../../components/contentHead/contentSubHeader";
@@ -39,10 +20,11 @@ class ThemeNavbar extends Component {
     handleClick = e => {
         this.props.toggleSidebarMenu("open");
     };
+    
     constructor(props) {
 
         super(props);
-
+       
         this.toggle = this.toggle.bind(this);
         this.state = {
             isOpen: false
@@ -67,7 +49,7 @@ class ThemeNavbar extends Component {
                         <h6 className="mb-1 text-bold-500 font-small-3">
                             <span className="warning">{notification.Title}</span>
                             <span className="text-bold-300 font-small-2 text-muted float-right">
-                                {notification.Time}
+                                {this.props.firstName}AAA dadsa dsa dsa dsa {notification.Time}
                             </span>
                         </h6>
                         <p className="font-small-3 line-height-2">
@@ -192,4 +174,17 @@ class ThemeNavbar extends Component {
    }
 }
 
-export default ThemeNavbar;
+const mapStateToProps = state => ({
+    firstName: state.user.userFirstName,
+    lastName: state.user.userLastName,
+})
+
+const mapDispatchToProps = dispatch => ({
+    userFirstName: firstName => dispatch(userFirstName(firstName)),
+    userLastName: lastName => dispatch(userLastName(lastName)),
+})
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ThemeNavbar)

@@ -1,4 +1,4 @@
-﻿const firstName = (state = 'sssss', action) => {  
+﻿const firstName = (state = 'sssssAAA', action) => {  
     switch (action.type) {
         case 'USER_FIRSTNAME':
             return action.firstName

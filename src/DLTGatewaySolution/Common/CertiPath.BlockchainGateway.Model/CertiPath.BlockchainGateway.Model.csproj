@@ -61,10 +61,12 @@
     <Compile Include="CurrentContextModels.cs" />
     <Compile Include="DashboardModels.cs" />
     <Compile Include="DataStoreModels.cs" />
+    <Compile Include="NotificationModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleViewModel.cs" />
     <Compile Include="SettingModels.cs" />
     <Compile Include="TableModels.cs" />
+    <Compile Include="UserModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

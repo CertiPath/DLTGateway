@@ -46,7 +46,7 @@ namespace CertiPath.BlockchainGateway.BackgroundService
                 int sleepForSeconds = 60;
                 try
                 {
-                    Helper.SettingHelper sh = new Helper.SettingHelper();
+                    Helper.SettingHelper sh = new Helper.SettingHelper(context);
                     sleepForSeconds = sh.GetTransactionHistoryJobTimeout();
                     BusinessNetwork bneService = new BusinessNetwork(context);
                     bneService.ProcessNamespace(ns);

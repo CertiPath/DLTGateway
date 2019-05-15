@@ -97,6 +97,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Database\CertiPath.BlockchainGateway.DataLayer\CertiPath.BlockchainGateway.DataLayer.csproj">
