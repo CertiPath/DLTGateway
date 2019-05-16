@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
 import { Form, Media, Collapse, Navbar, Nav, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {  Mail, Menu, MoreVertical, Check, Bell, User, AlertTriangle, Lock, X, LogOut } from "react-feather";
+import { Mail, Menu, MoreVertical, Check, Bell, User, AlertTriangle, Lock, X, LogOut, Info } from "react-feather";
 
 import { userFirstName, userLastName } from '../../../redux/actions/user/userActions'
 
@@ -14,7 +14,7 @@ import ContentSubHeader from "../../../components/contentHead/contentSubHeader";
 import ReactCountryFlag from "react-country-flag";
 
 const user = JSON.parse(sessionStorage.getItem('userAuth'));
-const notifications = JSON.parse(sessionStorage.getItem('userNotifications'));
+const userDetails = JSON.parse(sessionStorage.getItem('userDetails'));
 
 class ThemeNavbar extends Component {
     handleClick = e => {
@@ -37,19 +37,23 @@ class ThemeNavbar extends Component {
     }
 
     render() {
-        let notificationRows = notifications == null || notifications == undefined || notifications.length == 0 ? '<div></div>' : notifications.map(notification => {
+        let notificationRows = userDetails == null || userDetails.Notifications == null || userDetails.Notifications.length == 0 ? '<div></div>' : userDetails.Notifications.map(notification => {
             return (
                 <Media className="px-3 pt-2 pb-2 media  border-bottom-grey border-bottom-lighten-3">
                     <Media left middle href="#" className="mr-2">
-                        <span className="bg-warning rounded-circle width-35 height-35 d-block">
-                            <AlertTriangle size={30} className="p-1 white margin-left-3" />
+                        <span className={"bg-" + notification.Type.toString().toLowerCase() + " rounded-circle width-35 height-35 d-block"}>
+                            {
+                                notification.Type.toUpperCase() == 'WARNING' ? 
+                                    <AlertTriangle size={30} className="p-1 white margin-left-3" /> :
+                                    <Info size={30} className="p-1 white margin-left-3" />
+                            }
                         </span>
                     </Media>
                     <Media body>
                         <h6 className="mb-1 text-bold-500 font-small-3">
-                            <span className="warning">{notification.Title}</span>
+                            <span className={notification.Type.toString().toLowerCase()}>{notification.Title}</span>
                             <span className="text-bold-300 font-small-2 text-muted float-right">
-                                {this.props.firstName}AAA dadsa dsa dsa dsa {notification.Time}
+                               {notification.DateTime}
                             </span>
                         </h6>
                         <p className="font-small-3 line-height-2">
@@ -111,7 +115,7 @@ class ThemeNavbar extends Component {
                            </Link>
                               </NavItem>
                         {
-                            notifications.length == 0 ? ('') :
+                            notificationRows.length == 0 ? ('') :
                             (
                                           <UncontrolledDropdown nav inNavbar className="pr-1">
                                               <DropdownToggle nav>
@@ -174,6 +178,7 @@ class ThemeNavbar extends Component {
    }
 }
 
+/*
 const mapStateToProps = state => ({
     firstName: state.user.userFirstName,
     lastName: state.user.userLastName,
@@ -188,3 +193,5 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(ThemeNavbar)
+*/
+export default ThemeNavbar;

@@ -14,14 +14,18 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         {
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             Service.User user = new Service.User(context);
-            var res = user.GetDetails();
+            Helper.User userHelper = new Helper.User();
+            var authInfo = userHelper.GetDetailsFromPrincipal();
+            var res = user.GetDetails(authInfo.GUID);
             return res;
         }
         public List<Model.NotificationModel> GetNotifications()
         {
             DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             Service.User user = new Service.User(context);
-            var list = user.GetNotifications();
+            Helper.User userHelper = new Helper.User();
+            var authInfo = userHelper.GetDetailsFromPrincipal();
+            var list = user.GetNotifications(authInfo.GUID);
             return list;
         }
     }

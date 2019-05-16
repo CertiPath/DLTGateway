@@ -39,20 +39,22 @@ class Login extends Component {
                 Email: ""
             }));
 
-        sessionStorage.setItem('userNotifications', JSON.stringify(
-            [
-                {
-                    Title: "Test",
-                    Text: "blah",
-                    Time: ""
-                },
-                {
-                    Title: "Test",
-                    Text: "blah",
-                    Time: ""
-                }
-            ]
-        ));
+    }
+
+    loadCurrentUserInfo() {
+
+        let user = JSON.parse(sessionStorage.getItem('userAuth'));
+        if (user != null) {
+            if (user.IsAuthenticated.toString().toUpperCase() == 'TRUE') {
+                apiClient.defaults.headers.common['Authorization'] = 'Bearer ' + user.access_token;
+            }
+        }
+
+        apiClient.get('User/GetDetails', {})
+            .then(res => {
+                sessionStorage.setItem('userDetails', JSON.stringify(res.data));
+                window.location = '/Dashboard';       //TODO: fix this, just so it can get new values for user until I figure it out
+            });
     }
 
    render() {
@@ -93,7 +95,7 @@ class Login extends Component {
                                               if (res.data.IsAuthenticated.toUpperCase() == 'TRUE') {
                                                   sessionStorage.setItem('userAuth', JSON.stringify(res.data));
                                                   //this.props.history.push('/Dashboard'); 
-                                                  window.location = '/Dashboard';       //TODO: fix this, just so it can get new values for user until I figure it out
+                                                  this.loadCurrentUserInfo();
                                               }
                                               else {
                                                   this.setState({ invalidUsernameOrPassword: true });

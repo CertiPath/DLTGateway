@@ -27,6 +27,7 @@ namespace CertiPath.BlockchainGateway.Service
             if (user != null)
             {
                 res.IsAuthenticated = true;
+                res.GUID = user.GUID;
                 res.FirstName = user.FirstName;
                 res.LastName = user.LastName;
                 res.Email = user.Email;

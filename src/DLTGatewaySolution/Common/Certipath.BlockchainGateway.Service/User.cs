@@ -17,28 +17,28 @@ namespace CertiPath.BlockchainGateway.Service
             _context = context;
         }
 
-        public List<Model.NotificationModel> GetNotifications()
+        public List<Model.NotificationModel> GetNotifications(Guid userGUID)
         {
             List<Model.NotificationModel> list = new List<NotificationModel>();
-            list.Add(new NotificationModel()
-            {
-                Type = NotificationType.Warning,
-                DateTime = "",
-                Text = "Some sample text",
-                Title = "Missing setting"
-            });
+            Helper.Notification.NotificationHelper notification = new Helper.Notification.NotificationHelper(_context);
+
+            list.AddRange(notification.GetGlobalSettings());
+            list.AddRange(notification.GetBusinessNetworks());
+            
             return list;
         }
 
-        public Model.UserModel GetDetails()
+        public Model.UserModel GetDetails(Guid userGUID)
         {
-            Model.UserModel user = new UserModel()
+            var user = _context.User.Where(w => w.GUID == userGUID).SingleOrDefault();
+            Model.UserModel res = new UserModel()
             {
-                FirstName = "NDDD",
-                LastName = "TestLast",
-                Notifications = GetNotifications()
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Notifications = GetNotifications(user.GUID)
             };
-            return user;
+            return res;
         }
     }
 }

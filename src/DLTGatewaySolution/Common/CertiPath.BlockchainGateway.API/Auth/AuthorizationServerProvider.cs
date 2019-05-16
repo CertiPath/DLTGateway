@@ -35,7 +35,7 @@ namespace CertiPath.BlockchainGateway.API.Auth
                 if (res.IsAuthenticated)
                 {
                     var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-                    identity.AddClaim(new Claim("sub", context.UserName));
+                    identity.AddClaim(new Claim("User", converter.GetJson(res)));
 
                     // get AD connection info
                     LDAPConnectionModel adc = getActiveDirectoryConnection(dbContext);
@@ -63,7 +63,8 @@ namespace CertiPath.BlockchainGateway.API.Auth
             connection.Password = adList.Where(w => w.Name == "AD_Password").SingleOrDefault().Value;
             connection.Username = adList.Where(w => w.Name == "AD_Username").SingleOrDefault().Value;
             connection.Server = adList.Where(w => w.Name == "AD_Server").SingleOrDefault().Value;
-            connection.Port = Convert.ToInt32(adList.Where(w => w.Name == "AD_Port").SingleOrDefault().Value);
+            connection.Port = adList.Where(w => w.Name == "AD_Port").SingleOrDefault().Value.Trim() == "" ? 
+                                        3268 : Convert.ToInt32(adList.Where(w => w.Name == "AD_Port").SingleOrDefault().Value);
             return connection;
         }
 
