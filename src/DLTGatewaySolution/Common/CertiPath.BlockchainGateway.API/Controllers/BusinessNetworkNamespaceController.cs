@@ -3,24 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http;
 
-
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
-    [Authorize]
-    public class BusinessNetworkNamespaceController : ApiController
-    {
+     public class BusinessNetworkNamespaceController : BaseController
+     {
         public List<BusinessNetworkNamespaceViewModel> GetAll(Guid BusinessNetworkGUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(DatabaseContext);
             var res = bnn.GetAllByBusinessNetwork(BusinessNetworkGUID);
             return res;
         }
 
         public BusinessNetworkNamespaceModel GetDetails(Guid GUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(DatabaseContext);
             var res = bnn.GetDetails(GUID);
             return res;
         }
@@ -28,18 +24,15 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Delete(BusinessNetworkObjectModel obj)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(DatabaseContext);
             bnn.Delete(obj.GUID);
         }
 
         [HttpPost]
         public void Save(BusinessNetworkNamespaceViewModel obj)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(DatabaseContext);
             bnn.Save(obj);
         }
-
     }
 }

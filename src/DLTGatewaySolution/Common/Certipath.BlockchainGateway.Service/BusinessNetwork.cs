@@ -285,7 +285,7 @@ namespace CertiPath.BlockchainGateway.Service
             res.BlockchainFrameworkList = frameworkList;
 
             // get all uploaded files
-            Helper.BusinessNetwork.FileUpload file = new Helper.BusinessNetwork.FileUpload();
+            Helper.BusinessNetwork.FileUpload file = new Helper.BusinessNetwork.FileUpload(_context);
             res.FileUploadList = file.GetAllByBusinessNetwork(res.GUID, false);
 
             return res;
@@ -380,7 +380,7 @@ namespace CertiPath.BlockchainGateway.Service
                     dynamic stuff = JObject.Parse(transaction.Data);
 
                     dynamic ns_rwset = stuff.data.data[0].payload.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset;
-                    Helper.BusinessNetwork.DataStore DataStore = new Helper.BusinessNetwork.DataStore();
+                    Helper.BusinessNetwork.DataStore DataStore = new Helper.BusinessNetwork.DataStore(_context);
                     foreach (var rws in ns_rwset)
                     {
                         if (rws.rwset.writes != null)

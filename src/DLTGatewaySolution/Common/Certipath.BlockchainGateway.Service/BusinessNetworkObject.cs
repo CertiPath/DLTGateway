@@ -141,7 +141,7 @@ namespace CertiPath.BlockchainGateway.Service
             bnop.Disabled = obj.Disabled;
             bnop.Visible = obj.Visible;
 
-            Helper.BusinessNetworkObject.ObjectPropertyType opt = new Helper.BusinessNetworkObject.ObjectPropertyType();
+            Helper.BusinessNetworkObject.ObjectPropertyType opt = new Helper.BusinessNetworkObject.ObjectPropertyType(_context);
             var propTypeGUID = opt.GetByCode(obj.PropertyTypeCode);
             bnop.ObjectPropertyTypeGUID = propTypeGUID;
 

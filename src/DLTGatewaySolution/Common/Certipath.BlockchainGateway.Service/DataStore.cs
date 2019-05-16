@@ -31,7 +31,7 @@ namespace CertiPath.BlockchainGateway.Service
             };
 
             // get charts
-            Helper.DataStore.ChartHelper chartHelper = new Helper.DataStore.ChartHelper();
+            Helper.DataStore.ChartHelper chartHelper = new Helper.DataStore.ChartHelper(_context);
             m.ChartList = chartHelper.GetByBusinessNetworkObjectGUID(obj.BusinessNetworkObjectGUID);
 
             return m;

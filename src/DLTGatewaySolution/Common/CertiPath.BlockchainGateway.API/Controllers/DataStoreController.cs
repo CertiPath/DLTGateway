@@ -9,7 +9,6 @@ using System.Web.Http.Cors;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
-    [Authorize]
     public class User
     {
         public string LastName { get; set; }
@@ -17,29 +16,26 @@ namespace CertiPath.BlockchainGateway.API.Controllers
     }
 
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class DataStoreController : ApiController
+    public class DataStoreController : BaseController
     {
         [HttpPost]
         public Model.DataStoreTableModel GetAll([FromBody]Model.TableModel model)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(context);
+            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(DatabaseContext);
             var list = dsSrv.GetAll(model);
             return list;
         }
 
         public Model.DataStoreModel Get(Guid GUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(context);
+            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(DatabaseContext);
             var result = dsSrv.Get(GUID);
             return result;
         }
 
         public Model.ObjectChartReturnModel GetChart(Guid dataStoreGUID, Guid objectChartGUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(context);
+            CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(DatabaseContext);
             var result = dsSrv.GetChart(dataStoreGUID, objectChartGUID);
             return result;
         }

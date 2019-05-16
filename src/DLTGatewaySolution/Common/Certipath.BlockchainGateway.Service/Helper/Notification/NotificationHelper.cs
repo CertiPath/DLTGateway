@@ -34,7 +34,10 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Notification
                     Type = NotificationType.Warning.ToString(),
                     Title = "Required Settings",
                     DateTime = "",
-                    Text = String.Format("There are {0} global settings that are required, but missing.", missingCount.ToString())
+                    Text = String.Format("There {1} {0} global setting{2} that {1} required, but missing.", 
+                                    missingCount.ToString(),
+                                    missingCount == 1 ? "is" : "are",
+                                    missingCount == 1 ? "" : "s")
                 });
             }
             return list;
@@ -56,7 +59,10 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Notification
                     Type = NotificationType.Info.ToString(),
                     Title = "Disabled Networks",
                     DateTime = "",
-                    Text = String.Format("There are {0} business networks that are disabled and that you can administer.", disabledCount.ToString())
+                    Text = String.Format("There {1} {0} business network{2} that {1} disabled and that you can administer.", 
+                                        disabledCount.ToString(),
+                                        disabledCount == 1 ? "is" : "are",
+                                        disabledCount == 1 ? "" : "s")
                 });
             }
             return list;

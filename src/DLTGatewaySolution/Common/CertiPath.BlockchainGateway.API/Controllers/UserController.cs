@@ -7,13 +7,11 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
-    [Authorize]
-    public class UserController : ApiController
+    public class UserController : BaseController
     {
         public Model.UserModel GetDetails()
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            Service.User user = new Service.User(context);
+            Service.User user = new Service.User(DatabaseContext);
             Helper.User userHelper = new Helper.User();
             var authInfo = userHelper.GetDetailsFromPrincipal();
             var res = user.GetDetails(authInfo.GUID);
@@ -21,8 +19,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         }
         public List<Model.NotificationModel> GetNotifications()
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            Service.User user = new Service.User(context);
+            Service.User user = new Service.User(DatabaseContext);
             Helper.User userHelper = new Helper.User();
             var authInfo = userHelper.GetDetailsFromPrincipal();
             var list = user.GetNotifications(authInfo.GUID);

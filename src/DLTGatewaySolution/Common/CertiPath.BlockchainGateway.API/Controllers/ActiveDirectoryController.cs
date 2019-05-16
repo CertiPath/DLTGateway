@@ -8,8 +8,7 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
-    [Authorize]
-    public class ActiveDirectoryController : ApiController
+    public class ActiveDirectoryController : BaseController
     {
         [HttpGet]
         public List<LDAPGroupModel> GroupSearch(string Name)

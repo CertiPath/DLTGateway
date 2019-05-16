@@ -9,20 +9,27 @@ namespace CertiPath.BlockchainGateway.Service.Helper.DataStore
 {
     internal class DataStoreHistory
     {
+        DataLayer.DataModelContainer _context;
+        internal DataStoreHistory(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
+
         internal void Add(DataLayer.DataStore data)
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.DataLayer.DataStoreHistory history = new CertiPath.BlockchainGateway.DataLayer.DataStoreHistory();
-
-            history.GUID = Guid.NewGuid();
-            history.DataStoreGUID = data.GUID;
-            history.SourceID = data.SourceID;
-            history.TransactionHistoryGUID = data.TransactionHistoryGUID;
-            history.Value = data.Value;
-            history.CreatedOn = data.LastUpdatedOn == null ? DateTime.UtcNow : (DateTime)data.LastUpdatedOn;
-
-            context.DataStoreHistory.Add(history);
-            context.SaveChanges();
+            CertiPath.BlockchainGateway.DataLayer.DataStoreHistory history =
+                new CertiPath.BlockchainGateway.DataLayer.DataStoreHistory()
+                {
+                    GUID = Guid.NewGuid(),
+                    DataStoreGUID = data.GUID,
+                    SourceID = data.SourceID,
+                    TransactionHistoryGUID = data.TransactionHistoryGUID,
+                    Value = data.Value,
+                    CreatedOn = data.LastUpdatedOn == null ? DateTime.UtcNow : (DateTime)data.LastUpdatedOn
+                };
+            
+            _context.DataStoreHistory.Add(history);
+            _context.SaveChanges();
         }
     }
 }

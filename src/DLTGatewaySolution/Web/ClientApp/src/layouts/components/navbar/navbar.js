@@ -56,7 +56,7 @@ class ThemeNavbar extends Component {
                                {notification.DateTime}
                             </span>
                         </h6>
-                        <p className="font-small-3 line-height-2">
+                        <p className="font-small-3 line-height-2 mb-0">
                             {notification.Text}
                         </p>
                     </Media>
@@ -131,7 +131,7 @@ class ThemeNavbar extends Component {
                                                       {notificationRows}
                                                   </PerfectScrollbar>
                                                   <div className="p-1 text-center border-top-grey border-top-lighten-2">
-                                                      <Link to="/">View All</Link>
+                                                      <Link style={{display: "none"}} to="/">View All</Link>
                                                   </div>
                                               </DropdownMenu>
                                           </UncontrolledDropdown>

@@ -214,6 +214,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Auth\AuthRepository.cs" />
     <Compile Include="Controllers\ActiveDirectoryController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusinessNetworkNamespaceController.cs" />
     <Compile Include="Controllers\BusinessNetworkObjectController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />

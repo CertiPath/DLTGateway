@@ -10,10 +10,15 @@ namespace CertiPath.BlockchainGateway.Service.Helper.BusinessNetwork
 {
     internal class FileUpload
     {
+        DataLayer.DataModelContainer _context;
+        internal FileUpload(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
+
         internal List<FileUploadModel> GetAllByBusinessNetwork(Guid businessNetworkGUID, bool returnContent)
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var list = context.vBusinessNetworkFile.Where(w => w.BusinessNetworkGUID == businessNetworkGUID).ToList();
+            var list = _context.vBusinessNetworkFile.Where(w => w.BusinessNetworkGUID == businessNetworkGUID).ToList();
             List<FileUploadModel> res = new List<FileUploadModel>();
             foreach (var item in list)
             {

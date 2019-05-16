@@ -7,21 +7,18 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
-    [Authorize]
-    public class SettingController : ApiController
+    public class SettingController : BaseController
     {
         public List<Model.SettingTypeModel> GetAllTypes()
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            Service.Settings settingsSrv = new Service.Settings(context);
+            Service.Settings settingsSrv = new Service.Settings(DatabaseContext);
             var list = settingsSrv.GetAllTypes();
             return list;
         }
 
         public List<Model.SettingModel> GetAll(Guid SettingTypeGUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            Service.Settings settingsSrv = new Service.Settings(context);
+            Service.Settings settingsSrv = new Service.Settings(DatabaseContext);
             var list = settingsSrv.GetAll(SettingTypeGUID);
             return list;
         }
@@ -29,8 +26,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Save(List<Model.SettingModel> list)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            Service.Settings settingsSrv = new Service.Settings(context);
+            Service.Settings settingsSrv = new Service.Settings(DatabaseContext);
             settingsSrv.Save(list);
         }
     }
