@@ -27,7 +27,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertiPath.BlockchainGateway
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{421287CD-E6EC-4F61-A18B-2F6B618C2F38}"
 	ProjectSection(SolutionItems) = preProject
+		DatabaseCleanup.sql = DatabaseCleanup.sql
 		Database\Scripts\IIS_APPPOOL_DefaultAppPool.sql = Database\Scripts\IIS_APPPOOL_DefaultAppPool.sql
+		SetSimpleRecoveryMode_and_ShrinkLogs.sql = SetSimpleRecoveryMode_and_ShrinkLogs.sql
 		Database\Scripts\StandUp.sql = Database\Scripts\StandUp.sql
 	EndProjectSection
 EndProject
