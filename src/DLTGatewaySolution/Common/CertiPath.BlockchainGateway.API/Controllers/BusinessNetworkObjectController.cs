@@ -5,13 +5,11 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
-    [Authorize]
-    public class BusinessNetworkObjectController : ApiController
+    public class BusinessNetworkObjectController : BaseController
     {
         public List<BusinessNetworkObjectViewModel> GetAllByNamespace(Guid BusinessNetworkNamespaceGUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bnn = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bnn = new Service.BusinessNetworkObject(DatabaseContext);
             var res = bnn.GetDetailsByNamespace(BusinessNetworkNamespaceGUID);
             return res;
         }
@@ -19,23 +17,20 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Save(BusinessNetworkObjectViewModel obj)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.Save(obj);
         }
 
         [HttpPost]
         public void Delete(BusinessNetworkObjectViewModel obj)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.Delete(obj);
         }
 
         public BusinessNetworkObjectDetailsModel GetDetails(Guid BusinessNetworkObjectGUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             var res = bno.GetDetails(BusinessNetworkObjectGUID);
             return res;
         }
@@ -44,8 +39,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void SaveProperty(BusinessNetworkObjectPropertyModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.SaveProperty(obj);
         }
 
@@ -53,15 +47,13 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void DeleteProperty(BusinessNetworkObjectPropertyModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.DeleteProperty(obj);
         }
 
         public GetObjectChartsModel GetCharts(Guid BusinessNetworkObjectGUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
 
             // get charts
             List<BusinessNetworkObjectChartModel> chartList = bno.GetCharts(BusinessNetworkObjectGUID);
@@ -81,8 +73,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void EnableChart(BusinessNetworkObjectChartModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.EnableChart(obj.GUID);
         }
 
@@ -90,8 +81,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void DisableChart(BusinessNetworkObjectChartModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.DisableChart(obj.GUID);
         }
 
@@ -99,8 +89,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void DeleteChart(BusinessNetworkObjectChartModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.DeleteChart(obj.GUID);
         }
 
@@ -108,8 +97,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void SaveChart(BusinessNetworkObjectChartModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.SaveChart(obj);
         }
     }

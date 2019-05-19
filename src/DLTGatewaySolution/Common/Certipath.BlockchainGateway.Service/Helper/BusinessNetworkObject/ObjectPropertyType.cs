@@ -9,12 +9,17 @@ namespace CertiPath.BlockchainGateway.Service.Helper.BusinessNetworkObject
 {
     internal class ObjectPropertyType
     {
+        DataLayer.DataModelContainer _context;
+        internal ObjectPropertyType(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
+
         internal Guid GetByCode(string code)
         {
             // TODO: this is being used since we are hardcoding values on the front end
             // to load values from database; and clear this up
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var type = context.ObjectPropertyType.Where(w => w.Code == code).SingleOrDefault();
+            var type = _context.ObjectPropertyType.Where(w => w.Code == code).SingleOrDefault();
             return type.GUID;
         }
     }

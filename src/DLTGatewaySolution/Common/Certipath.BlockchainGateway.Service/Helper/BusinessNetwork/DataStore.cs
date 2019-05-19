@@ -11,14 +11,18 @@ namespace CertiPath.BlockchainGateway.Service.Helper.BusinessNetwork
 {
     internal class DataStore
     {
+        DataLayer.DataModelContainer _context;
+        internal DataStore(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
+
         internal void Save(BusinessNetworkObjectModel objToTrack, string id, dynamic write, TransactionHistory transaction)
         {
-
-            DataModelContainer context = DataModelContainer.Builder().Build();
             Helper.Common.EntityConverter converter = new Common.EntityConverter();
 
             // 1. add new or update existing
-            var ds = context.DataStore
+            var ds = _context.DataStore
                                 .Where(w => w.SourceID == id)
                                 .Where(w => w.BusinessNetworkObjectGUID == objToTrack.GUID)
                                 .SingleOrDefault();
@@ -47,12 +51,12 @@ namespace CertiPath.BlockchainGateway.Service.Helper.BusinessNetwork
             
             if (lAddNew)
             {
-                context.DataStore.Add(ds);
+                _context.DataStore.Add(ds);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
             // 2. DataStoreHistory
-            Helper.DataStore.DataStoreHistory dsh = new Helper.DataStore.DataStoreHistory();
+            Helper.DataStore.DataStoreHistory dsh = new Helper.DataStore.DataStoreHistory(_context);
             dsh.Add(ds);
 
         }

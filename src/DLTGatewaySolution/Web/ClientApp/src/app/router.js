@@ -101,8 +101,8 @@ class Router extends Component {
                     <MainLayoutRoutes
                         exact
                         path="/Settings/Roles"
-                        title="Roles"
-                        subTitle="System Permissions"
+                        title="Global Roles"
+                        subTitle="System wide permissions"
                         render={matchprops => (
                             <Suspense fallback={<Spinner />}>
                                 <LazyRoles {...matchprops} />

@@ -18,5 +18,30 @@ namespace CertiPath.BlockchainGateway.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsSystemRole { get; set; }
+        public string Code { get; set; }
+    }
+
+    public class UserGroupModel
+    {
+        public System.Guid GUID { get; set; }
+        public string Name { get; set; }
+        public string SID { get; set; }
+    }
+
+    public class UserGroupRoleModel
+    {
+        public System.Guid GUID { get; set; }
+        public Guid RoleGUID { get; set; }
+        public Guid UserGroupGUID { get; set; }
+        public string RoleName { get; set; }
+        public string UserGroupName { get; set; }
+        public string UserGroupSID { get; set; }
+    }
+
+    public class RoleADGroupModel
+    {
+        public Guid RoleGUID { get; set; }
+        public Model.LDAPGroupModel Group { get; set; }
+        public Guid? BusinessNetworkGUID { get; set; }
     }
 }

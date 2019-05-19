@@ -6,6 +6,7 @@ import Spinner from "../../components/spinner/spinner";
 import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row, Modal, ModalHeader, ModalBody, ModalFooter, CustomInput } from "reactstrap";
 
 class ModalAddEditObjectProperty extends Component {
+    
     state = {
         modal: false,
         Data: this.props.Data

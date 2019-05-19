@@ -159,8 +159,11 @@ export default class Example extends React.Component {
                             <CardBody>
                                 <div className="px-3">
                                     <Form className="form-horizontal">
-                                        <div className="form-body">
-                                            <h4 className="form-section"><FileText size={20} color="#212529" /> Namespaces</h4>
+                                            <div className="form-body">
+                                            {
+                                                    this.props.ShowHeader == null || this.props.ShowHeader == false ? ('') :
+                                                        (<h4 className="form-section"><FileText size={20} color="#212529" /> Namespaces</h4>)
+                                            }
 
                                             <Table striped responsive>
                                                 <thead>

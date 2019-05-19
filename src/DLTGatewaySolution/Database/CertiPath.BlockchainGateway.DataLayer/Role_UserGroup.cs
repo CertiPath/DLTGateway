@@ -18,7 +18,10 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public System.Guid RoleGUID { get; set; }
         public System.Guid UserGroupGUID { get; set; }
         public bool Deleted { get; set; }
+        public Nullable<System.Guid> BusinessNetworkGUID { get; set; }
     
+        public virtual BusinessNetwork BusinessNetwork { get; set; }
         public virtual Role Role { get; set; }
+        public virtual UserGroup UserGroup { get; set; }
     }
 }

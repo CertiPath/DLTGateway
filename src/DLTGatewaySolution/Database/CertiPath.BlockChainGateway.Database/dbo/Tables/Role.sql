@@ -4,5 +4,6 @@
     [Name] NVARCHAR(50) NOT NULL,
 	[Description] NVARCHAR(250) NOT NULL,
     [IsSystemRole] BIT NOT NULL DEFAULT 0, 
-    [Deleted] BIT NOT NULL DEFAULT 0
+    [Deleted] BIT NOT NULL DEFAULT 0, 
+    [Code] NVARCHAR(50) NOT NULL DEFAULT ''
 )

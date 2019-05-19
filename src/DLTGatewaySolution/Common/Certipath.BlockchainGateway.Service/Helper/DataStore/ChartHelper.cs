@@ -10,12 +10,17 @@ namespace CertiPath.BlockchainGateway.Service.Helper.DataStore
 {
     internal class ChartHelper
     {
+        DataLayer.DataModelContainer _context;
+        internal ChartHelper(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
+
         internal List<DataStoreChartModel> GetByBusinessNetworkObjectGUID(Guid objectGUID)
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
             List<DataStoreChartModel> res = new List<DataStoreChartModel>();
 
-            var charts = context.BusinessNetworkObjectChart
+            var charts = _context.BusinessNetworkObjectChart
                                         .Where(w => w.BusinessNetworkObjectGUID == objectGUID)
                                         .Where(w => w.Deleted == false)
                                         .Where(w => w.Disabled == false)
@@ -27,6 +32,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.DataStore
                 {
                     GUID = chart.GUID,
                     Name = chart.Name,
+                    Description = chart.Description,
                     TypeCode = chart.ChartType.Code
                 });
             }

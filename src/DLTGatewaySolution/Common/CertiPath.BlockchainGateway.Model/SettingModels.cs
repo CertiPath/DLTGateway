@@ -11,6 +11,13 @@ namespace CertiPath.BlockchainGateway.Model
         BACKGROUND_TRANSHISTORY_TIMEOUT
     }
 
+    public class SettingTypeModel
+    {
+        public System.Guid GUID { get; set; }
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+    }
+
     public class SettingModel
     {
         public System.Guid GUID { get; set; }

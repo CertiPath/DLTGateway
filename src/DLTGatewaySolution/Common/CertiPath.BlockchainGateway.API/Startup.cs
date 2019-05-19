@@ -18,7 +18,7 @@ namespace CertiPath.BlockchainGateway.API
             {
                 AllowInsecureHttp = true,                       // TODO: Should probably change this in production
                 TokenEndpointPath = new PathString("/api/oauth2/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(20),
+                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(120),
                 Provider = new AuthorizationServerProvider()
             };
 

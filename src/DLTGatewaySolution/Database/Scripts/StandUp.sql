@@ -14,10 +14,120 @@ INSERT INTO BlockchainFramework ([GUID], Name, DisplayName, Deleted)
 VALUES ('69BEF4F9-0342-45B4-A557-4B4B74C5A471', 'ETH', 'Ethereum', 0) 
 GO
 
--- log setting type
+-- AD SETTINGS - START --
+IF NOT EXISTS (SELECT * FROM SettingType WHERE Name = 'AD')
+BEGIN
+	PRINT 'Setting type AD'
+	INSERT INTO SettingType ([GUID], Name, DisplayName, UserEditable, [Order])
+	VALUES ('26146061-1F9A-4C5B-AA23-15931AC1823E', 'AD', 'Active Directory', 1, 0)
+END
+ELSE
+BEGIN
+	PRINT 'Setting Type AD already exists'
+END
+GO
 
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'AD_BaseDirectory')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'6543d281-bad5-4600-9c24-206ad31417d0', N'AD_BaseDirectory', 'Base Directory', '26146061-1f9a-4c5b-aa23-15931ac1823e', N'', N'string', NULL, NULL, 1, 1, 1)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'AD_Username')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'743ce489-9fe7-44fe-afff-2fe77870bb38', N'AD_Username', 'Username', '26146061-1f9a-4c5b-aa23-15931ac1823e', N'', N'string', NULL, NULL, 2, 1, 0)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'AD_Password')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'ef95c2b8-f1bb-48da-9c86-d2f1df7a6135', N'AD_Password', 'Password', '26146061-1f9a-4c5b-aa23-15931ac1823e', N'', N'string', NULL, NULL, 3, 1, 0)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'AD_Port')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'bc7ebdf7-3377-4b8e-ba69-72e2b017747c', N'AD_Port', 'Port', '26146061-1f9a-4c5b-aa23-15931ac1823e', N'3268', N'int', NULL, NULL, 4, 1, 1)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'AD_PageSize')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'c2f3d6ab-0b2a-4bf4-8282-c22fde408fd2', N'AD_PageSize', N'Page Size', '26146061-1f9a-4c5b-aa23-15931ac1823e', N'10', N'int', NULL, NULL, 5, 0, 1)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'AD_Server')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'b53cedcc-b89d-46ec-a61e-d17aef7a43b2', N'AD_Server', 'Server Address', '26146061-1f9a-4c5b-aa23-15931ac1823e', N'', N'string', NULL, NULL, 0, 1, 1)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'AD_AuthType')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'AF5BC482-D300-4B7B-B748-AB5F15E6F61F', N'AD_AuthType', N'Authentication Type', '26146061-1F9A-4C5B-AA23-15931AC1823E', 'NTLM', 'select', ',Basic,NTLM,Kerberos,MSN,Anonymous,Negotiate', NULL, -9, 1, 1)
+END
+GO
+-- AD SETTINGS - END --
+
+
+-- GUI SETTINGS - START --
+-- COmment out for now --
+/*
+IF NOT EXISTS (SELECT * FROM SettingType WHERE Name = 'GUI')
+BEGIN
+	PRINT 'Setting type GUI'
+	INSERT INTO SettingType ([GUID], Name, DisplayName, UserEditable, [Order])
+	VALUES ('1A5B9F0C-563C-4313-97BC-CD79A2CBA56B', 'GUI', 'User Interface', 2, 0)
+END
+ELSE
+BEGIN
+	PRINT 'Setting Type GUI already exists'
+END
+GO
+
+-- all special types because on click we want to do a special action to make these active right away
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'GUI_SidebarColor')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'4E7E5C5C-299D-4793-8791-918608B74653', N'GUI_SidebarColor', N'Sidebar Color', '1A5B9F0C-563C-4313-97BC-CD79A2CBA56B', '', 'sidebarcolor', '', NULL, 0, 1, 0)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'GUI_LayoutDark')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'14BC3522-00D2-4818-A361-3588A1A7B99C', N'GUI_LayoutDark', N'Layout Dark', '1A5B9F0C-563C-4313-97BC-CD79A2CBA56B', 'FALSE', 'layoutdark', '', NULL, 1, 1, 0)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'GUI_CompactMenu')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'F1D9B05A-800F-40F6-BFFE-0BBE4B7BA80A', N'GUI_CompactMenu', N'Compact Menu', '1A5B9F0C-563C-4313-97BC-CD79A2CBA56B', 'FALSE', 'compactmenu', '', NULL, 2, 1, 0)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM [Setting] WHERE Name = 'GUI_SidebarWidth')
+BEGIN
+	INSERT [dbo].[Setting] ([GUID], [Name], [DisplayName], [SettingTypeGUID], [Value], [ValueType], [ValueReference], [TooltipText], [Order], [UserEditable], [Required]) 
+	VALUES (N'FB663F93-4395-4D32-A8CB-8E65776F9AC7', N'GUI_SidebarWidth', N'Sidebar Width', '1A5B9F0C-563C-4313-97BC-CD79A2CBA56B', 'MEDIUM', 'sidebarwidth', '', NULL, 2, 1, 0)
+END
+GO
+*/
+-- GUI SETTINGS - END --
+
+
+-- TO RECONSIDER --
 INSERT INTO SettingType ([GUID], Name, DisplayName, UserEditable, [Order])
-VALUES ('8210870F-CCA3-4D15-8CA6-0F6CAA557F9A', 'LOG', 'Log', 1, 0)
+VALUES ('8210870F-CCA3-4D15-8CA6-0F6CAA557F9A', 'LOG', 'Log', 2, 0)
 GO
 
 -- settings
@@ -41,12 +151,12 @@ VALUES ('D716ECEB-367F-47A1-AA86-399E253CE363', 'LOG_ERROR', 'Log Error', '82108
 GO
 
 -- Global Admin
-IF NOT EXISTS (SELECT * FROM [Role] WHERE Name = 'Global Admin' AND IsSystemRole = 1) 
+IF NOT EXISTS (SELECT * FROM [Role] WHERE Code = 'GLOBALADMIN' AND IsSystemRole = 1) 
 BEGIN
 	PRINT 'Inserting Global Admin role...'
-	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted)
+	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted, Code)
 	VALUES ('4EB0771C-1A22-4941-9A89-A013E676F962', 'Global Admin',
-		'System wide administration rights', 1, 0)
+		'System wide administration rights', 1, 0, 'GLOBALADMIN')
 END
 ELSE
 BEGIN
@@ -54,16 +164,42 @@ BEGIN
 END
 
 -- Global View
-IF NOT EXISTS (SELECT * FROM [Role] WHERE Name = 'Global View' AND IsSystemRole = 1) 
+IF NOT EXISTS (SELECT * FROM [Role] WHERE Code = 'GLOBALVIEW' AND IsSystemRole = 1) 
 BEGIN
 	PRINT 'Inserting Global View role...'
-	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted)
+	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted, Code)
 	VALUES ('1FAC7817-2CF3-41C2-A34F-C1227EA5F8DF', 'Global View',
-		'System wide view rights', 1, 0)
+		'System wide view rights', 1, 0, 'GLOBALVIEW')
 END
 ELSE
 BEGIN
 	PRINT 'Global View role already exists.'
+END
+GO
+-- Local Admin
+IF NOT EXISTS (SELECT * FROM [Role] WHERE Code = 'LOCALADMIN' AND IsSystemRole = 0) 
+BEGIN
+	PRINT 'Inserting Local Admin role...'
+	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted, Code)
+	VALUES ('AF552A1A-C80A-455C-A854-1A330E7AC01C', 'Local Admin',
+		'Business Network Admin Rights', 0, 0, 'LOCALADMIN')
+END
+ELSE
+BEGIN
+	PRINT 'Local Admin role already exists.'
+END
+
+-- Local View
+IF NOT EXISTS (SELECT * FROM [Role] WHERE Code = 'LOCALVIEW' AND IsSystemRole = 0) 
+BEGIN
+	PRINT 'Inserting Local View role...'
+	INSERT INTO [Role] ([GUID], Name, [Description], IsSystemRole, Deleted, Code)
+	VALUES ('B67C7040-2E2A-4BE2-8B95-3414F3B36AB8', 'Local View',
+		'Business Network View Rights', 0, 0, 'LOCALVIEW')
+END
+ELSE
+BEGIN
+	PRINT 'Local View role already exists.'
 END
 GO
 

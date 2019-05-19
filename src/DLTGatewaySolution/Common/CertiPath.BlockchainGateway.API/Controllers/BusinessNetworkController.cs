@@ -12,35 +12,27 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
-    [Authorize]
-    public class BusinessNetworkController : ApiController
+    public class BusinessNetworkController : BaseController
     {
-        //[HttpGet()]
         public BusinessNetworkTableModel GetAll()
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
             var list = srvBN.GetAll();
             return list;
         }
 
         public BusinessNetworkModel GetDetails(Guid GUID)
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
             var res = srvBN.GetDetails(GUID);
             return res;
         }
 
         public BusinessNetworkModel GetMetadata()
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
             var res = srvBN.GetMetadata();
             return res;
         }
@@ -49,8 +41,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public ApiResult Save(BusinessNetworkModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             var result = bnet.Save(obj);
             return result;
         }
@@ -59,8 +50,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void Delete(BusinessNetworkModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             bnet.Delete(obj);
         }
 
@@ -68,8 +58,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void Enable(BusinessNetworkModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             bnet.Enable(obj);
         }
 
@@ -77,8 +66,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void Disable(BusinessNetworkModel obj)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             bnet.Disable(obj);
         }
 
@@ -86,15 +74,13 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public void DeleteConnectionFile(FileUploadModel file)
         {
             // TODO: Deal with response object and do error handling
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
-            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(context);
+            CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             bnet.DeleteConnectionFile(file.GUID);
         }
         
         [HttpPost]
         public void SaveConnectionFile()
         {
-            DataLayer.DataModelContainer context = DataLayer.DataModelContainer.Builder().Build();
             // TODO: Deal with response object and do error handling
             if (HttpContext.Current.Request.Files.AllKeys.Any())
             {
@@ -105,7 +91,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 
                 if (httpPostedFile != null)
                 {
-                    CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(context);
+                    CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
                     BinaryReader br = new BinaryReader(httpPostedFile.InputStream);
                     byte[] fileData = br.ReadBytes(httpPostedFile.ContentLength);
 

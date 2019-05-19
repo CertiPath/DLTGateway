@@ -22,6 +22,7 @@ namespace CertiPath.BlockchainGateway.Model
         public string ChannelName { get; set; }
         public bool Disabled { get; set; }
         public string Username { get; set; }
+        public string Endpoint { get; set; }
 
         public List<SelectModel> BlockchainFrameworkList { get; set; }
         public List<FileUploadModel> FileUploadList { get; set; }

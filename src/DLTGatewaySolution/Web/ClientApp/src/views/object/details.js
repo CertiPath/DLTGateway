@@ -1,5 +1,5 @@
-﻿import { Box, BarChart, Maximize, Minimize } from "react-feather";
-import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+﻿import { Box, BarChart, Maximize, Minimize, Info } from "react-feather";
+import { Breadcrumb, BreadcrumbItem, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Button, Card, CardBody, Col, FormGroup, Input, Label, Row, Form, Alert } from "reactstrap";
 import { toastr } from 'react-redux-toastr';
 import React, { Component, Fragment } from "react";
@@ -10,6 +10,7 @@ import classnames from "classnames";
 
 import Spinner from "../../components/spinner/spinner";
 import apiClient from "../../utility/apiClient";
+import ChartDescription from "../../components/businessNetworkObject/modalChartDescription";
 
 class BusinessNetworkObject extends Component {
     constructor(props) {
@@ -17,14 +18,21 @@ class BusinessNetworkObject extends Component {
 
         this.handleChartAreaMax = this.handleChartAreaMax.bind(this);
         this.handleChartAreaMin = this.handleChartAreaMin.bind(this);
-
+        
         this.state = {
             activeTab: 0,
             ObjectDetails: null,
             ChartData: null,
             ObjectGUID: props.match.params.id,
-            ChartAreaMaximized: false
+            ChartAreaMaximized: false,
+            modalChartDesc: false
         };
+    }
+    
+    toggleChartDesc = () => {
+        this.setState({
+            modalChartDesc: !this.state.modalChartDesc
+        });
     }
 
     toggleTab = tab => {
@@ -91,7 +99,7 @@ class BusinessNetworkObject extends Component {
             ChartAreaMaximized: false
         });
     }
-
+    
     render() {
         
         let rows = this.state.ObjectDetails == null ? '<div></div>' : this.state.ObjectDetails.PropertyValues.map(item => {
@@ -125,6 +133,15 @@ class BusinessNetworkObject extends Component {
         let tabDetails = this.state.ObjectDetails == null ? '<div></div>' : this.state.ObjectDetails.ChartList.map((chart, index) => {
             return (
                 <TabPane tabId={index}>
+                    {
+                        chart.Description != null && chart.Description != '' ? 
+                            (
+                                <ChartDescription
+                                    Title={chart.Name}
+                                    Text={chart.Description}
+                                />
+                            ): ('')
+                    }
                     <div style={{ width: "100%" }}>
                         {
                             chart.ChartData == null ? (<Spinner />) : 
@@ -167,7 +184,7 @@ class BusinessNetworkObject extends Component {
                         <Col sm="12" md="3" style={this.state.ChartAreaMaximized ? { display: "none" } : {}}>
                             <Card>
                                 <CardBody>
-                                    <div className="px-3">
+                                    <div>
                                         <Form className="form-horizontal">
                                             <div className="form-body">
                                                 <h4 className="form-section"><Box size={20} color="#212529" /> Object Properties</h4>

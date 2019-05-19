@@ -37,8 +37,7 @@ namespace CertiPath.BlockchainGateway.Service
 
         public BusinessNetworkNamespaceModel GetDetails(Guid namespaceGUID)
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
-            var ns = context.BusinessNetworkNamespace.Where(w => w.GUID == namespaceGUID).SingleOrDefault();
+            var ns = _context.BusinessNetworkNamespace.Where(w => w.GUID == namespaceGUID).SingleOrDefault();
 
             return new BusinessNetworkNamespaceModel()
             {

@@ -1,101 +1,125 @@
-﻿import "react-table/react-table.css";
+﻿import React from 'react';
+import "react-table/react-table.css";
 
-import React from "react";
-// Import React Table
-import ReactTable from "react-table";
-import apiClient from '../../../utility/apiClient';
-import { NavLink } from "react-router-dom";
-import { Button, Card, CardBody, CardTitle, Col, Row } from "reactstrap";
-
-const requestData = (pageSize, page, sorted, filtered) => {
-
-    return apiClient.post('Role/GetAll', {
-        "PageSize": pageSize,
-        "PageNumber": page,
-        "FilterList": filtered,
-        "SortList": sorted
-    });
-};
+import { UserX } from "react-feather";
+import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row, Table } from "reactstrap";
+import { Component, Fragment } from "react";
+import Spinner from "../../spinner/spinner";
+import { Alert } from "reactstrap";
+import { toastr } from 'react-redux-toastr';
+import apiClient from "../../../utility/apiClient";
+import { NavLink, Link } from "react-router-dom";
 
 export default class Example extends React.Component {
+
     constructor() {
         super();
         this.state = {
-            data: [],
-            pages: null,
-            loading: true
+            RoleList: null,
+            SelectedRoleGUID: null,
+            SelectedRoleName: '',
+            RoleSelected: false,
         };
-        this.fetchData = this.fetchData.bind(this);
     }
-    fetchData(state, instance) {
-        this.setState({ loading: true });
-        requestData(
-            state.pageSize,
-            state.page,
-            state.sorted,
-            state.filtered
-        ).then(res => {
-            this.setState({
-                data: res.data.List,
-                pages: Math.ceil(res.data.TotalCount / state.pageSize),
-                loading: false
-            });
-            })
-            .catch(function (error) {
-                alert(error);
-            })
+
+    componentDidMount() {
+        this.loadData();
     }
+    
+    loadData() {
+        if (this.props.IsGlobal) {
+            apiClient.get('Role/GetAll', {})
+                .then(res => {
+                    this.setState({
+                        RoleList: res.data
+                    });
+                });
+        }
+        else {
+            apiClient.get('Role/GetAllLocal', {})
+                .then(res => {
+                    this.setState({
+                        RoleList: res.data
+                    });
+                });
+        }
+    }
+
+    handleRoleSelected(selectedRoleGUID, selectedRoleName) {
+        
+        this.setState({
+            RoleSelected: true,
+            SelectedRoleGUID: selectedRoleGUID,
+            SelectedRoleName: selectedRoleName
+        });
+        this.props.OnRoleSelected(selectedRoleGUID, selectedRoleName);
+    }
+
     render() {
-        const { data, pages, loading } = this.state;
+        let rows = this.state.RoleList == null ? '<div></div>' : this.state.RoleList.map(role => {
+            return (
+                <tr>
+                    <td><Link to="#" onClick={() => this.handleRoleSelected(role.GUID, role.Name)}>{role.Name}</Link></td>
+                    <td hidden={this.state.RoleSelected}>{role.Description}</td>
+                    <td width="200px" hidden={this.state.RoleSelected}>
+                        <Button
+                            className="btn-sm"
+                            style={{ margin: '0px 0px 0px 0px' }}
+                            onClick={() => this.handleRoleSelected(role.GUID, role.Name)}>
+                            View Associated Groups
+                        </Button>
+                    </td>
+                </tr>
+            )
+        });
+
         return (
-            <div>
-                <ReactTable
-                    columns={[
-                        {
-                            Header: "Name",
-                            accessor: "Name"
-                        },
-                        {
-                            Header: "Description",
-                            accessor: "Description",
-                            sortable: false,
-                            filterable: false,
-                        },
-                        {
-                            Header: "System Role",
-                            accessor: "IsSystemRole",
-                            sortable: false,
-                            filterable: false,
-                        },
-                        {
-                            Header: "View",
-                            width: 100,
-                            sortable: false,
-                            filterable: false,
-                            accessor: "GUID",
-                            Cell: row => (
-                                <div style={{
-                                    textAlign: "center"
-                                }}>
-                                    <NavLink to={'/businessnetwork/details/' + row.GUID}>
-                                        <Button color="primary" size="sm" style={{ margin: 0 }}>
-                                            View
-                                        </Button>
-                                    </NavLink>
+
+            rows.length === 0 ?
+                (
+                    <div>
+                        <div className="px-3">
+                            <Form className="form-horizontal">
+                                <div className="form-body">
+                                    <Alert color="dark">
+                                        There are no global roles configured in the system. Contact support.
+                                     </Alert>
                                 </div>
-                            )
-                        }
-                    ]}
-                    manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-                    data={data}
-                    pages={pages} // Display the total number of pages
-                    loading={loading} // Display the loading overlay when we need it
-                    onFetchData={this.fetchData} // Request new data when things change
-                    filterable
-                    defaultPageSize={5}
-                    className="-striped -highlight"
-                />
-            </div>
+                            </Form>
+                        </div>
+                    </div>
+                )
+                :
+                (this.state.RoleList == null ? (<Spinner />) : (
+                    <Card>
+                        <CardBody>
+                            <div className="px-3">
+                                <Form className="form-horizontal">
+                                    <div className="form-body">
+
+                                        {
+                                            this.props.IsGlobal == true ? (<h4 className="form-section"><UserX size={20} color="#212529" /> Global Roles</h4>) : (<h4 className="form-section"><UserX size={20} color="#212529" /> Local Roles</h4>)
+                                        }
+                                        
+                                        <Table striped responsive>
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th hidden={this.state.RoleSelected}>Description</th>
+                                                    <th width="200px" hidden={this.state.RoleSelected}>View Associated Groups</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {rows}
+                                            </tbody>
+                                        </Table>
+                                    </div>
+                                </Form>
+                            </div>
+                        </CardBody>
+                    </Card>
+                    )
+                )
         );
     }
 }

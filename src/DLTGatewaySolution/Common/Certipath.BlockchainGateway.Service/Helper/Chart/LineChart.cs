@@ -102,6 +102,8 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
             Model.ObjectChartReturnModel res = new Model.ObjectChartReturnModel();
             res.ChartData = model;
             res.ChartType = chartType.ToString();
+            res.Name = chartDef.Name;
+            res.Description = chartDef.Description;
 
             return res;
         }

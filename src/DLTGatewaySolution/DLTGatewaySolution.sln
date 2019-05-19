@@ -27,7 +27,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertiPath.BlockchainGateway
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{421287CD-E6EC-4F61-A18B-2F6B618C2F38}"
 	ProjectSection(SolutionItems) = preProject
+		DatabaseCleanup.sql = DatabaseCleanup.sql
 		Database\Scripts\IIS_APPPOOL_DefaultAppPool.sql = Database\Scripts\IIS_APPPOOL_DefaultAppPool.sql
+		SetSimpleRecoveryMode_and_ShrinkLogs.sql = SetSimpleRecoveryMode_and_ShrinkLogs.sql
 		Database\Scripts\StandUp.sql = Database\Scripts\StandUp.sql
 	EndProjectSection
 EndProject
@@ -41,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanCollections", "Postm
 	ProjectSection(SolutionItems) = preProject
 		Misc\PostmanCollections\DLT_Gateway.postman_collection.json = Misc\PostmanCollections\DLT_Gateway.postman_collection.json
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertiPath.BlockchainGateway.LDAP", "CertiPath.BlockChain.LDAP\CertiPath.BlockchainGateway.LDAP.csproj", "{67685B1F-E82F-4B4B-896A-35DEDB906D4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -118,6 +122,14 @@ Global
 		{567D34A5-D73D-49AE-900C-9A940D7C5E2D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{567D34A5-D73D-49AE-900C-9A940D7C5E2D}.Release|x64.ActiveCfg = Release|Any CPU
 		{567D34A5-D73D-49AE-900C-9A940D7C5E2D}.Release|x64.Build.0 = Release|Any CPU
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Debug|x64.Build.0 = Debug|Any CPU
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Release|x64.ActiveCfg = Release|Any CPU
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -133,6 +145,7 @@ Global
 		{421287CD-E6EC-4F61-A18B-2F6B618C2F38} = {66829CD4-DFEF-42F3-A0D7-667AC277B4D5}
 		{567D34A5-D73D-49AE-900C-9A940D7C5E2D} = {CE224D92-C707-42E7-B392-1036117E842A}
 		{81B59B3B-C580-4491-A2F5-7DD9EC45A976} = {1D6F6A90-E7D7-4AB2-9539-06EF11E5483F}
+		{67685B1F-E82F-4B4B-896A-35DEDB906D4F} = {4A42B75D-0979-4EC6-825E-3BD9CB22B83C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C1682D3-F1BA-46D0-8C3C-13EFEF321188}

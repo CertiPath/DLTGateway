@@ -14,6 +14,7 @@ namespace CertiPath.BlockchainGateway.Model
 
     public class AuthenticationResponseModel
     {
+        public Guid GUID { get; set; }
         public bool IsAuthenticated { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -20,12 +20,11 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
         internal ObjectChartDataModel Get(Guid dataStoreGUID, BusinessNetworkObjectChart chartDef, NetworkObjectChartSetting chartSettings)
         {
             ObjectChartDataModel chartData = new ObjectChartDataModel();
-            DataModelContainer context = DataModelContainer.Builder().Build();
             
             // hardcode for number of records at first
             // 1. get the objects in questions
             int numOfRecords = Convert.ToInt32(chartSettings.XAxes.Value);
-            var historyList = context.DataStoreHistory
+            var historyList = _context.DataStoreHistory
                     .Where(w => w.DataStoreGUID == dataStoreGUID)
                     .OrderByDescending(o => o.CreatedOn)
                     .Take(numOfRecords)

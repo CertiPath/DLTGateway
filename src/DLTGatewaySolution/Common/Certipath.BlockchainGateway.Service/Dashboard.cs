@@ -11,15 +11,18 @@ namespace CertiPath.BlockchainGateway.Service
 {
     public class Dashboard
     {
+        DataLayer.DataModelContainer _context;
+        public Dashboard(DataLayer.DataModelContainer context)
+        {
+            _context = context;
+        }
         public BasicStatsModel GetBasicStats()
         {
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
             // so people see daily counts for the timezone the server is in
             // may not be perfect, but better than matching just on UTC time
             TimeZone localZone = TimeZone.CurrentTimeZone;
             TimeSpan currentOffset = localZone.GetUtcOffset(DateTime.Now);
-            var stats = context.GetSystemStats(currentOffset.Hours).SingleOrDefault();
+            var stats = _context.GetSystemStats(currentOffset.Hours).SingleOrDefault();
 
             BasicStatsModel res = new BasicStatsModel() {
                 CountAllTransactions = stats.CountAllTransactions,
@@ -39,8 +42,7 @@ namespace CertiPath.BlockchainGateway.Service
         public Model.NamespaceTransactionsPerDayChart GetNamespaceTransactionsPerDay(int numberOfDays)
         {
             Model.NamespaceTransactionsPerDayChart res = new Model.NamespaceTransactionsPerDayChart();
-            DataModelContainer context = DataModelContainer.Builder().Build();
-
+            
             TimeZone localZone = TimeZone.CurrentTimeZone;
             TimeSpan currentOffset = localZone.GetUtcOffset(DateTime.Now);
             
@@ -55,7 +57,7 @@ namespace CertiPath.BlockchainGateway.Service
             }
 
             DateTime queryFromDate = DateTime.Today.AddDays(-1 * numberOfDays);
-            var transactions = context.vNamespaceTransactionsPerDay
+            var transactions = _context.vNamespaceTransactionsPerDay
                                             .AsNoTracking()
                                             .Where(w => w.TransactionDate >= queryFromDate)
                                             .ToList();

@@ -42,48 +42,44 @@ export default class BusinessNetworkConnectionFilesCard extends React.Component 
         
         return (
 
-            <Card>
-                <CardBody>
-                    <div className="px-3">
-                        <Form className="form-horizontal">
-                            <div className="form-body">
-                                <h4 className="form-section"><Globe size={20} color="#212529" /> Credential Files
+            <div className="px-3">
+                <Form className="form-horizontal">
+                    <div className="form-body">
+                        <h4 className="form-section"><Globe size={20} color="#212529" /> Credential Files
                                 {
-                                    this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? '' :
-                                        (
-                                            <Row className="float-right">
-                                                <Col md="12">
-                                                    <FileUploadModal
-                                                            BusinessNetworkGUID={this.state.BusinessNetworkGUID}
-                                                            HandleUploadFinished={this.handleUploadFinished}
-                                                    />
-                                                </Col>
-                                            </Row>
-                                        )
-                                }
-                                </h4>
-                                {
-                                    this.state.FileList == null || this.state.FileList.length === 0 ?
-                                        (
-                                            <Alert color="dark">
-                                                There are no uploaded credential files. You will not be able to connect to the network. Click on the upload file icon in order to upload files.
-                                            </Alert>
-                                        ) :
-                                        (
-                                            <div>
-                                                <FileList
-                                                    FileDeletedAction={this.handleFileDeleted}
+                                this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? '' :
+                                    (
+                                        <Row className="float-right">
+                                            <Col md="12">
+                                                <FileUploadModal
                                                     BusinessNetworkGUID={this.state.BusinessNetworkGUID}
-                                                    FileList={this.state.FileList}
+                                                    HandleUploadFinished={this.handleUploadFinished}
                                                 />
-                                            </div>
-                                        )
-                                }
-                            </div>
-                        </Form>
+                                            </Col>
+                                        </Row>
+                                    )
+                            }
+                        </h4>
+                        {
+                            this.state.FileList == null || this.state.FileList.length === 0 ?
+                                (
+                                    <Alert color="dark">
+                                        There are no uploaded credential files. You will not be able to connect to the network. Click on the upload file icon in order to upload files.
+                                            </Alert>
+                                ) :
+                                (
+                                    <div>
+                                        <FileList
+                                            FileDeletedAction={this.handleFileDeleted}
+                                            BusinessNetworkGUID={this.state.BusinessNetworkGUID}
+                                            FileList={this.state.FileList}
+                                        />
+                                    </div>
+                                )
+                        }
                     </div>
-                </CardBody>
-            </Card>
+                </Form>
+            </div>
         );
     }
 }

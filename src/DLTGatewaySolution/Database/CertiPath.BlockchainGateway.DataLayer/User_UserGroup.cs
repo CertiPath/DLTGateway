@@ -19,5 +19,6 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public System.Guid UserGUID { get; set; }
     
         public virtual User User { get; set; }
+        public virtual UserGroup UserGroup { get; set; }
     }
 }
