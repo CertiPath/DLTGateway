@@ -120,7 +120,7 @@ def eth_get_tran(web3, block_number, tran_index):
 
 def db_connect():
     cns = db_get_cns()
-    return pymssql.connect(cns.server, cns.user, cns.password, cns.database)
+    return pymssql.connect(cns.server, cns.user, cns.password, cns.database, autocommit=True)
 
 
 def db_cursor(conn):
