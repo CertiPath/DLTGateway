@@ -26,7 +26,8 @@ class Login extends Component {
 
         super();
         this.state = {
-            invalidUsernameOrPassword: false,
+            loginFailure: false,
+            loginFailureReason: '',
             isLoading: false
         };
 
@@ -80,7 +81,7 @@ class Login extends Component {
                                   validationSchema={formSchema}
                                   onSubmit={values => {
                                       var self = this
-                                      this.setState({ invalidUsernameOrPassword: false, isLoading: true });
+                                      this.setState({ loginFailure: false, isLoading: true });
                                       apiClient
                                           .post('oauth2/token',
                                               qs.stringify(values),
@@ -92,23 +93,36 @@ class Login extends Component {
                                                         })
                                           .then(res => {
                                               this.setState({ isLoading: false });
-                                              if (res.data.IsAuthenticated.toUpperCase() == 'TRUE') {
-                                                  sessionStorage.setItem('userAuth', JSON.stringify(res.data));
-                                                  //this.props.history.push('/Dashboard'); 
-                                                  this.loadCurrentUserInfo();
+                                              
+                                              if (res.data.error != null) {
+                                                  this.setState({
+                                                      loginFailure: true,
+                                                      loginFailureReason: res.data.error
+                                                  });
                                               }
                                               else {
-                                                  this.setState({ invalidUsernameOrPassword: true });
+                                                  if (res.data.IsAuthenticated.toUpperCase() == 'TRUE') {
+                                                      sessionStorage.setItem('userAuth', JSON.stringify(res.data));
+                                                      //this.props.history.push('/Dashboard'); 
+                                                      this.loadCurrentUserInfo();
+                                                  }
+                                                  else {
+                                                      this.setState({
+                                                          loginFailure: true,
+                                                          loginFailureReason: 'Invalid username or password'
+                                                      });
+                                                  }
                                               }
                                           })
                                           .catch(function (error) {
+                                              
                                               self.setState({ isLoading: false });
                                               if (error.request.response != undefined && error.request.response != null) {
-                                                  toastr.warning('Authentication Failure', 'Could not authenticate user. Check username and password.', {
+                                                  toastr.warning('Authentication Failure', error.response.data.error, {
                                                       position: 'top-left', width: '100%', 'align-items': 'center'});
                                               }
                                               else {
-                                                  toastr.warning('Authentication Failure', error, {
+                                                  toastr.warning('Authentication Failure', error.response.data.error, {
                                                       position: 'top-left', width: '100%', 'align-items': 'center'
                                                   });
                                               }
@@ -117,10 +131,10 @@ class Login extends Component {
                               >
                                   {({ errors, touched }) => (
                                       <Form className="pt-2">
-                                          {this.state.invalidUsernameOrPassword ? 
+                                          {this.state.loginFailure ? 
 
                                               <FormGroup >
-                                                  <p className="white">Invalid username or password</p>
+                                                  <p className="white">{this.state.loginFailureReason}</p>
                                               </FormGroup>
                                               
                                               : null
