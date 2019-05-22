@@ -62,7 +62,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                                 };
                                 chartData.SeriesList.Add(seriesItem);
                             }
-                            seriesItem.DataList.Add(Convert.ToInt32(property.Value));
+                            seriesItem.DataList.Add(Convert.ToInt32(Convert.ToDouble(property.Value)));
                         }
                     }
                 }

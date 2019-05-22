@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CertiPath.BlockchainGateway.API.Filters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -20,6 +21,8 @@ namespace CertiPath.BlockchainGateway.API
            
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+            config.Filters.Add(new ApiExceptionFilter());
 
             config.Routes.MapHttpRoute(
                 name: "ApiWithAction",

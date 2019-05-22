@@ -31,7 +31,8 @@ const Footer = props => (
                {" "}
                CertiPath
             </a>
-         </p>
+            </p>
+            <p class="text-center" style={{ fontSize: "80%" }}>Version: {templateConfig.version}</p>
       </div>
    </footer>
 );
