@@ -45,7 +45,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                         counter++;
                         model.Data.Labels.Add(property.Name);
                         model.Data.Datasets[0].BackgroundColor.Add(ColorHelper.GetNextColorRgba(counter, "0.8"));
-                        model.Data.Datasets[0].Data.Add(Convert.ToInt64(property.Value));
+                        model.Data.Datasets[0].Data.Add(Convert.ToInt32(Convert.ToDouble(property.Value)));
                     }
                 }
             }
