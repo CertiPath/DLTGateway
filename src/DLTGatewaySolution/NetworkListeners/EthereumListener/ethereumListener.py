@@ -89,6 +89,7 @@ def db_query_network(network_name='', framework_name=FRAMEWORK_NAME_ETH):
                INNER JOIN BlockchainFramework AS F
                        ON N.BlockchainFrameworkGUID = F.GUID
         WHERE  N.Deleted = 0
+               AND N.Disabled = 0
                AND F.Deleted = 0
                AND F.Name = '{framework_name}'
                {and_network_name_condition}
@@ -189,8 +190,10 @@ def db_get_cns():
 def main():
     logging.basicConfig(level=logging.INFO)
     db_set_cns(load_secrets(load_env()))
-    while True:
-        process_networks(db_query_network())
+    networks = db_query_network()
+    process_networks(networks)
+    logging.info(f'Finished processing all {len(networks)} networks.')
+
 
 
 if __name__ == '__main__':
