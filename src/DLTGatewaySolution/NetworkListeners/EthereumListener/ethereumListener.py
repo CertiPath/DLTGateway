@@ -146,7 +146,7 @@ def save_tran(network_guid, block_number, tran, cursor):
                  cursor)
 
 
-def eth_get_blocks(network_dict, num_blocks=100):
+def eth_get_blocks(network_dict, num_blocks=99999999):
     web3 = eth_connect(network_dict)
     last_block_number = network_dict["LastBlockProcessed"] or 0
     network_name = network_dict["Name"]
