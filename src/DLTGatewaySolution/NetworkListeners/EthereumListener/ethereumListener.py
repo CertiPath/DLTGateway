@@ -191,8 +191,8 @@ def main():
     logging.basicConfig(level=logging.INFO)
     db_set_cns(load_secrets(load_env()))
     networks = db_query_network()
-    process_networks(networks)
-    logging.info(f'Finished processing all {len(networks)} networks.')
+    while True:
+        process_networks(networks)
 
 
 
