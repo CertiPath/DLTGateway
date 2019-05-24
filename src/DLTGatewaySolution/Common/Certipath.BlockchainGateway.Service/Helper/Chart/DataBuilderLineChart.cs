@@ -29,6 +29,8 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                     .OrderByDescending(o => o.CreatedOn)
                     .Take(numOfRecords)
                     .ToList();
+            // we got the most recent records, but not we have to reverse the order in order to display it correctly
+            historyList = historyList.OrderBy(o => o.CreatedOn).ToList();
 
             // for this chart type take datetime/strings as points
             chartData.LabelList = new List<string>();
@@ -58,11 +60,11 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                                 seriesItem = new ChartDataSeriesModel()
                                 {
                                     Label = property.Name,
-                                    DataList = new List<long>()
+                                    DataList = new List<double>()
                                 };
                                 chartData.SeriesList.Add(seriesItem);
                             }
-                            seriesItem.DataList.Add(Convert.ToInt32(property.Value));
+                            seriesItem.DataList.Add(Convert.ToDouble(property.Value));
                         }
                     }
                 }

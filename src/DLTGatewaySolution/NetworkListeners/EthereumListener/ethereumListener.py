@@ -89,6 +89,7 @@ def db_query_network(network_name='', framework_name=FRAMEWORK_NAME_ETH):
                INNER JOIN BlockchainFramework AS F
                        ON N.BlockchainFrameworkGUID = F.GUID
         WHERE  N.Deleted = 0
+               AND N.Disabled = 0
                AND F.Deleted = 0
                AND F.Name = '{framework_name}'
                {and_network_name_condition}
@@ -145,7 +146,7 @@ def save_tran(network_guid, block_number, tran, cursor):
                  cursor)
 
 
-def eth_get_blocks(network_dict, num_blocks=100):
+def eth_get_blocks(network_dict, num_blocks=99999999):
     web3 = eth_connect(network_dict)
     last_block_number = network_dict["LastBlockProcessed"] or 0
     network_name = network_dict["Name"]
@@ -189,8 +190,10 @@ def db_get_cns():
 def main():
     logging.basicConfig(level=logging.INFO)
     db_set_cns(load_secrets(load_env()))
+    networks = db_query_network()
     while True:
-        process_networks(db_query_network())
+        process_networks(networks)
+
 
 
 if __name__ == '__main__':
