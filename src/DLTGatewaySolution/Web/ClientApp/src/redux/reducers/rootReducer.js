@@ -8,7 +8,6 @@ import { combineReducers } from "redux";
 //import contactsReducer from "./contacts/";
 //import todoReducer from "./todo/";
 import customizer from "./customizer/";
-import user from "./user/"
 
 import { reducer as toastrReducer } from "react-redux-toastr";
 
@@ -19,8 +18,7 @@ const rootReducer = combineReducers({
    //todoApp: todoReducer,
    toastr: toastrReducer, // <- Mounted at toastr.
    //chatApp: chatReducer,
-   customizer: customizer,
-   user: user
+   customizer: customizer
 });
 
 export default rootReducer;
