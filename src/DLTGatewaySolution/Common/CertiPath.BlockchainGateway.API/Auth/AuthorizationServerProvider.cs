@@ -24,32 +24,40 @@ namespace CertiPath.BlockchainGateway.API.Auth
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
             CertiPath.BlockchainGateway.Service.Helper.Common.EntityConverter converter = new Service.Helper.Common.EntityConverter();
 
-            using (DataLayer.DataModelContainer dbContext = DataLayer.DataModelContainer.Builder().Build())
+            try
             {
-                CertiPath.BlockchainGateway.Service.Authenticate authSrv = new Service.Authenticate(dbContext);
-                var res = authSrv.Login(new AuthenticationModel()
+                using (DataLayer.DataModelContainer dbContext = DataLayer.DataModelContainer.Builder().Build())
                 {
-                    Username = context.UserName,
-                    Password = context.Password
-                });
-                if (res.IsAuthenticated)
-                {
-                    var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-                    identity.AddClaim(new Claim("User", converter.GetJson(res)));
+                    CertiPath.BlockchainGateway.Service.Authenticate authSrv = new Service.Authenticate(dbContext);
+                    var res = authSrv.Login(new AuthenticationModel()
+                    {
+                        Username = context.UserName,
+                        Password = context.Password
+                    });
+                    if (res.IsAuthenticated)
+                    {
+                        var identity = new ClaimsIdentity(context.Options.AuthenticationType);
+                        identity.AddClaim(new Claim("User", converter.GetJson(res)));
 
-                    // get AD connection info
-                    LDAPConnectionModel adc = getActiveDirectoryConnection(dbContext);
-                    identity.AddClaim(new Claim("ADConnection", converter.GetJson(adc)));
+                        // get AD connection info
+                        LDAPConnectionModel adc = getActiveDirectoryConnection(dbContext);
+                        identity.AddClaim(new Claim("ADConnection", converter.GetJson(adc)));
 
-                    var props = new AuthenticationProperties(new Dictionary<string, string>());
-                    props.Dictionary.Add("IsAuthenticated", Boolean.TrueString);
-                    props.Dictionary.Add("UserFirstName", res.FirstName);
-                    props.Dictionary.Add("UserLastName", res.LastName);
-                    props.Dictionary.Add("UserEmail", res.Email);
+                        var props = new AuthenticationProperties(new Dictionary<string, string>());
+                        props.Dictionary.Add("IsAuthenticated", Boolean.TrueString);
+                        props.Dictionary.Add("UserFirstName", res.FirstName);
+                        props.Dictionary.Add("UserLastName", res.LastName);
+                        props.Dictionary.Add("UserEmail", res.Email);
 
-                    var ticket = new AuthenticationTicket(identity, props);
-                    context.Validated(ticket);
+                        var ticket = new AuthenticationTicket(identity, props);
+                        context.Validated(ticket);
+                    }
                 }
+            }
+            catch (Exception exc)
+            {
+                Log.Error("AuthServerProvider - Error", exc);
+                context.SetError("System error. Contact your administrator");
             }
         }
 

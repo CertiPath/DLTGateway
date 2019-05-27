@@ -9,7 +9,7 @@ import { StaticCardData } from "../../views/cards/staticCardData";
 class DashboardBasicStatsComponent extends Component {
 
     render() {
-
+        
         return (
             <Row className="row-eq-height">
                 <Col sm="12" md="6" l="6" xl="3">

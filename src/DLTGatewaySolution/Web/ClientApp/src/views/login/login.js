@@ -1,5 +1,6 @@
 ﻿import * as Yup from "yup";
 
+import { CurrentUserConsumer, CurrentUserProvider } from "../../utility/context/currentUserContext";
 import { Button, Card, CardBody, CardHeader, Col, FormGroup, Row } from "reactstrap";
 import { Field, Form, Formik } from "formik";
 // import external modules
@@ -26,7 +27,8 @@ class Login extends Component {
 
         super();
         this.state = {
-            invalidUsernameOrPassword: false,
+            loginFailure: false,
+            loginFailureReason: '',
             isLoading: false
         };
 
@@ -41,7 +43,7 @@ class Login extends Component {
 
     }
 
-    loadCurrentUserInfo() {
+    loadCurrentUserInfo(context) {
 
         let user = JSON.parse(sessionStorage.getItem('userAuth'));
         if (user != null) {
@@ -53,111 +55,132 @@ class Login extends Component {
         apiClient.get('User/GetDetails', {})
             .then(res => {
                 sessionStorage.setItem('userDetails', JSON.stringify(res.data));
-                window.location = '/Dashboard';       //TODO: fix this, just so it can get new values for user until I figure it out
+                context.setDetails(res.data);
+                this.props.history.push('/Dashboard'); 
             });
     }
 
    render() {
       return (
 
-          <div className="container">
-            <Row className="full-height-vh">
-                <Col xs="12" className="d-flex align-items-center justify-content-center">
-                      <Card className="gradient-indigo-purple text-center width-400">
-                          <CardHeader>
-                              
-                          </CardHeader>
-                        <CardBody>
-                              <h2 className="white">{strings.App.Title}</h2>
-                              <h4 className="white py-4">Login</h4>
+          //<CurrentUserProvider>
+              <CurrentUserConsumer>
+                  {context => (
+                      <div className="container">
+                          <Row className="full-height-vh">
+                              <Col xs="12" className="d-flex align-items-center justify-content-center">
+                                  <Card className="gradient-indigo-purple text-center width-400">
+                                      <CardHeader>
 
-                              <Formik
-                                  initialValues={{
-                                      grant_type: "password",
-                                      Username: "",
-                                      Password: ""
-                                  }}
-                                  validationSchema={formSchema}
-                                  onSubmit={values => {
-                                      var self = this
-                                      this.setState({ invalidUsernameOrPassword: false, isLoading: true });
-                                      apiClient
-                                          .post('oauth2/token',
-                                              qs.stringify(values),
-                                                  {
-                                                  headers: {
-                                                            'Content-Type': 'application/x-www-form-urlencoded',
-                                                            'Accept': "*/*"
-                                                            }
-                                                        })
-                                          .then(res => {
-                                              this.setState({ isLoading: false });
-                                              if (res.data.IsAuthenticated.toUpperCase() == 'TRUE') {
-                                                  sessionStorage.setItem('userAuth', JSON.stringify(res.data));
-                                                  //this.props.history.push('/Dashboard'); 
-                                                  this.loadCurrentUserInfo();
-                                              }
-                                              else {
-                                                  this.setState({ invalidUsernameOrPassword: true });
-                                              }
-                                          })
-                                          .catch(function (error) {
-                                              self.setState({ isLoading: false });
-                                              if (error.request.response != undefined && error.request.response != null) {
-                                                  toastr.warning('Authentication Failure', 'Could not authenticate user. Check username and password.', {
-                                                      position: 'top-left', width: '100%', 'align-items': 'center'});
-                                              }
-                                              else {
-                                                  toastr.warning('Authentication Failure', error, {
-                                                      position: 'top-left', width: '100%', 'align-items': 'center'
-                                                  });
-                                              }
-                                          });
-                                  }}
-                              >
-                                  {({ errors, touched }) => (
-                                      <Form className="pt-2">
-                                          {this.state.invalidUsernameOrPassword ? 
+                                      </CardHeader>
+                                      <CardBody>
+                                          <h2 className="white">{strings.App.Title}</h2>
+                                          <h4 className="white py-4">Login</h4>
 
-                                              <FormGroup >
-                                                  <p className="white">Invalid username or password</p>
-                                              </FormGroup>
-                                              
-                                              : null
-                                          }
-                                          
-                                          <FormGroup>
-                                              <Field type="email" name="Username" id="Username" placeholder="username" className={`form-control ${errors.Username && touched.Username && 'is-invalid'}`} />
-                                              {errors.Username && touched.Username ? <div className="invalid-feedback">{errors.Username}</div> : null}
-                                          </FormGroup>
-                                          {this.state.isLoading ?
+                                          <Formik
+                                              initialValues={{
+                                                  grant_type: "password",
+                                                  Username: "",
+                                                  Password: ""
+                                              }}
+                                              validationSchema={formSchema}
+                                              onSubmit={values => {
+                                                  var self = this
+                                                  this.setState({ loginFailure: false, isLoading: true });
+                                                  apiClient
+                                                      .post('oauth2/token',
+                                                          qs.stringify(values),
+                                                          {
+                                                              headers: {
+                                                                  'Content-Type': 'application/x-www-form-urlencoded',
+                                                                  'Accept': "*/*"
+                                                              }
+                                                          })
+                                                      .then(res => {
+                                                          this.setState({ isLoading: false });
 
-                                              <div><Spinner /></div>
+                                                          if (res.data.error != null) {
+                                                              this.setState({
+                                                                  loginFailure: true,
+                                                                  loginFailureReason: res.data.error
+                                                              });
+                                                          }
+                                                          else {
+                                                              if (res.data.IsAuthenticated.toUpperCase() == 'TRUE') {
+                                                                  context.setAuth(res.data);
+                                                                  sessionStorage.setItem('userAuth', JSON.stringify(res.data));
+                                                                  this.loadCurrentUserInfo(context);
+                                                              }
+                                                              else {
+                                                                  this.setState({
+                                                                      loginFailure: true,
+                                                                      loginFailureReason: 'Invalid username or password'
+                                                                  });
+                                                              }
+                                                          }
+                                                      })
+                                                      .catch(function (error) {
 
-                                              : null
-                                          }
-                                          <FormGroup>
-                                              <Field type="password" name="Password" id="Password" placeholder="password" className={`form-control ${errors.Password && touched.Password && 'is-invalid'}`} />
-                                              {errors.Password && touched.Password ? <div className="invalid-feedback">{errors.Password}</div> : null}
-                                          </FormGroup>
-                                          <FormGroup>
-                                              <Col md="12">
-                                                  <Button type="submit" color="danger" block className="btn-pink btn-raised" to="/Dashboard">
-                                                      Login
-				                                  </Button>
-                                              </Col>
-                                          </FormGroup>
-                                      </Form>
-                                  )}
-                              </Formik>
-                        </CardBody>
-                    </Card>
-                </Col>
-                <Col xs="12" className="d-flex align-items-center justify-content-center">
-                    <Footer />
-                </Col>
-            </Row>
-        </div>
+                                                          self.setState({ isLoading: false });
+                                                          if (error.request.response != undefined && error.request.response != null) {
+                                                              toastr.warning('Authentication Failure', error.response.data.error, {
+                                                                  position: 'top-left', width: '100%', 'align-items': 'center'
+                                                              });
+                                                          }
+                                                          else {
+                                                              toastr.warning('Authentication Failure', error.response.data.error, {
+                                                                  position: 'top-left', width: '100%', 'align-items': 'center'
+                                                              });
+                                                          }
+                                                      });
+                                              }}
+                                          >
+                                              {({ errors, touched }) => (
+                                                  <Form className="pt-2">
+                                                      {this.state.loginFailure ?
+
+                                                          <FormGroup >
+                                                              <p className="white">{this.state.loginFailureReason}</p>
+                                                          </FormGroup>
+
+                                                          : null
+                                                      }
+
+                                                      <FormGroup>
+                                                          <Field type="email" name="Username" id="Username" placeholder="username" className={`form-control ${errors.Username && touched.Username && 'is-invalid'}`} />
+                                                          {errors.Username && touched.Username ? <div className="invalid-feedback">{errors.Username}</div> : null}
+                                                      </FormGroup>
+                                                      {this.state.isLoading ?
+
+                                                          <div><Spinner /></div>
+
+                                                          : null
+                                                      }
+                                                      <FormGroup>
+                                                          <Field type="password" name="Password" id="Password" placeholder="password" className={`form-control ${errors.Password && touched.Password && 'is-invalid'}`} />
+                                                          {errors.Password && touched.Password ? <div className="invalid-feedback">{errors.Password}</div> : null}
+                                                      </FormGroup>
+                                                      <FormGroup>
+                                                          <Col md="12">
+                                                              <Button type="submit" color="danger" block className="btn-pink btn-raised" to="/Dashboard">
+                                                                  Login
+				                                         </Button>
+                                                          </Col>
+                                                      </FormGroup>
+                                                  </Form>
+                                              )}
+                                          </Formik>
+                                      </CardBody>
+                                  </Card>
+                              </Col>
+                              <Col xs="12" className="d-flex align-items-center justify-content-center">
+                                  <Footer />
+                              </Col>
+                          </Row>
+                      </div>
+                  )}
+              </CurrentUserConsumer>
+        //  </CurrentUserProvider>
       );
    }
 }
