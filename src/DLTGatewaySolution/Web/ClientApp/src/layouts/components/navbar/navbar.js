@@ -154,7 +154,7 @@ class ThemeNavbar extends Component {
                                                 </DropdownItem>
                                                 <DropdownItem divider />
 
-                                                <Link to="/myprofile" className="p-0">
+                                                <Link to="/user" className="p-0">
                                                     <DropdownItem>
                                                         <User size={16} className="mr-1" /> My Profile
                                                     </DropdownItem>

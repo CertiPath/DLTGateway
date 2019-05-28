@@ -97,7 +97,7 @@ class Login extends Component {
                                                               }
                                                           })
                                                       .then(res => {
-                                                          this.setState({ isLoading: false });
+                                                          //this.setState({ isLoading: false });
 
                                                           if (res.data.error != null) {
                                                               this.setState({

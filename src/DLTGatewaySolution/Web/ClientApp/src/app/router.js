@@ -20,7 +20,7 @@ const LazyBizNetworkNamespace = lazy(() => import("../views/businessnetwork/Name
 const LazyDataStore = lazy(() => import("../views/datastore/list"));
 const LazyObjectDetails = lazy(() => import("../views/object/details"));
 const LazySystemUsers = lazy(() => import("../views/users/users"));
-const LazyMyProfile = lazy(() => import("../views/users/myprofile"));
+const LazyMyProfile = lazy(() => import("../views/users/user"));
 const LazyAccessDenied = lazy(() => import("../views/login/accessDenied"));
 
 class Router extends Component {
@@ -153,8 +153,8 @@ class Router extends Component {
                             />
                             <MainLayoutRoutes
                                 exact
-                                path="/MyProfile"
-                                title="My Profile"
+                                path="/User"
+                                title={"User: " + (context.Details == null ? '' : context.Details.FirstName + " " + context.Details.LastName)}
                                 subTitle=""
                                 render={matchprops => (
                                     <Suspense fallback={<Spinner />}>
