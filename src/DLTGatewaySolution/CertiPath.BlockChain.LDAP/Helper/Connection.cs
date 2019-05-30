@@ -5,7 +5,7 @@ namespace CertiPath.BlockChain.LDAP.Helper
 {
     public class Connection
     {
-        public static LdapConnection Init(BlockchainGateway.Model.LDAPConnectionModel m, bool takeConnectionStringFromConfig)
+        public static LdapConnection Init(BlockchainGateway.Model.LDAPConnectionModel m)
         {
             LdapConnection ldapConnection = null;
 

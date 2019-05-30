@@ -40,7 +40,8 @@ namespace CertiPath.BlockchainGateway.API.Auth
                         identity.AddClaim(new Claim("User", converter.GetJson(res)));
 
                         // get AD connection info
-                        LDAPConnectionModel adc = getActiveDirectoryConnection(dbContext);
+                        Helper.ActiveDirectory adh = new Helper.ActiveDirectory();
+                        LDAPConnectionModel adc = adh.GetActiveDirectoryConnection(dbContext);
                         identity.AddClaim(new Claim("ADConnection", converter.GetJson(adc)));
 
                         var props = new AuthenticationProperties(new Dictionary<string, string>());
@@ -60,22 +61,7 @@ namespace CertiPath.BlockchainGateway.API.Auth
                 context.SetError("System error. Contact your administrator");
             }
         }
-
-        private LDAPConnectionModel getActiveDirectoryConnection(DataModelContainer dbContext)
-        {
-            var adList = dbContext.Setting.Where(w => w.SettingType.Name == "AD").ToList();
-            LDAPConnectionModel connection = new LDAPConnectionModel();
-            connection.AuthType = adList.Where(w => w.Name == "AD_AuthType").SingleOrDefault().Value;
-            connection.BaseDirectory = adList.Where(w => w.Name == "AD_BaseDirectory").SingleOrDefault().Value;
-            connection.PageSize = adList.Where(w => w.Name == "AD_PageSize").SingleOrDefault().Value == "" ? 10 : Convert.ToInt32(adList.Where(w => w.Name == "AD_PageSize").SingleOrDefault().Value);
-            connection.Password = adList.Where(w => w.Name == "AD_Password").SingleOrDefault().Value;
-            connection.Username = adList.Where(w => w.Name == "AD_Username").SingleOrDefault().Value;
-            connection.Server = adList.Where(w => w.Name == "AD_Server").SingleOrDefault().Value;
-            connection.Port = adList.Where(w => w.Name == "AD_Port").SingleOrDefault().Value.Trim() == "" ? 
-                                        3268 : Convert.ToInt32(adList.Where(w => w.Name == "AD_Port").SingleOrDefault().Value);
-            return connection;
-        }
-
+        
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
         {
             // for additional properties I want to return alongside the token

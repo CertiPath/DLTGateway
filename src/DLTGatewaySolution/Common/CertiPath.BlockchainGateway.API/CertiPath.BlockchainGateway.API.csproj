@@ -216,6 +216,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Auth\AuthRepository.cs" />
+    <Compile Include="Auth\WinAuthProvider.cs" />
     <Compile Include="Controllers\ActiveDirectoryController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusinessNetworkNamespaceController.cs" />

@@ -3,8 +3,10 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using System;
+using System.Net;
 using System.Web;
 using System.Web.Http;
+
 
 [assembly: OwinStartup(typeof(CertiPath.BlockchainGateway.API.Startup))]
 namespace CertiPath.BlockchainGateway.API
@@ -26,13 +28,14 @@ namespace CertiPath.BlockchainGateway.API
             //app.UseOAuthBearerTokens(OAuthOptions);
             app.UseOAuthAuthorizationServer(OAuthOptions);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-
+            
             //HttpConfiguration config = new HttpConfiguration();
             //WebApiConfig.Register(config);
         }
 
         public void Configuration(IAppBuilder app)
         {
+            /*
             HttpConfiguration config = new HttpConfiguration();
 
             ConfigureAuth(app);
@@ -43,6 +46,18 @@ namespace CertiPath.BlockchainGateway.API
 
             //ConfigureAuth(app);
             //GlobalConfiguration.Configure(WebApiConfig.Register);;
+           */
+
+            // Enable Windows Authentification
+            //HttpListener listener = (HttpListener)app.Properties["System.Net.HttpListener"];
+            //listener.AuthenticationSchemes = AuthenticationSchemes.IntegratedWindowsAuthentication;
+            
+            HttpConfiguration config = new HttpConfiguration();
+            config.MapHttpAttributeRoutes();
+
+            app.Use(typeof(Auth.WinAuthProvider));
+            app.UseWebApi(config);
+            
         }
     }
 }

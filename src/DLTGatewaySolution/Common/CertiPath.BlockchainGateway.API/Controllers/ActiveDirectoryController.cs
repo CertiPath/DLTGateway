@@ -15,7 +15,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         {
             Helper.ActiveDirectory ad = new Helper.ActiveDirectory();
             LDAPConnectionModel connection = ad.GetConnection();
-            LDAP.Group ldapGroup = new LDAP.Group(connection, false);
+            LDAP.Group ldapGroup = new LDAP.Group(connection);
 
             string filter = "(groupType:1.2.840.113556.1.4.803:=2147483648)";
             if (Name != null && Name.Trim() != "")

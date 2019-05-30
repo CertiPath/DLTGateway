@@ -15,10 +15,10 @@ namespace CertiPath.BlockchainGateway.LDAP
         private LdapConnection _ldapConnection;
         private Model.LDAPConnectionModel _ldapConnectionInfo;
 
-        public Group(Model.LDAPConnectionModel m, bool takeConnectionStringFromConfig)
+        public Group(Model.LDAPConnectionModel m)
         {
             _ldapConnectionInfo = m;
-            _ldapConnection = Connection.Init(m, takeConnectionStringFromConfig);
+            _ldapConnection = Connection.Init(m);
         }
 
         #region Dispose
