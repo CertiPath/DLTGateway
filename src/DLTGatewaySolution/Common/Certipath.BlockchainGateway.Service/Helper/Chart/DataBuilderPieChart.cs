@@ -30,7 +30,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                 Datasets = new List<Dataset>(),
                 Labels = new List<string>()
             };
-            model.Data.Datasets.Add(new Dataset() { BackgroundColor = new List<string>(), Data = new List<long>() });
+            model.Data.Datasets.Add(new Dataset() { BackgroundColor = new List<string>(), Data = new List<double>() }); //NB:
 
             Helper.DataStore.Common dataStoreCommon = new DataStore.Common(_context);
             List<Model.PropertyModel> propertyValues = dataStoreCommon.Extract(chartDef.BusinessNetworkObjectGUID, obj.Value);
@@ -45,7 +45,7 @@ namespace CertiPath.BlockchainGateway.Service.Helper.Chart
                         counter++;
                         model.Data.Labels.Add(property.Name);
                         model.Data.Datasets[0].BackgroundColor.Add(ColorHelper.GetNextColorRgba(counter, "0.8"));
-                        model.Data.Datasets[0].Data.Add(Convert.ToInt32(Convert.ToDouble(property.Value)));
+                        model.Data.Datasets[0].Data.Add(Convert.ToDouble(property.Value));
                     }
                 }
             }

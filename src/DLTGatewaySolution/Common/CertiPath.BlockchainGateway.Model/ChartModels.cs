@@ -52,7 +52,7 @@ namespace CertiPath.BlockchainGateway.Model
     public partial class Dataset
     {
         [JsonProperty("data")]
-        public List<long> Data { get; set; }
+        public List<double> Data { get; set; }    //NB:
 
         [JsonProperty("backgroundColor")]
         public List<string> BackgroundColor { get; set; }
@@ -98,7 +98,7 @@ namespace CertiPath.BlockchainGateway.Model
     public partial class LineChartDataset
     {
         [JsonProperty("data")]
-        public List<long> Data { get; set; }
+        public List<double> Data { get; set; } //NB:
 
         [JsonProperty("label")]
         public string Label { get; set; }

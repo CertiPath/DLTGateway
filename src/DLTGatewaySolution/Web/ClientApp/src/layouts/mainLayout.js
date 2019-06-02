@@ -49,7 +49,7 @@ class MainLayout extends PureComponent {
    }
 
    render() {
-      return (
+       return (
             <FoldedContentProvider>
                <FoldedContentConsumer>
                   {context => (

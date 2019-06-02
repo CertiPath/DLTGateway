@@ -59,7 +59,7 @@ namespace CertiPath.BlockchainGateway.Model
 
     public class ChartDataSeriesModel
     {
-        public List<long> DataList { get; set; }
+        public List<double> DataList { get; set; }
         public string Label { get; set; }
     }
     #endregion
