@@ -43,5 +43,26 @@ namespace CertiPath.BlockchainGateway.API.Helper
                                         3268 : Convert.ToInt32(adList.Where(w => w.Name == "AD_Port").SingleOrDefault().Value);
             return connection;
         }
+
+        internal List<Model.LDAPGroupModel> GetSecurityGroupsByDN(string dn)
+        {
+            LDAPConnectionModel adConnection = GetActiveDirectoryConnection(DataLayer.DataModelContainer.Builder().Build());
+            adConnection.PageSize = 200;
+            LDAP.Group ldapGroup = new LDAP.Group(adConnection);
+
+            // all security groups for this user
+            string filter = String.Format("(&(member={0})(groupType:1.2.840.113556.1.4.803:=2147483648))", dn);
+            bool lEnd = false;
+            List<Model.LDAPGroupModel> groups = ldapGroup.GetByFilter(filter, 1, 200, out lEnd);
+
+            // TODO: at some point this should be fixed, but it is low priority. It issumes that a user will not belong 
+            // to more than 200 groups. We should paginate if there are more records than that
+            if (lEnd == false)
+            {
+                Log.Info("WARNING: AD GetSecurityGroupsByDN - assuming that user will not have more than 200 security groups, but in this case it seems not to be the case: " + dn);
+            }
+
+            return groups;
+        }
     }
 }
