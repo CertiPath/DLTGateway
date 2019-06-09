@@ -56,9 +56,9 @@ def load_secrets(parsed_env_cns, secret_name=DOCKER_SECRET_SQL_LOGIN_PWD):
     logging.info(f'Reading docker secret at "{file_path}"')
     with open(file_path, 'r') as f:
         pwd = f.read()
-        md5 = hashlib.md5(pwd.encode('utf-8'))
+        md5 = hashlib.md5(pwd.encode('utf-8')).hexdigest()
         logging.info(f'Hashed password: {md5}')
-    logging.info(f'Closing file at "{file_path}"')
+    logging.debug(f'Closing file at "{file_path}"')
     f.close()
     d[pwd_field] = pwd
     return namedtuple('ParsedCns', d.keys())(**d)
