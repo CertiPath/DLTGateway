@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  node:
+  eth:
     build: .
     environment:
       # The host machine should store a standard MSSQL connection string in the
