@@ -1,12 +1,13 @@
-version: '3.7'
+version: '3.4'
 
 services:
-  aspnet:
-    # Uncomment the next line to bind mount the host's source directory with the container.
-    # volumes:
-    # - .:/usr/src/host
-    # Uncomment the next line to keep Docker container running without ever exiting.
-    command: hostnamectl
-    command: ping localhost
-    # Then, connect to the running container using the following command
-    # docker exec -it dltgatewaysolution_aspnet_1 sh
+  certipath.blockchaingateway.web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
+networks:
+  default:
+    external:
+      name: nat

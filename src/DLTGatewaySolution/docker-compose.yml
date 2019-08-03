@@ -1,19 +1,8 @@
-version: '3.7'
+version: '3.4'
 
 services:
-  aspnet:
-    build: .
-    # environment:
-      # The host machine should store a standard MSSQL connection string in the
-      # `DLT_SQL_CNS` environment variable.
-      # https://www.connectionstrings.com/sqlconnection/standard-security/
-      # This connection string may or may not contain a password. The `SQL_LOGIN_PWD`
-      # secret may take precedence over the `DLT_SQL_CNS` environment variable, if both
-      # are specified.
-      #- DLT_SQL_CNS
-    #secrets:
-      #- SQL_LOGIN_PWD
-
-#secrets:
-  #SQL_LOGIN_PWD:
-    #file: ./secrets/SQL_LOGIN_PWD
+  certipath.blockchaingateway.web:
+    image: ${DOCKER_REGISTRY-}certipathblockchaingatewayweb
+    build:
+      context: .
+      dockerfile: Web\Dockerfile
