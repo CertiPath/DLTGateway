@@ -49,7 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostmanCollections", "Postm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CertiPath.BlockchainGateway.LDAP", "CertiPath.BlockChain.LDAP\CertiPath.BlockchainGateway.LDAP.csproj", "{67685B1F-E82F-4B4B-896A-35DEDB906D4F}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{11894BFA-130B-45D6-AB6D-4AB276DBAB33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,14 +135,14 @@ Global
 		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Release|x64.ActiveCfg = Release|Any CPU
 		{67685B1F-E82F-4B4B-896A-35DEDB906D4F}.Release|x64.Build.0 = Release|Any CPU
-		{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}.Debug|x64.Build.0 = Debug|Any CPU
-		{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}.Release|x64.ActiveCfg = Release|Any CPU
-		{AFE1D69A-0388-4D5E-9B9A-F9722C3FE9AB}.Release|x64.Build.0 = Release|Any CPU
+		{11894BFA-130B-45D6-AB6D-4AB276DBAB33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11894BFA-130B-45D6-AB6D-4AB276DBAB33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11894BFA-130B-45D6-AB6D-4AB276DBAB33}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{11894BFA-130B-45D6-AB6D-4AB276DBAB33}.Debug|x64.Build.0 = Debug|Any CPU
+		{11894BFA-130B-45D6-AB6D-4AB276DBAB33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11894BFA-130B-45D6-AB6D-4AB276DBAB33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11894BFA-130B-45D6-AB6D-4AB276DBAB33}.Release|x64.ActiveCfg = Release|Any CPU
+		{11894BFA-130B-45D6-AB6D-4AB276DBAB33}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

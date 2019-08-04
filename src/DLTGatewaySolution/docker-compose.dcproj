@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Windows</DockerTargetOS>
-    <ProjectGuid>afe1d69a-0388-4d5e-9b9a-f9722c3fe9ab</ProjectGuid>
+    <ProjectGuid>11894bfa-130b-45d6-ab6d-4ab276dbab33</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://{ServiceIPAddress}{ServicePort}</DockerServiceUrl>
     <DockerServiceName>certipath.blockchaingateway.web</DockerServiceName>
