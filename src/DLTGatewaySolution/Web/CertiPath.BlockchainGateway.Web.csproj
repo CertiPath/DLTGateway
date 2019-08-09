@@ -61,8 +61,15 @@
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <!--
+    
+    To make it buildable on the dotnet image without nodejs installed,
+    we will need to make some changes to our project file so that
+    it does not try to build client-side during publishing.
+    https://codesimple.blog/2018/11/02/how-to-create-a-dotnet-based-spa-and-deploy-it-in-docker/
+    
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />-->
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>

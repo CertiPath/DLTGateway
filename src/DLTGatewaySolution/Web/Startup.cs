@@ -27,6 +27,17 @@ namespace CertiPath.BlockchainGateway.Web
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            // To configure IIS options, include a service configuration for IISOptions 
+            // in ConfigureServices.
+            // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/?view=aspnetcore-2.2
+            services.Configure<IISOptions>(options =>
+            {
+                // Windows Authentication must be enabled in IIS for
+                // AutomaticAuthentication to function
+                options.ForwardClientCertificate = false;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
