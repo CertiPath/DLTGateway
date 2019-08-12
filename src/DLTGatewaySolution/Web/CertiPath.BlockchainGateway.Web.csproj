@@ -81,4 +81,8 @@
     </ItemGroup>
   </Target>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(ProjectDir)appsettings.json&quot; &quot;$(ProjectDir)ClientApp\src\app\&quot; /Y" />
+  </Target>
+
 </Project>

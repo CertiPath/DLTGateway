@@ -1,7 +1,8 @@
 import { create } from 'axios';
+import myConfig from '../../src/app/appsettings.json'
 
 const instance = create({
-    baseURL: 'http://localhost/CertiPath.BlockchainGateway.API/Api' //'http://www.dltgateway.com/DLTGatewayAPI/Api/'  //http://localhost/CertiPath.BlockchainGateway.API/Api' // staging URL: 'http://nbcpwin1.eastus.cloudapp.azure.com:9000/'
+    baseURL: myConfig.AppSettings.ApiUrl //'http://localhost/CertiPath.BlockchainGateway.API/Api' //'http://www.dltgateway.com/DLTGatewayAPI/Api/'  //http://localhost/CertiPath.BlockchainGateway.API/Api' // staging URL: 'http://nbcpwin1.eastus.cloudapp.azure.com:9000/'
 });
 
 let user = JSON.parse(sessionStorage.getItem('userAuth'));

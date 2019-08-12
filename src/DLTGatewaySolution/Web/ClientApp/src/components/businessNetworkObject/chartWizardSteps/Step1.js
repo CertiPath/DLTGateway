@@ -29,6 +29,16 @@ export default class Step1 extends Component {
     componentWillUnmount() {
         this.props.onRef(undefined);
     }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.ChartTypeGUID != '') {
+            if (this.state.SelectedTypeGUID != nextProps.ChartTypeGUID) {
+                this.setState({
+                    SelectedTypeGUID: nextProps.ChartTypeGUID
+                })
+            }
+        }
+    }
    
     categoryChange(event) {
 
@@ -68,7 +78,7 @@ export default class Step1 extends Component {
     }
 
     typeChange(event) {
-
+        
         let typeGUID = event.target.value;
         let typeName = '';
         this.props.TypeList.map(type => {

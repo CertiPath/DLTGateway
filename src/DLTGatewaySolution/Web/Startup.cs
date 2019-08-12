@@ -10,12 +10,15 @@ namespace CertiPath.BlockchainGateway.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfigurationRoot Configuration { get; set; }
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
-        }
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
-        public IConfiguration Configuration { get; }
+            Configuration = builder.Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -37,6 +40,12 @@ namespace CertiPath.BlockchainGateway.Web
                 // AutomaticAuthentication to function
                 options.ForwardClientCertificate = false;
             });
+
+            // Add functionality to inject IOptions<T>
+            services.AddOptions();
+
+            // Add our Config object so it can be injected
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
         }
 
