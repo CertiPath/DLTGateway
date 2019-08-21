@@ -5,5 +5,8 @@
     [LastName] NVARCHAR(50) NOT NULL, 
     [Deleted] BIT NOT NULL DEFAULT 0, 
     [Email] NVARCHAR(100) NOT NULL DEFAULT '', 
-    [Password] NVARCHAR(250) NOT NULL DEFAULT ''
+    [Password] NVARCHAR(250) NOT NULL DEFAULT '', 
+    [Domain] NVARCHAR(100) NOT NULL DEFAULT "", 
+    [Username] NVARCHAR(100) NOT NULL DEFAULT "", 
+    [LastLogin] DATETIME2 NULL
 )

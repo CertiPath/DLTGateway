@@ -246,6 +246,9 @@
           <Property Name="Deleted" Type="bit" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Domain" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastLogin" Type="datetime2" Precision="7" />
         </EntityType>
         <EntityType Name="User_UserGroup">
           <Key>
@@ -1267,6 +1270,9 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="Password" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AuditLog" Relationship="DataModel.FK_AuditLog_CreatedBy" FromRole="User" ToRole="AuditLog" />
           <NavigationProperty Name="User_UserGroup" Relationship="DataModel.FK_User_UserGroup_User" FromRole="User" ToRole="User_UserGroup" />
+          <Property Name="Domain" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LastLogin" Type="DateTime" Precision="7" />
         </EntityType>
         <Association Name="FK_AuditLog_CreatedBy">
           <End Type="DataModel.User" Role="User" Multiplicity="1" />
@@ -1832,6 +1838,9 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="DataModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Domain" ColumnName="Domain" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />

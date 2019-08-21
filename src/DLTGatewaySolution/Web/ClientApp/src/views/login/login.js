@@ -14,9 +14,10 @@ import apiClient from '../../utility/apiClient';
 import strings from "../../app/localizedStrings";
 
 const formSchema = Yup.object().shape({
+    Domain: Yup.string()
+        .required("Domain is required"),
     Username: Yup.string()
-        .required("Username is required")
-        .email("Invalid email address"),
+        .required("Username is required"),
     Password: Yup.string()
         .required("Password is required")
 });
@@ -79,9 +80,10 @@ class Login extends Component {
 
                                           <Formik
                                               initialValues={{
-                                                  grant_type: "password",
-                                                  Username: "",
-                                                  Password: ""
+                                                    grant_type: "password",
+                                                    Domain: "",
+                                                    Username: "",
+                                                    Password: ""
                                               }}
                                               validationSchema={formSchema}
                                               onSubmit={values => {
@@ -114,7 +116,7 @@ class Login extends Component {
                                                               else {
                                                                   this.setState({
                                                                       loginFailure: true,
-                                                                      loginFailureReason: 'Invalid username or password'
+                                                                      loginFailureReason: 'Invalid domain, username or password'
                                                                   });
                                                               }
                                                           }
@@ -146,16 +148,24 @@ class Login extends Component {
                                                           : null
                                                       }
 
-                                                      <FormGroup>
-                                                          <Field type="email" name="Username" id="Username" placeholder="username" className={`form-control ${errors.Username && touched.Username && 'is-invalid'}`} />
-                                                          {errors.Username && touched.Username ? <div className="invalid-feedback">{errors.Username}</div> : null}
-                                                      </FormGroup>
-                                                      {this.state.isLoading ?
+                                                      {
+                                                          this.state.isLoading ?
 
                                                           <div><Spinner /></div>
 
                                                           : null
                                                       }
+
+                                                      <FormGroup>
+                                                          <Field type="text" name="Domain" id="Domain" placeholder="domain" className={`form-control ${errors.Domain && touched.Domain && 'is-invalid'}`} />
+                                                          {errors.Domain && touched.Domain ? <div className="invalid-feedback">{errors.Domain}</div> : null}
+                                                      </FormGroup>
+
+                                                      <FormGroup>
+                                                          <Field type="text" name="Username" id="Username" placeholder="username" className={`form-control ${errors.Username && touched.Username && 'is-invalid'}`} />
+                                                          {errors.Username && touched.Username ? <div className="invalid-feedback">{errors.Username}</div> : null}
+                                                      </FormGroup>
+                                                      
                                                       <FormGroup>
                                                           <Field type="password" name="Password" id="Password" placeholder="password" className={`form-control ${errors.Password && touched.Password && 'is-invalid'}`} />
                                                           {errors.Password && touched.Password ? <div className="invalid-feedback">{errors.Password}</div> : null}

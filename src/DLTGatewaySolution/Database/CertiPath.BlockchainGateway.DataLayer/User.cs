@@ -27,6 +27,9 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public bool Deleted { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string Domain { get; set; }
+        public string Username { get; set; }
+        public Nullable<System.DateTime> LastLogin { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AuditLog> AuditLog { get; set; }

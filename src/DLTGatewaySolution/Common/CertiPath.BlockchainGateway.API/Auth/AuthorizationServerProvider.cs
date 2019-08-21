@@ -9,6 +9,9 @@ using System.Web;
 using Microsoft.AspNet.Identity.EntityFramework;
 using CertiPath.BlockchainGateway.Model;
 using CertiPath.BlockchainGateway.DataLayer;
+using System.DirectoryServices.AccountManagement;
+using System.IO;
+using System.Web.Helpers;
 
 namespace CertiPath.BlockchainGateway.API.Auth
 {
@@ -28,12 +31,42 @@ namespace CertiPath.BlockchainGateway.API.Auth
             {
                 using (DataLayer.DataModelContainer dbContext = DataLayer.DataModelContainer.Builder().Build())
                 {
-                    CertiPath.BlockchainGateway.Service.Authenticate authSrv = new Service.Authenticate(dbContext);
-                    var res = authSrv.Login(new AuthenticationModel()
+                    // must read the entire payload since domain is not a standard field
+                    context.Request.Body.Position = 0;
+                    var payload = new StreamReader(context.Request.Body).ReadToEnd();
+                    dynamic payloadJson = Json.Decode(payload);
+
+                    string domain = payloadJson.Domain;
+                    string username = context.UserName;
+                    string password = context.Password;
+
+                    bool validCredentials = false;
+                    using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domain))
                     {
-                        Username = context.UserName,
-                        Password = context.Password
-                    });
+                        // validate the credentials
+                        validCredentials = pc.ValidateCredentials(username, password);
+                    }
+
+                    AuthenticationResponseModel res = new AuthenticationResponseModel()
+                    {
+                        IsAuthenticated = validCredentials
+                    };
+                    if (res.IsAuthenticated)
+                    {
+                        // get user info (or create a user record if initial login)
+                        // TODO
+                        /*
+                         * 
+                          CertiPath.BlockchainGateway.Service.Authenticate authSrv = new Service.Authenticate(dbContext);
+                        var res = authSrv.Login(new AuthenticationModel()
+                        {
+                            Username = context.UserName,
+                            Password = context.Password
+                        });
+                         * 
+                         */
+                    }
+                    
                     if (res.IsAuthenticated)
                     {
                         var identity = new ClaimsIdentity(context.Options.AuthenticationType);
@@ -87,3 +120,4 @@ namespace CertiPath.BlockchainGateway.API.Auth
         }
     }
 }
+ 
