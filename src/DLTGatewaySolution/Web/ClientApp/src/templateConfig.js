@@ -4,7 +4,7 @@ import sidebarBGImage from "./assets/img/sidebar-bg/01.jpg";
 
 //Template config options
 const templateConfig = {
-    version: '0.8.25',              // for now just keep the version here for an easy access / manually update
+    version: '0.2019.08.22',              // for now just keep the version here for an easy access / manually update
     layoutColor: 'layout-light',    // Options: layout-dark, layout-light - Set layout-dark for dark mode and layout-light for light.
     // fixedNavbar: true, // Options: true, false - Set true for fixed navbar.
     sidebar: {

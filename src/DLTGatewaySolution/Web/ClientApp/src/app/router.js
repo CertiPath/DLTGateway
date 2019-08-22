@@ -56,7 +56,7 @@ class Router extends Component {
                                     exact
                                     path="/Dashboard"
                                     title={strings.Dashboard.Title}
-                                    subTitle={strings.Dashboard.WelcomeMessage + ", " + (context.Details == null ? '' : context.Details.FirstName)}
+                                    subTitle={strings.Dashboard.WelcomeMessage + ", " + (context.Details == null ? '' : context.Details.Username)}
                                     render={matchprops => (
                                     <Suspense fallback={<Spinner />}>
                                         <LazyDashboard {...matchprops} />
@@ -154,7 +154,7 @@ class Router extends Component {
                             <MainLayoutRoutes
                                 exact
                                 path="/User"
-                                title={"User: " + (context.Details == null ? '' : context.Details.FirstName + " " + context.Details.LastName)}
+                                    title={"User: " + (context.Details == null ? '' : context.Details.Username)}
                                 subTitle=""
                                 render={matchprops => (
                                     <Suspense fallback={<Spinner />}>

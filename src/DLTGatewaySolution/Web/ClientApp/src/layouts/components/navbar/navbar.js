@@ -149,7 +149,7 @@ class ThemeNavbar extends Component {
                                             <DropdownMenu right>
                                                 <DropdownItem>
                                                     <span className="font-small-3">
-                                                        {context.Details.FirstName} {context.Details.LastName} <span className="text-muted">(Admin)</span>
+                                                        {context.Details.Username} <span className="text-muted">(Admin)</span>
                                                     </span>
                                                 </DropdownItem>
                                                 <DropdownItem divider />

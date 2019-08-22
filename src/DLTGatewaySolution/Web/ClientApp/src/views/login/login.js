@@ -39,7 +39,8 @@ class Login extends Component {
                 Token: "",
                 FirstName: "",
                 LastName: "",
-                Email: ""
+                Email: "",
+                Username: ""
             }));
 
     }

@@ -33,6 +33,8 @@ namespace CertiPath.BlockchainGateway.Service
             var user = _context.User.Where(w => w.GUID == userGUID).SingleOrDefault();
             Model.UserModel res = new UserModel()
             {
+                Domain = user.Domain,
+                Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
@@ -52,6 +54,7 @@ namespace CertiPath.BlockchainGateway.Service
             {
                 return new UserModel()
                 {
+                    GUID = user.GUID,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,
@@ -79,6 +82,28 @@ namespace CertiPath.BlockchainGateway.Service
             _context.User.Add(user);
             _context.SaveChanges();
             return m;
+        }
+
+        public void CreateLoginLog(Model.UserModel m)
+        {
+            var user = _context.User
+                                .Where(w => w.GUID == m.GUID)
+                                .SingleOrDefault();
+            user.LastLogin = DateTime.UtcNow;
+            _context.SaveChanges();
+
+            // Audit Log
+            Helper.Audit.AuditLog alo = new Helper.Audit.AuditLog(_context);
+            AuditLogModel alm = new AuditLogModel();
+
+            alm.OperationType = AuditLogOperationType.Login;
+            alm.PrimaryObjectGUID = user.GUID;
+            alm.PrimaryObjectType = AuditLogObjectType.User;
+            alm.SecondaryObjectGUID = null;
+            alm.SecondaryObjectType = null;
+            alm.NewRecordValue = user.LastLogin.ToString();
+            alm.OldRecordValue = "";
+            alo.Save(alm);
         }
     }
 }

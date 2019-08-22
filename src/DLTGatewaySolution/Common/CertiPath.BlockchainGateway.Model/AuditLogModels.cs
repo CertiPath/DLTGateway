@@ -27,7 +27,8 @@ namespace CertiPath.BlockchainGateway.Model
     {
         Create,
         Update,
-        Delete
+        Delete,
+        Login
     }
 
     public class AuditLogModel
