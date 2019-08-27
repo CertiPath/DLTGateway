@@ -25,5 +25,13 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             var list = user.GetNotifications(authInfo.GUID);
             return list;
         }
+
+        [HttpPost]
+        public Model.UserTableModel GetAll([FromBody]Model.TableModel model)
+        {
+            CertiPath.BlockchainGateway.Service.User userService = new Service.User(DatabaseContext);
+            var list = userService.GetAll(model);
+            return list;
+        }
     }
 }

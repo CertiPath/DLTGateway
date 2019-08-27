@@ -1,14 +1,24 @@
-﻿// import external modules
+﻿import { Card, CardBody, Col, Row } from "reactstrap";
 import React, { Component, Fragment } from "react";
 
-class blankPage extends Component {
+import UserTable from "../../components/user/userList";
+
+class DataStoreListPage extends Component {
     render() {
         return (
             <Fragment>
-               <div></div>
+                <Row>
+                    <Col sm="12">
+                        <Card>
+                            <CardBody>
+                                <UserTable />
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
             </Fragment>
         );
     }
 }
 
-export default blankPage;
+export default DataStoreListPage;

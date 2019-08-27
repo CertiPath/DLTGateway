@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CertiPath.BlockchainGateway.Model;
+using System.Linq.Dynamic;
 
 namespace CertiPath.BlockchainGateway.Service
 {
@@ -104,6 +105,97 @@ namespace CertiPath.BlockchainGateway.Service
             alm.NewRecordValue = user.LastLogin.ToString();
             alm.OldRecordValue = "";
             alo.Save(alm);
+        }
+
+        public Model.UserTableModel GetAll(Model.TableModel model)
+        {
+            List<Model.UserModel> list = new List<Model.UserModel>();
+
+            bool lFilter = model.FilterList.Count > 0;
+            bool lFilterOnFirstName = false;
+            bool lFilterOnLastName= false;
+            bool lFilterOnUsername = false;
+
+            string firstName = "";
+            string lastName = "";
+            string username = "";
+
+            if (lFilter)
+            {
+                foreach (var filter in model.FilterList)
+                {
+                    if (filter.id == "FirstName")
+                    {
+                        lFilterOnFirstName = true;
+                        firstName = filter.value;
+                    }
+                    if (filter.id == "LastName")
+                    {
+                        lFilterOnLastName = true;
+                        lastName = filter.value;
+                    }
+                    if (filter.id == "Username")
+                    {
+                        lFilterOnUsername = true;
+                        username = filter.value;
+                    }
+                }
+            }
+
+            string sortBy = "LastLogin DESC";
+            if (model.SortList.Count > 0)
+            {
+                sortBy = model.SortList[0].id + " " + (Convert.ToBoolean(model.SortList[0].desc) ? "DESC" : "ASC");
+            }
+
+            var data = _context.User
+                            .Where(w => w.Deleted == false)
+                            .Where(w => w.Username != null && w.Username != "")
+                            .Where(w =>
+                                (lFilter == false) ||
+                                (
+                                    (lFilterOnFirstName == false || w.FirstName.Contains(firstName)) &&
+                                    (lFilterOnLastName == false || w.LastName.Contains(lastName)) &&
+                                    (lFilterOnUsername == false || w.Username.Contains(username))
+                                )
+                                )
+                            .AsQueryable().OrderBy(sortBy)
+                            .Skip(model.PageNumber * model.PageSize)
+                            .Take(model.PageSize)
+                            .ToList();
+
+                            int totalCount = _context.User
+                                .Where(w => w.Deleted == false)
+                                .Where(w => w.Username != null && w.Username != "")
+                                .Where(w =>
+                                    (lFilter == false) ||
+                                    (
+                                        (lFilterOnFirstName == false || w.FirstName.Contains(firstName)) &&
+                                        (lFilterOnLastName == false || w.LastName.Contains(lastName)) &&
+                                        (lFilterOnUsername == false || w.Username.Contains(username))
+                                    )
+                                    )
+                                .Count();
+
+            foreach (var item in data)
+            {
+                list.Add(new Model.UserModel()
+                {
+                    Domain = item.Domain,
+                    Email = item.Email,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    GUID = item.GUID,
+                    LastLogin = item.LastLogin,
+                    Username = item.Username
+                });
+            }
+            Model.UserTableModel result = new Model.UserTableModel()
+            {
+                List = list,
+                TotalCount = totalCount
+            };
+            return result;
         }
     }
 }
