@@ -41,20 +41,44 @@ namespace CertiPath.BlockchainGateway.API.Auth
                     string username = parsedPayload["UserName"];
                     string password = parsedPayload["Password"];
 
+                    string firstName = "";
+                    string lastName = "";
+                    string email = "";
+
                     bool validCredentials = false;
                     using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domain))
                     {
                         // validate the credentials
                         validCredentials = pc.ValidateCredentials(username, password);
+
+                        if (validCredentials)
+                        {
+                            UserPrincipal up = new UserPrincipal(pc);
+                            PrincipalSearcher search = new PrincipalSearcher(up);
+
+                            IEnumerable<System.DirectoryServices.AccountManagement.Principal> collsearch = search.FindAll()
+                                                                                                                    .Where(a => a.SamAccountName != null && a.DisplayName != null)
+                                                                                                                    .Where(a => a.SamAccountName.ToUpper().Contains(username.ToUpper()) ||
+                                                                                                                        a.DisplayName.ToUpper().Contains(username.ToUpper()));
+                            foreach (UserPrincipal result in collsearch)
+                            {
+                                firstName = result.GivenName;
+                                lastName = result.Surname;
+                                email = result.EmailAddress;
+                                break;
+                            }
+                        }
                     }
 
+                    // the entire claims functionality breaks if you try to insert empty values into claims
+                    // not sure why it is that way, but "N/A"s below are for that reason
                     AuthenticationResponseModel res = new AuthenticationResponseModel()
                     {
                         IsAuthenticated = validCredentials,
                         Username = username,
-                        FirstName = "",
-                        LastName = "",
-                        Email = ""
+                        FirstName = (firstName == null || firstName.Trim() == "") ? "N/A" : firstName,
+                        LastName = (lastName == null || lastName.Trim() == "") ? "N/A" : lastName,
+                        Email = (email == null || email.Trim() == "") ? "N/A" : email
                     };
                     if (res.IsAuthenticated)
                     {
@@ -66,7 +90,9 @@ namespace CertiPath.BlockchainGateway.API.Auth
                             {
                                 Domain = domain,
                                 Username = username,
-                                Email = ""
+                                Email = email,
+                                FirstName = firstName,
+                                LastName = lastName
                             });
                         }
                         res.GUID = user.GUID;
