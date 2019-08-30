@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CertiPath.BlockchainGateway.API.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Web.Http;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
+    [SuperAdmin]
     public class SettingController : BaseController
     {
         public List<Model.SettingTypeModel> GetAllTypes()

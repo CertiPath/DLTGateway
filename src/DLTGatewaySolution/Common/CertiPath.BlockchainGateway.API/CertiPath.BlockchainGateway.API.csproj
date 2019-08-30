@@ -233,7 +233,10 @@
     <Compile Include="Controllers\SettingController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\ApiExceptionFilter.cs" />
+    <Compile Include="Attributes\SuperAdminAttribute.cs" />
     <Compile Include="Helper\ActiveDirectory.cs" />
+    <Compile Include="Helper\Claims.cs" />
+    <Compile Include="Helper\Contstants.cs" />
     <Compile Include="Helper\User.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -299,6 +302,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Views\ActiveDirectory\" />
     <Folder Include="Views\BusinessNetworkObject\" />
+    <Folder Include="Views\SuperAdminBase\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

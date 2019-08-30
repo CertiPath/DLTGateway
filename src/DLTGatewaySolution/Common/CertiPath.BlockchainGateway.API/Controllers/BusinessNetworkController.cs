@@ -40,7 +40,17 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public ApiResult Save(BusinessNetworkModel obj)
         {
-            // TODO: Deal with response object and do error handling
+            // only super admin users can add new biz network records
+            if (obj.GUID == null || obj.GUID == Guid.Empty)
+            {
+                Helper.Claims claims = new Helper.Claims();
+                bool isSuperAdmin = claims.isSuperAdmin();
+                if (isSuperAdmin == false)
+                {
+                    throw new Exception(Helper.Contstants.PERMISSION_DENIED_SUPER_ADMIN);
+                }
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             var result = bnet.Save(obj);
             return result;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CertiPath.BlockchainGateway.API.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,6 +16,8 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         /// This will get only global roles
         /// </summary>
         /// <returns></returns>
+        /// 
+        [SuperAdmin]
         public List<Model.RoleViewModel> GetAll()
         {
             Service.Role roleSrv = new Service.Role(DatabaseContext);

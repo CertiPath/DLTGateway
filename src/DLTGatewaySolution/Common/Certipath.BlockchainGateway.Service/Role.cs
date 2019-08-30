@@ -116,6 +116,16 @@ namespace CertiPath.BlockchainGateway.Service
             return rug;
         }
 
+        public List<Model.UserGroupRoleModel> GetUserGroupsByRoleName(string roleName, bool isSystemRole)
+        {
+            var role = _context.Role
+                                .Where(w => w.IsSystemRole == isSystemRole)
+                                .Where(w => w.Name == roleName)
+                                .SingleOrDefault();
+
+            return GetUserGroups(role.GUID, null);
+        }
+
         public List<Model.UserGroupRoleModel> GetUserGroups(Guid roleGUID, Guid? businessNetworkGUID)
         {
             var groups = _context.Role_UserGroup

@@ -40,7 +40,8 @@ class Login extends Component {
                 FirstName: "",
                 LastName: "",
                 Email: "",
-                Username: ""
+                Username: "",
+                IsSuperAdmin: false
             }));
 
     }

@@ -154,8 +154,8 @@ class Router extends Component {
                             <MainLayoutRoutes
                                 exact
                                 path="/User"
-                                    title={"User: " + (context.Details == null ? '' : context.Details.Username)}
-                                subTitle=""
+                                title={"User: " + (context.Details == null ? '' : context.Details.Username)}
+                                    subTitle={(context.Details == null ? '' : (context.Auth.IsSuperAdmin === "TRUE" ? "Super Admin" : context.Auth.IsSuperAdmin) )}
                                 render={matchprops => (
                                     <Suspense fallback={<Spinner />}>
                                         <LazyMyProfile {...matchprops} />

@@ -20,5 +20,9 @@ namespace CertiPath.BlockchainGateway.Model
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
+
+        public bool IsSuperAdmin { get; set; }
+        public bool IsGlobalAdmin { get; set; }
+        public bool IsGlobalView { get; set; }
     }
 }

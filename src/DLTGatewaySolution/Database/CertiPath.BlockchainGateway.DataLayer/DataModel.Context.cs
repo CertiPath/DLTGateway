@@ -64,5 +64,19 @@ namespace CertiPath.BlockchainGateway.DataLayer
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSystemStats_Result>("GetSystemStats", offsetHoursParameter);
         }
+    
+        [DbFunction("DataModelContainer", "udfUserBusinessNetwork")]
+        public virtual IQueryable<udfUserBusinessNetwork_Result> udfUserBusinessNetwork(string sidList, Nullable<bool> ignoreGroups)
+        {
+            var sidListParameter = sidList != null ?
+                new ObjectParameter("sidList", sidList) :
+                new ObjectParameter("sidList", typeof(string));
+    
+            var ignoreGroupsParameter = ignoreGroups.HasValue ?
+                new ObjectParameter("ignoreGroups", ignoreGroups) :
+                new ObjectParameter("ignoreGroups", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<udfUserBusinessNetwork_Result>("[DataModelContainer].[udfUserBusinessNetwork](@sidList, @ignoreGroups)", sidListParameter, ignoreGroupsParameter);
+        }
     }
 }

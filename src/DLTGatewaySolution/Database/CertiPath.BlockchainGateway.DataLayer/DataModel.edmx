@@ -645,6 +645,19 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
         <Function Name="GetSystemStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="offsetHours" Type="int" Mode="In" />
         </Function>
+        <Function Name="udfUserBusinessNetwork" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="sidList" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="ignoreGroups" Type="bit" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="BlockchainFrameworkGUID" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <EntityContainer Name="DataModelStoreContainer">
           <EntitySet Name="AuditLog" EntityType="Self.AuditLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BlockchainFramework" EntityType="Self.BlockchainFramework" Schema="dbo" store:Type="Tables" />
@@ -946,6 +959,10 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="UserGroup" EntitySet="UserGroup" />
             <End Role="User_UserGroup" EntitySet="User_UserGroup" />
           </AssociationSet>
+          <FunctionImport Name="udfUserBusinessNetwork" IsComposable="true" ReturnType="Collection(DataModel.udfUserBusinessNetwork_Result)">
+            <Parameter Name="sidList" Mode="In" Type="String" />
+            <Parameter Name="ignoreGroups" Mode="In" Type="Boolean" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="BlockchainFramework">
           <Key>
@@ -1622,6 +1639,11 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="udfUserBusinessNetwork_Result">
+          <Property Type="Guid" Name="GUID" Nullable="false" />
+          <Property Type="Guid" Name="BlockchainFrameworkGUID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="250" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2004,6 +2026,15 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="udfUserBusinessNetwork" FunctionName="DataModel.Store.udfUserBusinessNetwork">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataModel.udfUserBusinessNetwork_Result">
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="BlockchainFrameworkGUID" ColumnName="BlockchainFrameworkGUID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

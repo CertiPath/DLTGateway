@@ -44,6 +44,10 @@ namespace CertiPath.BlockchainGateway.API.Auth
                     string firstName = "";
                     string lastName = "";
                     string email = "";
+                    List<UserAdGroupModel> groupList = new List<UserAdGroupModel>();
+                    bool isSuperAdmin = false;
+                    bool isGlobalAdmin = false;
+                    bool isGlobalView = false;
 
                     bool validCredentials = false;
                     using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domain))
@@ -65,6 +69,73 @@ namespace CertiPath.BlockchainGateway.API.Auth
                                 firstName = result.GivenName;
                                 lastName = result.Surname;
                                 email = result.EmailAddress;
+
+                                // get groups
+                                PrincipalSearchResult<Principal> groups = result.GetAuthorizationGroups();
+                                var group = groups.GetEnumerator();
+
+                                // get all global admin groups
+                                // get all global view groups
+                                Service.Role roleService = new Service.Role(dbContext);
+                                List<UserGroupRoleModel> globalAdminGroups = roleService.GetUserGroupsByRoleName(Helper.Contstants.ROLE_GLOBAL_ADMIN, true);
+                                List<UserGroupRoleModel> globalViewGroups = roleService.GetUserGroupsByRoleName(Helper.Contstants.ROLE_GLOBAL_VIEW, true);
+
+                                using (group)
+                                {
+                                    while (group.MoveNext())
+                                    {
+                                        try
+                                        {
+                                            Principal p = group.Current;
+                                            if (p.Name.Trim() != "")
+                                            {
+                                                groupList.Add(new UserAdGroupModel()
+                                                {
+                                                    DistinguishedName = p.DistinguishedName,
+                                                    Name = p.Name,
+                                                    SamAccountName = p.SamAccountName,
+                                                    Sid = p.Sid.Value
+                                                });
+
+                                                if (p.SamAccountName.ToLower() == "Domain Admins".ToLower())
+                                                {
+                                                    isSuperAdmin = true;
+                                                }
+
+                                                // global admin
+                                                if (isGlobalAdmin == false)
+                                                {
+                                                    foreach (var globalAdmin in globalAdminGroups)
+                                                    {
+                                                        if (globalAdmin.UserGroupSID.ToUpper().Trim() == p.Sid.Value.ToUpper().Trim())
+                                                        {
+                                                            isGlobalAdmin = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+
+                                                // global view
+                                                if (isGlobalView == false)
+                                                {
+                                                    foreach (var globalView in globalViewGroups)
+                                                    {
+                                                        if (globalView.UserGroupSID.ToUpper().Trim() == p.Sid.Value.ToUpper().Trim())
+                                                        {
+                                                            isGlobalView = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            Console.WriteLine(p.Name);
+                                        }
+                                        catch (NoMatchingPrincipalException pex)
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                }
                                 break;
                             }
                         }
@@ -78,7 +149,10 @@ namespace CertiPath.BlockchainGateway.API.Auth
                         Username = username,
                         FirstName = (firstName == null || firstName.Trim() == "") ? "N/A" : firstName,
                         LastName = (lastName == null || lastName.Trim() == "") ? "N/A" : lastName,
-                        Email = (email == null || email.Trim() == "") ? "N/A" : email
+                        Email = (email == null || email.Trim() == "") ? "N/A" : email,
+                        IsSuperAdmin = isSuperAdmin,
+                        IsGlobalAdmin = isGlobalAdmin,
+                        IsGlobalView = isGlobalView
                     };
                     if (res.IsAuthenticated)
                     {
@@ -114,6 +188,7 @@ namespace CertiPath.BlockchainGateway.API.Auth
                         props.Dictionary.Add("UserLastName", res.LastName);
                         props.Dictionary.Add("UserEmail", res.Email);
                         props.Dictionary.Add("UserName", domain + "/" + username);
+                        props.Dictionary.Add("IsSuperAdmin", isSuperAdmin.ToString().ToUpper());
 
                         var ticket = new AuthenticationTicket(identity, props);
                         context.Validated(ticket);

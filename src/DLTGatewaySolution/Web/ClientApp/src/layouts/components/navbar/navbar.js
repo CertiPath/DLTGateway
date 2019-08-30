@@ -149,7 +149,10 @@ class ThemeNavbar extends Component {
                                             <DropdownMenu right>
                                                 <DropdownItem>
                                                     <span className="font-small-3">
-                                                        {context.Details.Username} <span className="text-muted">(Admin)</span>
+                                                        {context.Details.Username} <br />
+                                                        <span style={JSON.stringify(context.Details.IsSuperAdmin) === "true" ? { display: 'block' } : { display: 'none' }}>(Super Admin)</span>
+                                                        <span style={JSON.stringify(context.Details.IsGlobalAdmin) === "true" && JSON.stringify(context.Details.IsSuperAdmin) === "false" ? { display: 'block' } : { display: 'none' }}>(Global Admin)</span>
+                                                        <span style={JSON.stringify(context.Details.IsGlobalView) === "true" && JSON.stringify(context.Details.IsGlobalAdmin) === "false" && JSON.stringify(context.Details.IsSuperAdmin) === "false" ? { display: 'block' } : { display: 'none' }}>(Global View)</span>
                                                     </span>
                                                 </DropdownItem>
                                                 <DropdownItem divider />

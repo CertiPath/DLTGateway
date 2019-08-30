@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CertiPath.BlockchainGateway.API.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,6 +16,13 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             Helper.User userHelper = new Helper.User();
             var authInfo = userHelper.GetDetailsFromPrincipal();
             var res = user.GetDetails(authInfo.GUID);
+
+            // set is super admin
+            Helper.Claims claims = new Helper.Claims();
+            res.IsSuperAdmin = claims.isSuperAdmin();
+            res.IsGlobalAdmin = claims.isGlobalAdmin();
+            res.IsGlobalView = claims.isGlobalView();
+
             return res;
         }
         public List<Model.NotificationModel> GetNotifications()
@@ -26,6 +34,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             return list;
         }
 
+        [SuperAdmin]
         [HttpPost]
         public Model.UserTableModel GetAll([FromBody]Model.TableModel model)
         {
