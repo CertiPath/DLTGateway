@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CertiPath.BlockchainGateway.Model;
 using CertiPath.BlockchainGateway.DataLayer;
 using CertiPath.BlockchainGateway.Service.Helper.Chart;
+using System.Data.Entity;
 
 namespace CertiPath.BlockchainGateway.Service
 {
@@ -16,13 +17,13 @@ namespace CertiPath.BlockchainGateway.Service
         {
             _context = context;
         }
-        public BasicStatsModel GetBasicStats()
+        public BasicStatsModel GetBasicStats(bool userCanViewAllNetworks, string userGroups)
         {
             // so people see daily counts for the timezone the server is in
             // may not be perfect, but better than matching just on UTC time
             TimeZone localZone = TimeZone.CurrentTimeZone;
             TimeSpan currentOffset = localZone.GetUtcOffset(DateTime.Now);
-            var stats = _context.GetSystemStats(currentOffset.Hours).SingleOrDefault();
+            var stats = _context.GetSystemStats(currentOffset.Hours, userGroups, userCanViewAllNetworks).SingleOrDefault();
 
             BasicStatsModel res = new BasicStatsModel() {
                 CountAllTransactions = stats.CountAllTransactions,
@@ -39,7 +40,7 @@ namespace CertiPath.BlockchainGateway.Service
         /// </summary>
         /// <param name="numberOfDays"></param>
         /// <returns></returns>
-        public Model.NamespaceTransactionsPerDayChart GetNamespaceTransactionsPerDay(int numberOfDays)
+        public Model.NamespaceTransactionsPerDayChart GetNamespaceTransactionsPerDay(int numberOfDays, bool userCanViewAllNetworks, string userGroups)
         {
             Model.NamespaceTransactionsPerDayChart res = new Model.NamespaceTransactionsPerDayChart();
             
@@ -57,10 +58,31 @@ namespace CertiPath.BlockchainGateway.Service
             }
 
             DateTime queryFromDate = DateTime.Today.AddDays(-1 * numberOfDays);
-            var transactions = _context.vNamespaceTransactionsPerDay
+
+            List<vNamespaceTransactionsPerDay> transactions = new List<vNamespaceTransactionsPerDay>();
+            var tempTransactions = _context.vNamespaceTransactionsPerDay
                                             .AsNoTracking()
                                             .Where(w => w.TransactionDate >= queryFromDate)
                                             .ToList();
+
+            // exclude some transactions per day depending on user permissions
+            if (userCanViewAllNetworks)
+            {
+                transactions = tempTransactions;
+            }
+            else
+            {
+                // get all user business networks
+                var ubnList = _context.udfUserBusinessNetwork(userGroups, userCanViewAllNetworks).ToList();
+                foreach (var transaction in tempTransactions)
+                {
+                    var match = ubnList.Where(w => w.GUID == transaction.BusinessNetworkGUID).SingleOrDefault();
+                    if (match != null)
+                    {
+                        transactions.Add(transaction);
+                    }
+                }
+            }
 
             var namespaces = transactions
                                .GroupBy(g => g.NamespaceGUID)
@@ -98,6 +120,7 @@ namespace CertiPath.BlockchainGateway.Service
                 res.datasets.Insert(0, data);
             }
 
+            /*
             index++;
             var data2 = new NamespaceTranactionDataList();
             data2.label = "Second one";
@@ -129,6 +152,7 @@ namespace CertiPath.BlockchainGateway.Service
             data3.data = new List<int>();
             data3.data.AddRange(new List<int>() { 12, 26, 56, 62, 1, 23, 22 });
             res.datasets.Add(data3);
+            */
 
             return res;
         }

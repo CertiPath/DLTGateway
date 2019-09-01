@@ -56,13 +56,21 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public virtual DbSet<Role_UserGroup> Role_UserGroup { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
     
-        public virtual ObjectResult<GetSystemStats_Result> GetSystemStats(Nullable<int> offsetHours)
+        public virtual ObjectResult<GetSystemStats_Result> GetSystemStats(Nullable<int> offsetHours, string sidList, Nullable<bool> ignoreGroups)
         {
             var offsetHoursParameter = offsetHours.HasValue ?
                 new ObjectParameter("offsetHours", offsetHours) :
                 new ObjectParameter("offsetHours", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSystemStats_Result>("GetSystemStats", offsetHoursParameter);
+            var sidListParameter = sidList != null ?
+                new ObjectParameter("sidList", sidList) :
+                new ObjectParameter("sidList", typeof(string));
+    
+            var ignoreGroupsParameter = ignoreGroups.HasValue ?
+                new ObjectParameter("ignoreGroups", ignoreGroups) :
+                new ObjectParameter("ignoreGroups", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetSystemStats_Result>("GetSystemStats", offsetHoursParameter, sidListParameter, ignoreGroupsParameter);
         }
     
         [DbFunction("DataModelContainer", "udfUserBusinessNetwork")]
@@ -77,6 +85,20 @@ namespace CertiPath.BlockchainGateway.DataLayer
                 new ObjectParameter("ignoreGroups", typeof(bool));
     
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<udfUserBusinessNetwork_Result>("[DataModelContainer].[udfUserBusinessNetwork](@sidList, @ignoreGroups)", sidListParameter, ignoreGroupsParameter);
+        }
+    
+        [DbFunction("DataModelContainer", "udfDataStore")]
+        public virtual IQueryable<udfDataStore_Result> udfDataStore(string sidList, Nullable<bool> ignoreGroups)
+        {
+            var sidListParameter = sidList != null ?
+                new ObjectParameter("sidList", sidList) :
+                new ObjectParameter("sidList", typeof(string));
+    
+            var ignoreGroupsParameter = ignoreGroups.HasValue ?
+                new ObjectParameter("ignoreGroups", ignoreGroups) :
+                new ObjectParameter("ignoreGroups", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<udfDataStore_Result>("[DataModelContainer].[udfDataStore](@sidList, @ignoreGroups)", sidListParameter, ignoreGroupsParameter);
         }
     }
 }

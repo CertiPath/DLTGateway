@@ -168,4 +168,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="GUID" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="a4bb84d0-40be-4a6f-a9eb-e6d777a4114c" ChangeDateTime="08/31/2019 01:10:09">
+    <Property Name="ElementName" Value="[dbo].[TransactionHistory].[IX_TransactionHistory_Column]" />
+    <Property Name="ElementType" Value="SqlIndex" />
+    <Property Name="ParentElementName" Value="[dbo].[TransactionHistory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IX_TransactionHistory_ChaincodeName]" />
+  </Operation>
 </Operations>

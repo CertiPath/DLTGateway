@@ -18,25 +18,35 @@ namespace CertiPath.BlockchainGateway.API.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class DataStoreController : BaseController
     {
+        bool _canViewAllNetworks = false;
+        string _userGroups = "";
+
+        public DataStoreController()
+        {
+            Helper.Claims claims = new Helper.Claims();
+            _canViewAllNetworks = claims.isGlobalAdmin() || claims.isGlobalView() || claims.isSuperAdmin();
+            _userGroups = claims.GetGroups();
+        }
+
         [HttpPost]
         public Model.DataStoreTableModel GetAll([FromBody]Model.TableModel model)
         {
             CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(DatabaseContext);
-            var list = dsSrv.GetAll(model);
+            var list = dsSrv.GetAll(model, _canViewAllNetworks, _userGroups);
             return list;
         }
 
         public Model.DataStoreModel Get(Guid GUID)
         {
             CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(DatabaseContext);
-            var result = dsSrv.Get(GUID);
+            var result = dsSrv.Get(GUID, _canViewAllNetworks, _userGroups);
             return result;
         }
 
         public Model.ObjectChartReturnModel GetChart(Guid dataStoreGUID, Guid objectChartGUID)
         {
             CertiPath.BlockchainGateway.Service.DataStore dsSrv = new Service.DataStore(DatabaseContext);
-            var result = dsSrv.GetChart(dataStoreGUID, objectChartGUID);
+            var result = dsSrv.GetChart(dataStoreGUID, objectChartGUID, _canViewAllNetworks, _userGroups);
             return result;
         }
     }

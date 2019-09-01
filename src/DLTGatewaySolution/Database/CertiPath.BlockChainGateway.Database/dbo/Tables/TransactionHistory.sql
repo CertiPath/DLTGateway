@@ -21,3 +21,7 @@
 GO
 
 CREATE INDEX [IX_TransactionHistory_TransactionID] ON [dbo].[TransactionHistory] ([TransactionID])
+
+GO
+
+CREATE INDEX [IX_TransactionHistory_ChaincodeName] ON [dbo].[TransactionHistory] ([ChaincodeName])

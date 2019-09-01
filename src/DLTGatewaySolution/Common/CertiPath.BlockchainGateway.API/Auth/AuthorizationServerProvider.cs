@@ -13,6 +13,7 @@ using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Web.Helpers;
 using System.Collections.Specialized;
+using System.Text;
 
 namespace CertiPath.BlockchainGateway.API.Auth
 {
@@ -48,6 +49,7 @@ namespace CertiPath.BlockchainGateway.API.Auth
                     bool isSuperAdmin = false;
                     bool isGlobalAdmin = false;
                     bool isGlobalView = false;
+                    StringBuilder sbGroups = new StringBuilder();
 
                     bool validCredentials = false;
                     using (PrincipalContext pc = new PrincipalContext(ContextType.Domain, domain))
@@ -89,6 +91,12 @@ namespace CertiPath.BlockchainGateway.API.Auth
                                             Principal p = group.Current;
                                             if (p.Name.Trim() != "")
                                             {
+                                                if (sbGroups.Length > 0)
+                                                {
+                                                    sbGroups.Append(",");
+                                                }
+                                                sbGroups.Append(p.Sid.Value);
+
                                                 groupList.Add(new UserAdGroupModel()
                                                 {
                                                     DistinguishedName = p.DistinguishedName,
@@ -152,7 +160,8 @@ namespace CertiPath.BlockchainGateway.API.Auth
                         Email = (email == null || email.Trim() == "") ? "N/A" : email,
                         IsSuperAdmin = isSuperAdmin,
                         IsGlobalAdmin = isGlobalAdmin,
-                        IsGlobalView = isGlobalView
+                        IsGlobalView = isGlobalView,
+                        Groups = sbGroups.ToString()
                     };
                     if (res.IsAuthenticated)
                     {

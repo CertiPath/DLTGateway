@@ -20,5 +20,6 @@ namespace CertiPath.BlockchainGateway.DataLayer
         public string TransactionDayName { get; set; }
         public Nullable<int> TransactionCount { get; set; }
         public System.Guid KeyGUID { get; set; }
+        public System.Guid BusinessNetworkGUID { get; set; }
     }
 }

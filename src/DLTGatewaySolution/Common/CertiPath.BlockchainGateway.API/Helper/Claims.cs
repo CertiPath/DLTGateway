@@ -47,5 +47,15 @@ namespace CertiPath.BlockchainGateway.API.Helper
             Model.AuthenticationResponseModel user = JsonConvert.DeserializeObject<Model.AuthenticationResponseModel>(userValues);
             return user.IsGlobalView;
         }
+
+        internal string GetGroups()
+        {
+            IEnumerable<Claim> claims = GetAll();
+            string userValues = claims.Where(w => w.Type == "User").SingleOrDefault().Value;
+
+            Model.AuthenticationResponseModel user = JsonConvert.DeserializeObject<Model.AuthenticationResponseModel>(userValues);
+            return user.Groups;
+        }
+
     }
 }

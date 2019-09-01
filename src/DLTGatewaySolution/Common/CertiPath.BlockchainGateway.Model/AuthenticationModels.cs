@@ -24,5 +24,6 @@ namespace CertiPath.BlockchainGateway.Model
         public bool IsSuperAdmin { get; set; }
         public bool IsGlobalAdmin { get; set; }
         public bool IsGlobalView { get; set; }
+        public string Groups { get; set; }
     }
 }

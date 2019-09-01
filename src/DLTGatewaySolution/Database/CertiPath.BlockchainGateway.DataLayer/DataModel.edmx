@@ -369,6 +369,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Key>
             <PropertyRef Name="NamespaceGUID" />
             <PropertyRef Name="NamespaceName" />
+            <PropertyRef Name="BusinessNetworkGUID" />
             <PropertyRef Name="KeyGUID" />
           </Key>
           <Property Name="KeyGUID" Type="uniqueidentifier" Nullable="false" />
@@ -377,6 +378,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="TransactionDate" Type="date" />
           <Property Name="TransactionDayName" Type="nvarchar" MaxLength="30" />
           <Property Name="TransactionCount" Type="int" />
+          <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <Association Name="FK_AuditLog_CreatedBy">
           <End Role="User" Type="Self.User" Multiplicity="1" />
@@ -644,6 +646,30 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
         </Association>
         <Function Name="GetSystemStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="offsetHours" Type="int" Mode="In" />
+          <Parameter Name="sidList" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="ignoreGroups" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="udfDataStore" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="sidList" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="ignoreGroups" Type="bit" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="BusinessNetworkGUID" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="BusinessNetworkName" Type="nvarchar" MaxLength="250" Nullable="false" />
+                <Property Name="BusinessNetworkNamespaceGUID" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="BusinessNetworkNamespaceName" Type="nvarchar" MaxLength="250" Nullable="false" />
+                <Property Name="BusinessNetworkObjectGUID" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="BusinessNetworkObjectClassName" Type="nvarchar" MaxLength="250" Nullable="false" />
+                <Property Name="BusinessNetworkObjectName" Type="nvarchar" MaxLength="250" Nullable="false" />
+                <Property Name="DataStoreGUID" Type="uniqueidentifier" Nullable="false" />
+                <Property Name="DataStoreIsDeleted" Type="bit" Nullable="false" />
+                <Property Name="DataStoreSourceID" Type="nvarchar" MaxLength="100" />
+                <Property Name="DataStoreValue" Type="nvarchar(max)" />
+                <Property Name="DataStoreLastUpdatedOn" Type="datetime2" Precision="7" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
         </Function>
         <Function Name="udfUserBusinessNetwork" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="sidList" Type="nvarchar(max)" Mode="In" />
@@ -743,7 +769,8 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
     [vNamespaceTransactionsPerDay].[NamespaceName] AS [NamespaceName], 
     [vNamespaceTransactionsPerDay].[TransactionDate] AS [TransactionDate], 
     [vNamespaceTransactionsPerDay].[TransactionDayName] AS [TransactionDayName], 
-    [vNamespaceTransactionsPerDay].[TransactionCount] AS [TransactionCount]
+    [vNamespaceTransactionsPerDay].[TransactionCount] AS [TransactionCount], 
+    [vNamespaceTransactionsPerDay].[BusinessNetworkGUID] AS [BusinessNetworkGUID]
     FROM [dbo].[vNamespaceTransactionsPerDay] AS [vNamespaceTransactionsPerDay]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_AuditLog_CreatedBy" Association="Self.FK_AuditLog_CreatedBy">
@@ -872,7 +899,9 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           </AssociationSet>
           <EntitySet Name="AuditLog" EntityType="DataModel.AuditLog" />
           <FunctionImport Name="GetSystemStats" ReturnType="Collection(DataModel.GetSystemStats_Result)" >
-          <Parameter Name="offsetHours" Mode="In" Type="Int32" />
+            <Parameter Name="offsetHours" Mode="In" Type="Int32" />
+            <Parameter Name="sidList" Mode="In" Type="String" />
+            <Parameter Name="ignoreGroups" Mode="In" Type="Boolean" />
           </FunctionImport>
           <EntitySet Name="vDataStore" EntityType="DataModel.vDataStore" />
           <EntitySet Name="vNamespaceTransactionsPerDay" EntityType="DataModel.vNamespaceTransactionsPerDay" />
@@ -960,6 +989,10 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <End Role="User_UserGroup" EntitySet="User_UserGroup" />
           </AssociationSet>
           <FunctionImport Name="udfUserBusinessNetwork" IsComposable="true" ReturnType="Collection(DataModel.udfUserBusinessNetwork_Result)">
+            <Parameter Name="sidList" Mode="In" Type="String" />
+            <Parameter Name="ignoreGroups" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="udfDataStore" IsComposable="true" ReturnType="Collection(DataModel.udfDataStore_Result)">
             <Parameter Name="sidList" Mode="In" Type="String" />
             <Parameter Name="ignoreGroups" Mode="In" Type="Boolean" />
           </FunctionImport>
@@ -1189,6 +1222,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
             <PropertyRef Name="NamespaceGUID" />
             <PropertyRef Name="NamespaceName" />
             <PropertyRef Name="KeyGUID" />
+            <PropertyRef Name="BusinessNetworkGUID" />
           </Key>
           <Property Name="NamespaceGUID" Type="Guid" Nullable="false" />
           <Property Name="NamespaceName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -1196,6 +1230,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Name="TransactionDayName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="TransactionCount" Type="Int32" />
           <Property Name="KeyGUID" Type="Guid" Nullable="false" />
+          <Property Name="BusinessNetworkGUID" Type="Guid" Nullable="false" />
         </EntityType>
         <EntityType Name="vBusinessNetworkNamespace">
           <Key>
@@ -1644,6 +1679,20 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <Property Type="Guid" Name="BlockchainFrameworkGUID" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="250" />
         </ComplexType>
+        <ComplexType Name="udfDataStore_Result">
+          <Property Type="Guid" Name="BusinessNetworkGUID" Nullable="false" />
+          <Property Type="String" Name="BusinessNetworkName" Nullable="false" MaxLength="250" />
+          <Property Type="Guid" Name="BusinessNetworkNamespaceGUID" Nullable="false" />
+          <Property Type="String" Name="BusinessNetworkNamespaceName" Nullable="false" MaxLength="250" />
+          <Property Type="Guid" Name="BusinessNetworkObjectGUID" Nullable="false" />
+          <Property Type="String" Name="BusinessNetworkObjectClassName" Nullable="false" MaxLength="250" />
+          <Property Type="String" Name="BusinessNetworkObjectName" Nullable="false" MaxLength="250" />
+          <Property Type="Guid" Name="DataStoreGUID" Nullable="false" />
+          <Property Type="Boolean" Name="DataStoreIsDeleted" Nullable="false" />
+          <Property Type="String" Name="DataStoreSourceID" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DataStoreValue" Nullable="true" />
+          <Property Type="DateTime" Name="DataStoreLastUpdatedOn" Nullable="true" Precision="27" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1786,6 +1835,7 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
           <EntitySetMapping Name="vNamespaceTransactionsPerDay">
             <EntityTypeMapping TypeName="DataModel.vNamespaceTransactionsPerDay">
               <MappingFragment StoreEntitySet="vNamespaceTransactionsPerDay">
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
                 <ScalarProperty Name="KeyGUID" ColumnName="KeyGUID" />
                 <ScalarProperty Name="TransactionCount" ColumnName="TransactionCount" />
                 <ScalarProperty Name="TransactionDayName" ColumnName="TransactionDayName" />
@@ -2032,6 +2082,24 @@ warning 6002: The table/view 'CertiPath.BlockChainGateway.Database.dbo.vNamespac
                 <ScalarProperty Name="GUID" ColumnName="GUID" />
                 <ScalarProperty Name="BlockchainFrameworkGUID" ColumnName="BlockchainFrameworkGUID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="udfDataStore" FunctionName="DataModel.Store.udfDataStore">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataModel.udfDataStore_Result">
+                <ScalarProperty Name="BusinessNetworkGUID" ColumnName="BusinessNetworkGUID" />
+                <ScalarProperty Name="BusinessNetworkName" ColumnName="BusinessNetworkName" />
+                <ScalarProperty Name="BusinessNetworkNamespaceGUID" ColumnName="BusinessNetworkNamespaceGUID" />
+                <ScalarProperty Name="BusinessNetworkNamespaceName" ColumnName="BusinessNetworkNamespaceName" />
+                <ScalarProperty Name="BusinessNetworkObjectGUID" ColumnName="BusinessNetworkObjectGUID" />
+                <ScalarProperty Name="BusinessNetworkObjectClassName" ColumnName="BusinessNetworkObjectClassName" />
+                <ScalarProperty Name="BusinessNetworkObjectName" ColumnName="BusinessNetworkObjectName" />
+                <ScalarProperty Name="DataStoreGUID" ColumnName="DataStoreGUID" />
+                <ScalarProperty Name="DataStoreIsDeleted" ColumnName="DataStoreIsDeleted" />
+                <ScalarProperty Name="DataStoreSourceID" ColumnName="DataStoreSourceID" />
+                <ScalarProperty Name="DataStoreValue" ColumnName="DataStoreValue" />
+                <ScalarProperty Name="DataStoreLastUpdatedOn" ColumnName="DataStoreLastUpdatedOn" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
