@@ -16,17 +16,32 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 {
     public class BusinessNetworkController : BaseController
     {
+        bool _canViewAllNetworks = false;
+        bool _globalAdmin = false;
+        string _userGroups = "";
+        List<DataLayer.udfUserBusinessNetworkLocalAdmin_Result> localAdminBizNetworkList;
+
+        public BusinessNetworkController()
+        {
+            Helper.Claims claims = new Helper.Claims();
+            _canViewAllNetworks = claims.isGlobalAdmin() || claims.isGlobalView() || claims.isSuperAdmin();
+            _globalAdmin = claims.isSuperAdmin() || claims.isGlobalAdmin();
+            _userGroups = claims.GetGroups();
+
+            localAdminBizNetworkList = DatabaseContext.udfUserBusinessNetworkLocalAdmin(_userGroups).ToList();
+        }
+
         public BusinessNetworkTableModel GetAll()
         {
             CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
-            var list = srvBN.GetAll();
+            var list = srvBN.GetAll(_canViewAllNetworks, _userGroups);
             return list;
         }
 
         public BusinessNetworkModel GetDetails(Guid GUID)
         {
             CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
-            var res = srvBN.GetDetails(GUID);
+            var res = srvBN.GetDetails(GUID, _canViewAllNetworks, _userGroups);
             return res;
         }
 

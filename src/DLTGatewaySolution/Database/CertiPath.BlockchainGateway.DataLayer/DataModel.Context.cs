@@ -100,5 +100,15 @@ namespace CertiPath.BlockchainGateway.DataLayer
     
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<udfDataStore_Result>("[DataModelContainer].[udfDataStore](@sidList, @ignoreGroups)", sidListParameter, ignoreGroupsParameter);
         }
+    
+        [DbFunction("DataModelContainer", "udfUserBusinessNetworkLocalAdmin")]
+        public virtual IQueryable<udfUserBusinessNetworkLocalAdmin_Result> udfUserBusinessNetworkLocalAdmin(string sidList)
+        {
+            var sidListParameter = sidList != null ?
+                new ObjectParameter("sidList", sidList) :
+                new ObjectParameter("sidList", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<udfUserBusinessNetworkLocalAdmin_Result>("[DataModelContainer].[udfUserBusinessNetworkLocalAdmin](@sidList)", sidListParameter);
+        }
     }
 }

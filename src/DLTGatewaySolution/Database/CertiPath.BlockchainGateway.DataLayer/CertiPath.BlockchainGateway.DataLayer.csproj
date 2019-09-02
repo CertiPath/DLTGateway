@@ -138,6 +138,9 @@
     <Compile Include="udfDataStore_Result.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="udfUserBusinessNetworkLocalAdmin_Result.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="udfUserBusinessNetwork_Result.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>

@@ -19,21 +19,27 @@ namespace CertiPath.BlockchainGateway.Service
             _context = context;
         }
 
-        public BusinessNetworkTableModel GetAll()
+        public BusinessNetworkTableModel GetAll(bool canViewAllNetworks, string userGroups)
         {
             List<BusinessNetworkModel> list = new List<BusinessNetworkModel>();
             var networks = _context.BusinessNetwork.Where(w => w.Deleted == false).ToList();
+            var ubnList = _context.udfUserBusinessNetwork(userGroups, canViewAllNetworks).ToList();
             foreach (var network in networks)
             {
-                list.Add(new BusinessNetworkModel() {
-                    GUID = network.GUID,
-                    Name = network.Name,
-                    ChannelName = network.ChannelName,
-                    PeerAddress = network.PeerAddress,
-                    BlockchainFrameworkGUID = network.BlockchainFrameworkGUID,
-                    BlockchainFrameworkName = network.BlockchainFramework.DisplayName,
-                    Disabled = network.Disabled
-                });
+                var ubn = ubnList.Where(w => w.GUID == network.GUID).SingleOrDefault();
+                if (ubn != null)
+                {
+                    list.Add(new BusinessNetworkModel()
+                    {
+                        GUID = network.GUID,
+                        Name = network.Name,
+                        ChannelName = network.ChannelName,
+                        PeerAddress = network.PeerAddress,
+                        BlockchainFrameworkGUID = network.BlockchainFrameworkGUID,
+                        BlockchainFrameworkName = network.BlockchainFramework.DisplayName,
+                        Disabled = network.Disabled
+                    });
+                }
             }
             return new BusinessNetworkTableModel() {
                 List = list,
@@ -256,11 +262,19 @@ namespace CertiPath.BlockchainGateway.Service
             alo.Save(alm);
         }
 
-        public Model.BusinessNetworkModel GetDetails(Guid GUID)
+        public Model.BusinessNetworkModel GetDetails(Guid GUID, bool canViewAllNetworks, string userGroups)
         {
-            Model.BusinessNetworkModel res = new BusinessNetworkModel();
+            // check permissions
+            var ubnList = _context.udfUserBusinessNetwork(userGroups, canViewAllNetworks).ToList();
+            var ubn = ubnList.Where(w => w.GUID == GUID).SingleOrDefault();
+            if (ubn == null)
+            {
+                throw new Exception("Access Denied");
+            }
 
+            Model.BusinessNetworkModel res = new BusinessNetworkModel();
             var bne = _context.BusinessNetwork.Where(w => w.GUID == GUID).SingleOrDefault();
+            
             res.GUID = bne.GUID;
             res.Name = bne.Name;
             res.ChannelName = bne.ChannelName == null ? "" : bne.ChannelName;
