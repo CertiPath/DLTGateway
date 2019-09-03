@@ -16,32 +16,22 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 {
     public class BusinessNetworkController : BaseController
     {
-        bool _canViewAllNetworks = false;
-        bool _globalAdmin = false;
-        string _userGroups = "";
-        List<DataLayer.udfUserBusinessNetworkLocalAdmin_Result> localAdminBizNetworkList;
-
-        public BusinessNetworkController()
-        {
-            Helper.Claims claims = new Helper.Claims();
-            _canViewAllNetworks = claims.isGlobalAdmin() || claims.isGlobalView() || claims.isSuperAdmin();
-            _globalAdmin = claims.isSuperAdmin() || claims.isGlobalAdmin();
-            _userGroups = claims.GetGroups();
-
-            localAdminBizNetworkList = DatabaseContext.udfUserBusinessNetworkLocalAdmin(_userGroups).ToList();
-        }
-
         public BusinessNetworkTableModel GetAll()
         {
             CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
-            var list = srvBN.GetAll(_canViewAllNetworks, _userGroups);
+            var list = srvBN.GetAll(_allNetworkViewList);
             return list;
         }
 
         public BusinessNetworkModel GetDetails(Guid GUID)
         {
+            if (CanViewNetwork(GUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
-            var res = srvBN.GetDetails(GUID, _canViewAllNetworks, _userGroups);
+            var res = srvBN.GetDetails(GUID, _globalView, _userGroups);
             return res;
         }
 
@@ -58,9 +48,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
             // only super admin users can add new biz network records
             if (obj.GUID == null || obj.GUID == Guid.Empty)
             {
-                Helper.Claims claims = new Helper.Claims();
-                bool isSuperAdmin = claims.isSuperAdmin();
-                if (isSuperAdmin == false)
+                if (CanAdminNetwork(obj.GUID) == false)
                 {
                     throw new Exception(Helper.Contstants.PERMISSION_DENIED_SUPER_ADMIN);
                 }
@@ -74,6 +62,11 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Delete(BusinessNetworkModel obj)
         {
+            if (CanAdminNetwork(obj.GUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             // TODO: Deal with response object and do error handling
             CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             bnet.Delete(obj);
@@ -82,6 +75,11 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Enable(BusinessNetworkModel obj)
         {
+            if (CanAdminNetwork(obj.GUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             // TODO: Deal with response object and do error handling
             CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             bnet.Enable(obj);
@@ -90,6 +88,11 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Disable(BusinessNetworkModel obj)
         {
+            if (CanAdminNetwork(obj.GUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             // TODO: Deal with response object and do error handling
             CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             bnet.Disable(obj);
@@ -98,6 +101,18 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void DeleteConnectionFile(FileUploadModel file)
         {
+            var bnfu = DatabaseContext.BusinessNetwork_FileUpload
+                                    .Where(w => w.FileUploadGUID == file.GUID)
+                                    .SingleOrDefault();
+
+            if (bnfu != null)
+            {
+                if (CanAdminNetwork(bnfu.BusinessNetworkGUID) == false)
+                {
+                    throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+                }
+            }
+
             // TODO: Deal with response object and do error handling
             CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);
             bnet.DeleteConnectionFile(file.GUID);
@@ -113,6 +128,11 @@ namespace CertiPath.BlockchainGateway.API.Controllers
                 var httpPostedFile = HttpContext.Current.Request.Files["file"];
                 var givenName = HttpContext.Current.Request.Params["name"];
                 Guid bneGUID = new Guid(HttpContext.Current.Request.Params["BusinessNetworkGUID"]);
+
+                if (CanAdminNetwork(bneGUID) == false)
+                {
+                    throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+                }
 
                 if (httpPostedFile != null)
                 {
@@ -132,7 +152,6 @@ namespace CertiPath.BlockchainGateway.API.Controllers
                 }
             }
         }
-        
     }
     
 }

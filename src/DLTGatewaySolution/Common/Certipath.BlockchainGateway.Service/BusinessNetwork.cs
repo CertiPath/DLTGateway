@@ -19,14 +19,13 @@ namespace CertiPath.BlockchainGateway.Service
             _context = context;
         }
 
-        public BusinessNetworkTableModel GetAll(bool canViewAllNetworks, string userGroups)
+        public BusinessNetworkTableModel GetAll(List<Guid> ViewList)
         {
             List<BusinessNetworkModel> list = new List<BusinessNetworkModel>();
             var networks = _context.BusinessNetwork.Where(w => w.Deleted == false).ToList();
-            var ubnList = _context.udfUserBusinessNetwork(userGroups, canViewAllNetworks).ToList();
             foreach (var network in networks)
             {
-                var ubn = ubnList.Where(w => w.GUID == network.GUID).SingleOrDefault();
+                var ubn = ViewList.Where(w => w == network.GUID).SingleOrDefault();
                 if (ubn != null)
                 {
                     list.Add(new BusinessNetworkModel()
@@ -264,14 +263,6 @@ namespace CertiPath.BlockchainGateway.Service
 
         public Model.BusinessNetworkModel GetDetails(Guid GUID, bool canViewAllNetworks, string userGroups)
         {
-            // check permissions
-            var ubnList = _context.udfUserBusinessNetwork(userGroups, canViewAllNetworks).ToList();
-            var ubn = ubnList.Where(w => w.GUID == GUID).SingleOrDefault();
-            if (ubn == null)
-            {
-                throw new Exception("Access Denied");
-            }
-
             Model.BusinessNetworkModel res = new BusinessNetworkModel();
             var bne = _context.BusinessNetwork.Where(w => w.GUID == GUID).SingleOrDefault();
             

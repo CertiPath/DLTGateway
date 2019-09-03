@@ -107,6 +107,7 @@
     <Build Include="dbo\Functions\udfUserBusinessNetwork.sql" />
     <Build Include="dbo\Functions\udfDataStore.sql" />
     <Build Include="dbo\Functions\udfUserBusinessNetworkLocalAdmin.sql" />
+    <Build Include="dbo\Functions\udfUserBusinessNetworkLocalView.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="CertiPath.BlockchainGateway.Database.refactorlog" />

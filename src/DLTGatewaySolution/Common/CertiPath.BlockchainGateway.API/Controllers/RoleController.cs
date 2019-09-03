@@ -34,6 +34,11 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 
         public List<Model.UserGroupRoleModel> GetUserGroupsLocal(Guid RoleGUID, Guid BusinessNetworkGUID)
         {
+            if (CanViewNetwork(BusinessNetworkGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             Service.Role roleSrv = new Service.Role(DatabaseContext);
             var list = roleSrv.GetUserGroups(RoleGUID, BusinessNetworkGUID);
             return list;
@@ -42,13 +47,24 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void DeleteUserGroup(Model.UserGroupRoleModel m)
         {
+            var ugr = DatabaseContext.Role_UserGroup.Where(w => w.GUID == m.GUID).SingleOrDefault();
+            if (CanAdminNetwork(ugr.BusinessNetworkGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             Service.Role roleSrv = new Service.Role(DatabaseContext);
             roleSrv.DeleteUserGroup(m.GUID);
         }
 
         [HttpPost]
         public void AddActiveDirectoryGroup(Model.RoleADGroupModel model)
-        {         
+        {
+            if (CanAdminNetwork(model.BusinessNetworkGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             Service.Role roleSrv = new Service.Role(DatabaseContext);
             roleSrv.AddUserGroup(model);
         }
