@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Linq;
 
 namespace CertiPath.BlockchainGateway.API.Controllers
 {
@@ -9,6 +10,12 @@ namespace CertiPath.BlockchainGateway.API.Controllers
     {
         public List<BusinessNetworkObjectViewModel> GetAllByNamespace(Guid BusinessNetworkNamespaceGUID)
         {
+            var bizNetNamespace = DatabaseContext.BusinessNetworkNamespace.Where(w => w.GUID == BusinessNetworkNamespaceGUID).SingleOrDefault();
+            if (CanViewNetwork(bizNetNamespace.BusinessNetworkGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bnn = new Service.BusinessNetworkObject(DatabaseContext);
             var res = bnn.GetDetailsByNamespace(BusinessNetworkNamespaceGUID);
             return res;
@@ -17,6 +24,13 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Save(BusinessNetworkObjectViewModel obj)
         {
+            var netObj = DatabaseContext.BusinessNetworkObject.Where(w => w.GUID == obj.BusinessNetworkObjectGUID).SingleOrDefault();
+            var bizNetNamespace = DatabaseContext.BusinessNetworkNamespace.Where(w => w.GUID == netObj.BusinessNetworkNamespaceGUID).SingleOrDefault();
+            if (CanAdminNetwork(bizNetNamespace.BusinessNetworkGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.Save(obj);
         }
@@ -24,12 +38,25 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Delete(BusinessNetworkObjectViewModel obj)
         {
+            var netObj = DatabaseContext.BusinessNetworkObject.Where(w => w.GUID == obj.BusinessNetworkObjectGUID).SingleOrDefault();
+            var bizNetNamespace = DatabaseContext.BusinessNetworkNamespace.Where(w => w.GUID == netObj.BusinessNetworkNamespaceGUID).SingleOrDefault();
+            if (CanAdminNetwork(bizNetNamespace.BusinessNetworkGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.Delete(obj);
         }
 
         public BusinessNetworkObjectDetailsModel GetDetails(Guid BusinessNetworkObjectGUID)
         {
+            var netObj = DatabaseContext.BusinessNetworkObject.Where(w => w.GUID == BusinessNetworkObjectGUID).SingleOrDefault();
+            var bizNetNamespace = DatabaseContext.BusinessNetworkNamespace.Where(w => w.GUID == netObj.BusinessNetworkNamespaceGUID).SingleOrDefault();
+            if (CanViewNetwork(bizNetNamespace.BusinessNetworkGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             var res = bno.GetDetails(BusinessNetworkObjectGUID);
             return res;

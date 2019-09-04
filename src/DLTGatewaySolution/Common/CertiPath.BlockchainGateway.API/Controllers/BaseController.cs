@@ -24,18 +24,26 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 
         public BaseController()
         {
-            DatabaseContext = DataLayer.DataModelContainer.Builder().Build();
+            try
+            {
+                DatabaseContext = DataLayer.DataModelContainer.Builder().Build();
 
-            Helper.Claims claims = new Helper.Claims();
-            _globalView = claims.isGlobalAdmin() || claims.isGlobalView() || claims.isSuperAdmin();
-            _globalAdmin = claims.isSuperAdmin() || claims.isGlobalAdmin();
+                Helper.Claims claims = new Helper.Claims();
+                _globalView = claims.isGlobalAdmin() || claims.isGlobalView() || claims.isSuperAdmin();
+                _globalAdmin = claims.isSuperAdmin() || claims.isGlobalAdmin();
 
-            _userGroups = claims.GetGroups();
+                _userGroups = claims.GetGroups();
 
-            _localAdminBizNetworkList = DatabaseContext.udfUserBusinessNetworkLocalAdmin(_userGroups).ToList();
-            _localViewBizNetworkList = DatabaseContext.udfUserBusinessNetworkLocalView(_userGroups).ToList();
+                _localAdminBizNetworkList = DatabaseContext.udfUserBusinessNetworkLocalAdmin(_userGroups).ToList();
+                _localViewBizNetworkList = DatabaseContext.udfUserBusinessNetworkLocalView(_userGroups).ToList();
 
-            _allNetworkViewList = getAllViewList(_globalView, _userGroups, _localAdminBizNetworkList, _localViewBizNetworkList);
+                _allNetworkViewList = getAllViewList(_globalView, _userGroups, _localAdminBizNetworkList, _localViewBizNetworkList);
+            }
+            catch (Exception exc)
+            {
+                Log.Error("API Base Controller Exception", exc);
+                throw exc;
+            }
         }
 
         private List<Guid> getAllViewList(bool globalView, string userGroups, List<udfUserBusinessNetworkLocalAdmin_Result> localAdminBizNetworkList, List<udfUserBusinessNetworkLocalView_Result> localViewBizNetworkList)
