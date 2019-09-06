@@ -36,9 +36,13 @@ BEGIN
 			dst.Value as DataStoreValue, dst.LastUpdatedOn as DataStoreLastUpdatedOn
 		FROM DataStore dst
 		INNER JOIN BusinessNetworkObject bno ON dst.BusinessNetworkObjectGUID = bno.[GUID]
+			AND bno.Deleted = 0
 		INNER JOIN BusinessNetworkNamespace bnn ON bno.BusinessNetworkNamespaceGUID = bnn.[GUID]
+			AND bnn.Deleted = 0
 		INNER JOIN BusinessNetwork bne ON bnn.BusinessNetworkGUID = bne.[GUID]
+			AND bne.Deleted = 0
 		INNER JOIN udfUserBusinessNetwork(@sidList, @ignoreGroups) ubn ON bne.[GUID] = ubn.[GUID]
+		WHERE dst.IsDeleted = 0
 	) a
 
 	RETURN

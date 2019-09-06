@@ -19,7 +19,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public BusinessNetworkTableModel GetAll()
         {
             CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
-            var list = srvBN.GetAll(_allNetworkViewList);
+            var list = srvBN.GetAll(_allNetworkViewList, _allNetworkAdminList);
             return list;
         }
 
@@ -30,8 +30,12 @@ namespace CertiPath.BlockchainGateway.API.Controllers
                 throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
             }
 
+            bool lCanAdmin = CanAdminNetwork(GUID);
+
             CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
             var res = srvBN.GetDetails(GUID, _globalView, _userGroups);
+
+            res.ReadOnly = !lCanAdmin;
             return res;
         }
 
@@ -46,12 +50,10 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public ApiResult Save(BusinessNetworkModel obj)
         {
             // only super admin users can add new biz network records
-            if (obj.GUID == null || obj.GUID == Guid.Empty)
+            bool lCanSave = CanAdminNetwork(obj.GUID);
+            if (lCanSave == false)
             {
-                if (CanAdminNetwork(obj.GUID) == false)
-                {
-                    throw new Exception(Helper.Contstants.PERMISSION_DENIED_SUPER_ADMIN);
-                }
+                throw new Exception(Helper.Contstants.PERMISSION_DENIED_SUPER_ADMIN);
             }
 
             CertiPath.BlockchainGateway.Service.BusinessNetwork bnet = new Service.BusinessNetwork(DatabaseContext);

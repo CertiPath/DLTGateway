@@ -9,9 +9,10 @@ class ConfirmDialog extends Component {
     
     constructor(props) {
         super();
-
+        
         let disabledText = "Click on the enable button to make the network enabled again.";
         let enabledText = "Disabling network " + props.Name + " will exclude it from any data collection and processing. Are you sure you want to continue?";
+
         if (props.DisabledText != null) {
             disabledText = props.DisabledText;
         }
@@ -26,7 +27,8 @@ class ConfirmDialog extends Component {
                 modalText: props.Disabled == true ?
                     disabledText :
                     enabledText,
-            modalYesButtonText: props.Disabled == true ? "Enable" : "Disable"
+            modalYesButtonText: props.Disabled == true ? "Enable" : "Disable",
+            ReadOnly: props.ReadOnly
         };
     }
 
@@ -44,7 +46,8 @@ class ConfirmDialog extends Component {
                 modalText: nextProps.Disabled == true ?
                     "Click on the enable button to make the network enabled again." :
                     "Disabling network " + nextProps.Name + " will exclude it from any data collection and processing. Are you sure you want to continue?",
-                modalYesButtonText: nextProps.Disabled == true ? "Enable" : "Disable"
+                modalYesButtonText: nextProps.Disabled == true ? "Enable" : "Disable",
+                ReadOnly: nextProps.ReadOnly
             });
         }
     }
@@ -72,10 +75,12 @@ class ConfirmDialog extends Component {
                 >
                     <ModalHeader toggle={this.toggle}>{this.state.modalTitle}</ModalHeader>
                     <ModalBody>
-                        {this.state.modalText}
+                        {
+                            this.state.ReadOnly == false ? (this.state.modalText) : ('Your permissions do not allow you to enable or disable a network.')
+                        }
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.handleYesButtonClick}>
+                        <Button color="primary" onClick={this.handleYesButtonClick} {...(this.state.ReadOnly && { disabled: true })}>
                             {this.state.modalYesButtonText}
                         </Button>{" "}
                         <Button color="secondary" onClick={this.toggle}>

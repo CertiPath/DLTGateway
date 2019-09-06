@@ -20,7 +20,8 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         public List<DataLayer.udfUserBusinessNetworkLocalAdmin_Result> _localAdminBizNetworkList;
         public List<DataLayer.udfUserBusinessNetworkLocalView_Result> _localViewBizNetworkList;
 
-        public List<Guid> _allNetworkViewList; 
+        public List<Guid> _allNetworkViewList;
+        public List<Guid> _allNetworkAdminList;
 
         public BaseController()
         {
@@ -38,6 +39,8 @@ namespace CertiPath.BlockchainGateway.API.Controllers
                 _localViewBizNetworkList = DatabaseContext.udfUserBusinessNetworkLocalView(_userGroups).ToList();
 
                 _allNetworkViewList = getAllViewList(_globalView, _userGroups, _localAdminBizNetworkList, _localViewBizNetworkList);
+                _allNetworkAdminList = getAllAdminList(_globalView, _userGroups, _localAdminBizNetworkList, _localViewBizNetworkList);
+
             }
             catch (Exception exc)
             {
@@ -47,6 +50,44 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         }
 
         private List<Guid> getAllViewList(bool globalView, string userGroups, List<udfUserBusinessNetworkLocalAdmin_Result> localAdminBizNetworkList, List<udfUserBusinessNetworkLocalView_Result> localViewBizNetworkList)
+        {
+            //Log.Info("Get all view list for user:");
+            //Log.Info("  Global view: " + globalView.ToString());
+            //Log.Info("  User groups: " + userGroups);
+            List<Guid> result = new List<Guid>();
+            if (globalView)
+            {
+                var networks = DatabaseContext.BusinessNetwork.Where(w => w.Deleted == false).ToList();
+                foreach (var network in networks)
+                {
+                    result.Add(network.GUID);
+                }
+            }
+            else
+            {
+                foreach (var localAdmin in localAdminBizNetworkList)
+                {
+                    //Log.Info("      Local Admin: " + localAdmin.Name);
+                    var temp = result.Where(w => w == localAdmin.GUID).SingleOrDefault();
+                    if (temp == null || temp == Guid.Empty)
+                    {
+                        result.Add(localAdmin.GUID);
+                    }
+                }
+                foreach (var localView in localViewBizNetworkList)
+                {
+                    //Log.Info("      Local View: " + localView.Name);
+                    var temp = result.Where(w => w == localView.GUID).SingleOrDefault();
+                    if (temp == null || temp == Guid.Empty)
+                    {
+                        result.Add(localView.GUID);
+                    }
+                }
+            }
+            return result;
+        }
+
+        private List<Guid> getAllAdminList(bool globalView, string userGroups, List<udfUserBusinessNetworkLocalAdmin_Result> localAdminBizNetworkList, List<udfUserBusinessNetworkLocalView_Result> localViewBizNetworkList)
         {
             List<Guid> result = new List<Guid>();
             if (globalView)
@@ -62,17 +103,9 @@ namespace CertiPath.BlockchainGateway.API.Controllers
                 foreach (var localAdmin in localAdminBizNetworkList)
                 {
                     var temp = result.Where(w => w == localAdmin.GUID).SingleOrDefault();
-                    if (temp == null)
+                    if (temp == null || temp == Guid.Empty)
                     {
                         result.Add(localAdmin.GUID);
-                    }
-                }
-                foreach (var localView in localViewBizNetworkList)
-                {
-                    var temp = result.Where(w => w == localView.GUID).SingleOrDefault();
-                    if (temp == null)
-                    {
-                        result.Add(localView.GUID);
                     }
                 }
             }

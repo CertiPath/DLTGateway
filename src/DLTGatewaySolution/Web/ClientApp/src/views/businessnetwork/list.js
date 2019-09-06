@@ -101,6 +101,7 @@ export default class BusinessNetworkList extends React.Component {
                             Name={network.Name}
                             YesButtonAction={() => network.Disabled == false ? this.handleDisable(network.GUID) : this.handleEnable(network.GUID)}
                             Disabled={network.Disabled}
+                            ReadOnly={network.ReadOnly}
                         />
                     </td>
                     <td style={{ paddingLeft: 0, paddingRight: 0, cursor: 'pointer' }} title="View/Edit Details">

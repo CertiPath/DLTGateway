@@ -70,7 +70,8 @@ class BusinessNetworkDetails extends Component {
         businessNetworkData: null,
         FormikTest: null,
         SelectedRoleGUID: null,
-        SelectedRoleName: ''
+        SelectedRoleName: '',
+        ReadOnly: false
     }
 
     toggleTab = tab => {
@@ -107,7 +108,8 @@ class BusinessNetworkDetails extends Component {
             .then(res => {
                 this.setState({
                     businessNetworkData: res.data,
-                    BusinessNetworkType: res.data.BlockchainFrameworkName
+                    BusinessNetworkType: res.data.BlockchainFrameworkName,
+                    ReadOnly: res.data.ReadOnly
                 });
             });
     }
@@ -345,10 +347,11 @@ class BusinessNetworkDetails extends Component {
                                                                                                         Name={props.values.Name}
                                                                                                         YesButtonAction={() => this.state.businessNetworkData.Disabled == false ? this.handleDisable(this.state.businessNetworkData.GUID) : this.handleEnable(this.state.businessNetworkData.GUID)}
                                                                                                         Disabled={this.state.businessNetworkData.Disabled}
-                                                                                                    />
+                                                                                                        ReadOnly={this.state.ReadOnly}
+                                                                                                />
                                                                                                 </Col>
                                                                                                 <Col md="6">
-                                                                                                    <ConfirmDelete
+                                                                                                    <ConfirmDelete {...(this.state.ReadOnly && { disabled: true })}
                                                                                                         Title={"Delete network " + props.values.Name + "?"}
                                                                                                         Text={"You are about to delete network " + props.values.Name + ". All associated namespaces and tracked objects will be deleted with it. Are you sure you want to continue?"}
                                                                                                         YesButtonText="Delete"
@@ -365,7 +368,7 @@ class BusinessNetworkDetails extends Component {
                                                                                 <Col md="6">
                                                                                     <FormGroup>
                                                                                         <Label for="Name">Name</Label>
-                                                                                        <Field type="text" id="Name" value={props.values.Name}
+                                                                                        <Field type="text" id="Name" value={props.values.Name} {...(this.state.ReadOnly && { disabled: true })}
                                                                                             onChange={e => {
                                                                                                 props.handleChange(e);
                                                                                                 this.onNameChange(e);
@@ -376,7 +379,8 @@ class BusinessNetworkDetails extends Component {
                                                                                 <Col md="6">
                                                                                     <FormGroup>
                                                                                         <Label for="BlockchainFrameworkGUID">Framework Type</Label>
-                                                                                        <Field component="select" onChange={e => {
+                                                                                        <Field component="select" {...(this.state.ReadOnly && { disabled: true })}
+                                                                                            onChange={e => {
                                                                                             props.handleChange(e);
                                                                                             this.onTypeChange(e);
                                                                                         }}
@@ -404,14 +408,14 @@ class BusinessNetworkDetails extends Component {
                                                                                             <Col md="6">
                                                                                                 <FormGroup>
                                                                                                     <Label for="ChannelName">Channel Name</Label>
-                                                                                                    <Field type="text" id="ChannelName" value={props.values.ChannelName} onChange={props.handleChange} name="ChannelName" className={`form-control ${props.errors.ChannelName && props.touched.ChannelName && 'is-invalid'}`} />
+                                                                                                    <Field type="text" id="ChannelName" {...(this.state.ReadOnly && { disabled: true })} value={props.values.ChannelName} onChange={props.handleChange} name="ChannelName" className={`form-control ${props.errors.ChannelName && props.touched.ChannelName && 'is-invalid'}`} />
                                                                                                     {props.errors.ChannelName && props.touched.ChannelName ? <div className="invalid-feedback">{props.errors.ChannelName}</div> : null}
                                                                                                 </FormGroup>
                                                                                             </Col>
                                                                                             <Col md="6">
                                                                                                 <FormGroup>
                                                                                                     <Label for="Username">Username</Label>
-                                                                                                    <Field type="text" id="Username" value={props.values.Username} onChange={props.handleChange} name="Username" className={`form-control ${props.errors.Username && props.touched.Username && 'is-invalid'}`} />
+                                                                                                    <Field type="text" id="Username" {...(this.state.ReadOnly && { disabled: true })} value={props.values.Username} onChange={props.handleChange} name="Username" className={`form-control ${props.errors.Username && props.touched.Username && 'is-invalid'}`} />
                                                                                                     {props.errors.Username && props.touched.Username ? <div className="invalid-feedback">{props.errors.Username}</div> : null}
                                                                                                 </FormGroup>
                                                                                             </Col>
@@ -426,7 +430,7 @@ class BusinessNetworkDetails extends Component {
                                                                                             <Col md="12">
                                                                                                 <FormGroup>
                                                                                                     <Label for="PeerAddress">Peer Address</Label>
-                                                                                                    <Field type="text" id="PeerAddress" value={props.values.PeerAddress} onChange={props.handleChange} name="PeerAddress" className={`form-control ${props.errors.PeerAddress && props.touched.PeerAddress && 'is-invalid'}`} />
+                                                                                                    <Field type="text" id="PeerAddress" {...(this.state.ReadOnly && { disabled: true })} value={props.values.PeerAddress} onChange={props.handleChange} name="PeerAddress" className={`form-control ${props.errors.PeerAddress && props.touched.PeerAddress && 'is-invalid'}`} />
                                                                                                     {props.errors.PeerAddress && props.touched.PeerAddress ? <div className="invalid-feedback">{props.errors.PeerAddress}</div> : null}
                                                                                                 </FormGroup>
                                                                                             </Col>
@@ -439,7 +443,7 @@ class BusinessNetworkDetails extends Component {
                                                                                             <Col md="12">
                                                                                                 <FormGroup>
                                                                                                     <Label for="Endpoint">Endpoint</Label>
-                                                                                                    <Field type="text" id="Endpoint" value={props.values.Endpoint} onChange={props.handleChange} name="Endpoint" className={`form-control ${props.errors.Endpoint && props.touched.Endpoint && 'is-invalid'}`} />
+                                                                                                    <Field type="text" id="Endpoint" {...(this.state.ReadOnly && { disabled: true })} value={props.values.Endpoint} onChange={props.handleChange} name="Endpoint" className={`form-control ${props.errors.Endpoint && props.touched.Endpoint && 'is-invalid'}`} />
                                                                                                     {props.errors.Endpoint && props.touched.Endpoint ? <div className="invalid-feedback">{props.errors.Endpoint}</div> : null}
                                                                                                 </FormGroup>
                                                                                             </Col>
@@ -450,7 +454,7 @@ class BusinessNetworkDetails extends Component {
 
                                                                             <div className="form-actions bottom clearfix">
                                                                                 <div className="float-right">
-                                                                                    <Button type="submit" color="primary">
+                                                                                    <Button type="submit" color="primary" {...(this.state.ReadOnly && { disabled: true })}>
                                                                                         <CheckSquare size={16} color="#FFF" /> Save
                                                                 </Button>
                                                                                 </div>

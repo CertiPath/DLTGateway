@@ -63,9 +63,8 @@ namespace CertiPath.BlockchainGateway.API.Auth
                             PrincipalSearcher search = new PrincipalSearcher(up);
 
                             IEnumerable<System.DirectoryServices.AccountManagement.Principal> collsearch = search.FindAll()
-                                                                                                                    .Where(a => a.SamAccountName != null && a.DisplayName != null)
-                                                                                                                    .Where(a => a.SamAccountName.ToUpper().Contains(username.ToUpper()) ||
-                                                                                                                        a.DisplayName.ToUpper().Contains(username.ToUpper()));
+                                                                                                                    .Where(a => a.SamAccountName != null)
+                                                                                                                    .Where(a => a.SamAccountName.ToUpper().Contains(username.ToUpper()));
                             foreach (UserPrincipal result in collsearch)
                             {
                                 firstName = result.GivenName;

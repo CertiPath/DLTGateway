@@ -28,7 +28,9 @@ BEGIN
 		SELECT DISTINCT bne.GUID, bne.[BlockchainFrameworkGUID], bne.Name --, ugr.SID
 		FROM dbo.BusinessNetwork bne
 		INNER JOIN [Role_UserGroup] rug ON bne.GUID = rug.BusinessNetworkGUID
+			AND rug.Deleted = 0
 		INNER JOIN [UserGroup] ugr ON rug.UserGroupGUID = ugr.GUID
+			AND ugr.Deleted = 0
 		INNER JOIN [Role] rol ON rug.RoleGUID = rol.[GUID] AND rol.IsSystemRole = 0
 			AND rol.Code = 'LOCALADMIN'
 		INNER JOIN @tblSID tblSID ON ugr.SID = tblSID.value

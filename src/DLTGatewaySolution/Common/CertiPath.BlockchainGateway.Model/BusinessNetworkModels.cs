@@ -27,6 +27,8 @@ namespace CertiPath.BlockchainGateway.Model
         public List<SelectModel> BlockchainFrameworkList { get; set; }
         public List<FileUploadModel> FileUploadList { get; set; }
         //public List<BusinessNetworkNamespaceAndObjectModel> NamespaceList { get; set; }
+
+        public bool ReadOnly { get; set; }
     }
 
     public class BusinessNetworkNamespaceAndObjectModel

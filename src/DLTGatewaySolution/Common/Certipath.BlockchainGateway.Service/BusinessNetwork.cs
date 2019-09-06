@@ -19,14 +19,17 @@ namespace CertiPath.BlockchainGateway.Service
             _context = context;
         }
 
-        public BusinessNetworkTableModel GetAll(List<Guid> ViewList)
+        public BusinessNetworkTableModel GetAll(List<Guid> ViewList, List<Guid> AdminList)
         {
+            //Log.Info("Networks GetAll:");
+            //Log.Info("Count of records: " + ViewList.Count().ToString());
+
             List<BusinessNetworkModel> list = new List<BusinessNetworkModel>();
             var networks = _context.BusinessNetwork.Where(w => w.Deleted == false).ToList();
             foreach (var network in networks)
             {
                 var ubn = ViewList.Where(w => w == network.GUID).SingleOrDefault();
-                if (ubn != null)
+                if (ubn != null && ubn != Guid.Empty)
                 {
                     list.Add(new BusinessNetworkModel()
                     {
@@ -36,7 +39,8 @@ namespace CertiPath.BlockchainGateway.Service
                         PeerAddress = network.PeerAddress,
                         BlockchainFrameworkGUID = network.BlockchainFrameworkGUID,
                         BlockchainFrameworkName = network.BlockchainFramework.DisplayName,
-                        Disabled = network.Disabled
+                        Disabled = network.Disabled,
+                        ReadOnly = isReadOnly(network.GUID, AdminList)
                     });
                 }
             }
@@ -44,6 +48,12 @@ namespace CertiPath.BlockchainGateway.Service
                 List = list,
                 TotalCount = list.Count
             };
+        }
+
+        private bool isReadOnly(Guid networkGUID, List<Guid> adminList)
+        {
+            var ubn = adminList.Where(w => w == networkGUID).SingleOrDefault();
+            return (ubn != null && ubn != Guid.Empty) ? false : true;
         }
 
         // TODO: Refactor - too much repetition

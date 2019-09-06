@@ -50,9 +50,8 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 
         public BusinessNetworkObjectDetailsModel GetDetails(Guid BusinessNetworkObjectGUID)
         {
-            var netObj = DatabaseContext.BusinessNetworkObject.Where(w => w.GUID == BusinessNetworkObjectGUID).SingleOrDefault();
-            var bizNetNamespace = DatabaseContext.BusinessNetworkNamespace.Where(w => w.GUID == netObj.BusinessNetworkNamespaceGUID).SingleOrDefault();
-            if (CanViewNetwork(bizNetNamespace.BusinessNetworkGUID) == false)
+            Guid bizNetGUID = getBusinessNetworkGUIDByObjectGUID(BusinessNetworkObjectGUID);
+            if (CanViewNetwork(bizNetGUID) == false)
             {
                 throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
             }
@@ -65,7 +64,12 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void SaveProperty(BusinessNetworkObjectPropertyModel obj)
         {
-            // TODO: Deal with response object and do error handling
+            Guid bizNetGUID = getBusinessNetworkGUIDByObjectGUID(obj.BusinessNetworkObjectGUID);
+            if (CanAdminNetwork(bizNetGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.SaveProperty(obj);
         }
@@ -73,13 +77,24 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void DeleteProperty(BusinessNetworkObjectPropertyModel obj)
         {
-            // TODO: Deal with response object and do error handling
+            Guid bizNetGUID = getBusinessNetworkGUIDByObjectPropertyGUID(obj.GUID);
+            if (CanAdminNetwork(bizNetGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.DeleteProperty(obj);
         }
 
         public GetObjectChartsModel GetCharts(Guid BusinessNetworkObjectGUID)
         {
+            Guid bizNetGUID = getBusinessNetworkGUIDByObjectGUID(BusinessNetworkObjectGUID);
+            if (CanViewNetwork(bizNetGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
 
             // get charts
@@ -99,7 +114,12 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void EnableChart(BusinessNetworkObjectChartModel obj)
         {
-            // TODO: Deal with response object and do error handling
+            Guid bizNetGUID = getBusinessNetworkGUIDByObjectChartGUID(obj.GUID);
+            if (CanAdminNetwork(bizNetGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+            
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.EnableChart(obj.GUID);
         }
@@ -107,7 +127,12 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void DisableChart(BusinessNetworkObjectChartModel obj)
         {
-            // TODO: Deal with response object and do error handling
+            Guid bizNetGUID = getBusinessNetworkGUIDByObjectChartGUID(obj.GUID);
+            if (CanAdminNetwork(bizNetGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.DisableChart(obj.GUID);
         }
@@ -115,7 +140,12 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void DeleteChart(BusinessNetworkObjectChartModel obj)
         {
-            // TODO: Deal with response object and do error handling
+            Guid bizNetGUID = getBusinessNetworkGUIDByObjectChartGUID(obj.GUID);
+            if (CanAdminNetwork(bizNetGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.DeleteChart(obj.GUID);
         }
@@ -123,10 +153,34 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void SaveChart(BusinessNetworkObjectChartModel obj)
         {
-            // TODO: Deal with response object and do error handling
+            Guid bizNetGUID = getBusinessNetworkGUIDByObjectGUID(obj.BusinessNetworkObjectGUID);
+            if (CanAdminNetwork(bizNetGUID) == false)
+            {
+                throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
+            }
+
             CertiPath.BlockchainGateway.Service.BusinessNetworkObject bno = new Service.BusinessNetworkObject(DatabaseContext);
             bno.SaveChart(obj);
         }
+
+        private Guid getBusinessNetworkGUIDByObjectGUID(Guid BusinessNetworkObjectGUID)
+        {
+            var netObj = DatabaseContext.BusinessNetworkObject.Where(w => w.GUID == BusinessNetworkObjectGUID).SingleOrDefault();
+            var bizNetNamespace = DatabaseContext.BusinessNetworkNamespace.Where(w => w.GUID == netObj.BusinessNetworkNamespaceGUID).SingleOrDefault();
+            return bizNetNamespace.BusinessNetworkGUID;
+        }
+
+        private Guid getBusinessNetworkGUIDByObjectPropertyGUID(Guid propertyGUID)
+        {
+            var prop = DatabaseContext.BusinessNetworkObjectProperty.Where(w => w.GUID == propertyGUID).SingleOrDefault();
+            return getBusinessNetworkGUIDByObjectGUID(prop.BusinessNetworkObjectGUID);
+        }
+        private Guid getBusinessNetworkGUIDByObjectChartGUID(Guid chartGUID)
+        {
+            var chart = DatabaseContext.BusinessNetworkObjectChart.Where(w => w.GUID == chartGUID).SingleOrDefault();
+            return getBusinessNetworkGUIDByObjectGUID(chart.BusinessNetworkObjectGUID);
+        }
+
     }
 
 }

@@ -31,9 +31,11 @@ BEGIN
 		LEFT JOIN 
 		(
 			[Role_UserGroup] rug
-			LEFT JOIN [UserGroup] ugr ON rug.UserGroupGUID = ugr.GUID
-			LEFT JOIN [Role] rol ON rug.RoleGUID = rol.[GUID] AND rol.IsSystemRole = 0
-			LEFT JOIN @tblSID tblSID ON ugr.SID = tblSID.value
+			INNER JOIN [UserGroup] ugr ON rug.UserGroupGUID = ugr.GUID
+				AND ugr.Deleted = 0
+			INNER JOIN [Role] rol ON rug.RoleGUID = rol.[GUID] AND rol.IsSystemRole = 0
+				AND rol.Deleted = 0
+			INNER JOIN @tblSID tblSID ON ugr.SID = tblSID.value
 		)  ON bne.GUID = rug.BusinessNetworkGUID
 		WHERE bne.Deleted = 0
 			AND
@@ -42,7 +44,8 @@ BEGIN
 					OR
 					(
 						@ignoreGroups = 0 AND
-						tblSID.value IS NOT NULL
+						tblSID.value IS NOT NULL AND
+						rug.Deleted = 0
 					)
 				)
 
