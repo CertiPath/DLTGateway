@@ -19,14 +19,16 @@ export default class BusinessNetworkConnectionFilesCard extends React.Component 
 
         this.state = {
             FileList: props.FileList,
-            BusinessNetworkGUID: props.BusinessNetworkGUID
+            BusinessNetworkGUID: props.BusinessNetworkGUID,
+            ReadOnly: props.ReadOnly
         };
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             FileList: nextProps.FileList,
-            BusinessNetworkGUID: nextProps.BusinessNetworkGUID
+            BusinessNetworkGUID: nextProps.BusinessNetworkGUID,
+            ReadOnly: nextProps.ReadOnly
         });
     }
 
@@ -47,7 +49,7 @@ export default class BusinessNetworkConnectionFilesCard extends React.Component 
                     <div className="form-body">
                         <h4 className="form-section"><Globe size={20} color="#212529" /> Credential Files
                                 {
-                                this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? '' :
+                                this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' || this.state.ReadOnly == true ? '' :
                                     (
                                         <Row className="float-right">
                                             <Col md="12">
@@ -73,6 +75,7 @@ export default class BusinessNetworkConnectionFilesCard extends React.Component 
                                             FileDeletedAction={this.handleFileDeleted}
                                             BusinessNetworkGUID={this.state.BusinessNetworkGUID}
                                             FileList={this.state.FileList}
+                                            ReadOnly={this.state.ReadOnly}
                                         />
                                     </div>
                                 )

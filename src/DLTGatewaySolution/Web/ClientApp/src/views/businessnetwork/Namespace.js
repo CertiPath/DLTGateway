@@ -79,8 +79,9 @@ class BusinessNetworkNamespace extends React.Component {
                                             <h4 className="form-section"><Box size={20} color="#212529" /> Tracked Objects
                                             </h4>
                                             <TrackedObjectList
-                                                BusinessNetworkNamespaceGUID={this.state.NamespaceDetails.NamespaceGUID}
-                                                OnObjectSelectedClick={this.handleObjectSelected}
+                                                        BusinessNetworkNamespaceGUID={this.state.NamespaceDetails.NamespaceGUID}
+                                                        OnObjectSelectedClick={this.handleObjectSelected}
+                                                        ReadOnly={this.state.NamespaceDetails.ReadOnly}
                                             />
                                         </div>
                                     </Form>
@@ -92,6 +93,7 @@ class BusinessNetworkNamespace extends React.Component {
                         <TrackedObjectDetails
                             SelectedObjectGUID={this.state.SelectedObjectGUID}
                             SelectedObjectName={this.state.SelectedObjectName}
+                            ReadOnly={this.state.NamespaceDetails.ReadOnly}
                         />
                     </Col>
                 </Row>

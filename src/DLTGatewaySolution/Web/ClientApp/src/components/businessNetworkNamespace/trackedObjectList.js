@@ -25,7 +25,8 @@ export default class TrackedObjectList extends React.Component {
         this.state = {
             ObjectList: null,
             ObjectSelected: false,
-            BusinessNetworkNamespaceGUID: props.BusinessNetworkNamespaceGUID
+            BusinessNetworkNamespaceGUID: props.BusinessNetworkNamespaceGUID,
+            ReadOnly: props.ReadOnly
         };
     }
 
@@ -81,15 +82,22 @@ export default class TrackedObjectList extends React.Component {
                             OnFinishedAction={this.onFinishedAddEdit}
                             GUID={null}
                             BusinessNetworkGUID={this.props.BusinessNetworkGUID}
+                            ReadOnly={this.state.ReadOnly}
                         />
                     </td>
                     <td style={{ paddingLeft: 0, paddingRight: 0, cursor: 'pointer' }} title="Delete Object">
-                        <ConfirmDelete
-                            Title={"Delete Object " + obj.BusinessNetworkObjectName + "?"}
-                            Text={"You are about to delete tracked object " + obj.BusinessNetworkObjectName + ". There are currently " + obj.ObjectCount + " imported objects of this type. This data will become unavailable. Are you sure you want to continue?"}
-                            YesButtonText="Delete"
-                            YesButtonAction={() => this.handleClickDelete(obj.BusinessNetworkObjectGUID)}
-                        />
+                        {
+                            this.state.ReadOnly == true ? '' :
+                                (
+                                    <ConfirmDelete
+                                        Title={"Delete Object " + obj.BusinessNetworkObjectName + "?"}
+                                        Text={"You are about to delete tracked object " + obj.BusinessNetworkObjectName + ". There are currently " + obj.ObjectCount + " imported objects of this type. This data will become unavailable. Are you sure you want to continue?"}
+                                        YesButtonText="Delete"
+                                        YesButtonAction={() => this.handleClickDelete(obj.BusinessNetworkObjectGUID)}
+                                    />
+                                )
+                        }
+                        
                     </td>
                 </tr>
             )
@@ -110,18 +118,23 @@ export default class TrackedObjectList extends React.Component {
                             </Form>
                         </div>
                         <div className="float-right">
-                            <AddEditObject
-                                ButtonText="Add New"
-                                Data={{
-                                    BusinessNetworkObjectGUID: null,
-                                    BusinessNetworkNamespaceGUID: this.state.BusinessNetworkNamespaceGUID,
-                                    BusinessNetworkObjectName: '',
-                                    BusinessNetworkObjectClassName: '',
-                                }}
-                                OnFinishedAction={this.onFinishedAddEdit}
-                                GUID={null}
-                                BusinessNetworkGUID={this.props.BusinessNetworkGUID}
-                            />
+                            {
+                                this.state.ReadOnly == true ? '' :
+                                    (
+                                        <AddEditObject
+                                            ButtonText="Add New"
+                                            Data={{
+                                                BusinessNetworkObjectGUID: null,
+                                                BusinessNetworkNamespaceGUID: this.state.BusinessNetworkNamespaceGUID,
+                                                BusinessNetworkObjectName: '',
+                                                BusinessNetworkObjectClassName: '',
+                                            }}
+                                            OnFinishedAction={this.onFinishedAddEdit}
+                                            GUID={null}
+                                            BusinessNetworkGUID={this.props.BusinessNetworkGUID}
+                                        />
+                                    )
+                            }
                         </div>
                     </div>
                 )
@@ -131,7 +144,7 @@ export default class TrackedObjectList extends React.Component {
                         <Table striped responsive>
                             <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th>{this.state.ReadOnly}</th>
                                     <th hidden={this.state.ObjectSelected}>Class Name</th>
                                     <th>Count</th>
                                     <th width="30"></th>
@@ -143,18 +156,25 @@ export default class TrackedObjectList extends React.Component {
                             </tbody>
                         </Table>
                         <div className="float-right">
-                            <AddEditObject
-                                ButtonText="Add New"
-                                Data={{
-                                    BusinessNetworkObjectGUID: null,
-                                    BusinessNetworkNamespaceGUID: this.state.BusinessNetworkNamespaceGUID,
-                                    BusinessNetworkObjectName: '',
-                                    BusinessNetworkObjectClassName: '',
-                                }}
-                                OnFinishedAction={this.onFinishedAddEdit}
-                                GUID={null}
-                                BusinessNetworkGUID={this.props.BusinessNetworkGUID}
-                            />
+                            {
+                                this.state.ReadOnly == true ? '' :
+                                    (
+                                        <AddEditObject
+                                            ButtonText="Add New"
+                                            Data={{
+                                                BusinessNetworkObjectGUID: null,
+                                                BusinessNetworkNamespaceGUID: this.state.BusinessNetworkNamespaceGUID,
+                                                BusinessNetworkObjectName: '',
+                                                BusinessNetworkObjectClassName: '',
+                                            }}
+                                            OnFinishedAction={this.onFinishedAddEdit}
+                                            GUID={null}
+                                            BusinessNetworkGUID={this.props.BusinessNetworkGUID}
+                                            ReadOnly={this.state.ReadOnly}
+                                        />
+                                    )
+                            }
+                            
                         </div>
                     </div>)
                 )

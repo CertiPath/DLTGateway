@@ -12,13 +12,14 @@ import { NavLink, Link } from "react-router-dom";
 
 export default class Example extends React.Component {
 
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             RoleList: null,
             SelectedRoleGUID: null,
             SelectedRoleName: '',
             RoleSelected: false,
+            ReadOnly: props.ReadOnly
         };
     }
 

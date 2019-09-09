@@ -20,6 +20,13 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         {
             CertiPath.BlockchainGateway.Service.BusinessNetwork srvBN = new Service.BusinessNetwork(DatabaseContext);
             var list = srvBN.GetAll(_allNetworkViewList, _allNetworkAdminList);
+
+
+            for (int i=0; i<list.List.Count(); i++)
+            {
+                bool lCanAdmin = CanAdminNetwork(list.List.ElementAt(i).GUID);
+                list.List.ElementAt(i).ReadOnly = !lCanAdmin;
+            }
             return list;
         }
 

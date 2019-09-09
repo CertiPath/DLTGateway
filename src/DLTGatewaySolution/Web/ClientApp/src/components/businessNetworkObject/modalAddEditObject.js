@@ -10,7 +10,8 @@ class ModalAddEditObject extends Component {
     
     state = {
         modal: false,
-        Data: this.props.Data
+        Data: this.props.Data,
+        ReadOnly: this.props.ReadOnly
     };
     
     toggle = () => {
@@ -58,14 +59,15 @@ class ModalAddEditObject extends Component {
     render() {
         return (
             <div>
+                
                 {
-                    this.state.Data.BusinessNetworkObjectGUID == null ? (
+                    this.state.Data.BusinessNetworkObjectGUID == null && this.state.ReadOnly == false ? (
                         <Button onClick={this.toggle}>
                             Add New Tracked Object
                         </Button>
-                    ) :
-                        (
-                            <Edit size={18} className="mr-2" onClick={this.toggle} style={{ cursor: 'pointer' }} />
+                    ) : this.state.ReadOnly ? ('') :
+                            (
+                                <Edit size={18} {...(this.state.ReadOnly && { disabled: true })} className="mr-2" onClick={this.toggle} style={{ cursor: 'pointer' }} />
                         )
                 }
                 <Modal
@@ -86,7 +88,7 @@ class ModalAddEditObject extends Component {
                                             <Col md="12">
                                                 <FormGroup>
                                                     <Label for="Name">Display Name</Label>
-                                                    <Input type="text" id="Name" className="border-primary" defaultValue={this.state.Data.BusinessNetworkObjectName} onChange={this.nameChange.bind(this)} />
+                                                    <Input type="text" {...(this.state.ReadOnly && { disabled: true })} id="Name" className="border-primary" defaultValue={this.state.Data.BusinessNetworkObjectName} onChange={this.nameChange.bind(this)} />
                                                 </FormGroup>
                                             </Col>
                                         </Row>
@@ -94,7 +96,7 @@ class ModalAddEditObject extends Component {
                                             <Col md="12">
                                                 <FormGroup>
                                                     <Label for="ClassName">Class Name</Label>
-                                                    <Input type="text" id="ClassName" className="border-primary" defaultValue={this.state.Data.BusinessNetworkObjectClassName} onChange={this.classNameChange.bind(this)} />
+                                                    <Input type="text" {...(this.state.ReadOnly && { disabled: true })} id="ClassName" className="border-primary" defaultValue={this.state.Data.BusinessNetworkObjectClassName} onChange={this.classNameChange.bind(this)} />
                                                 </FormGroup>
                                             </Col>
                                         </Row>
@@ -104,11 +106,18 @@ class ModalAddEditObject extends Component {
                         </Row>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => {
-                            this.handleButtonClick();
-                        }}>
-                            {this.props.ButtonText}
-                    </Button>{" "}
+
+                        {
+                            this.state.ReadOnly == true ? '' :
+                                (
+                                    <Button color="primary" onClick={() => {
+                                        this.handleButtonClick();
+                                    }}>
+                                        {this.props.ButtonText}
+                                    </Button>
+                                )
+                        }
+                        {" "}
                         <Button color="secondary" onClick={this.toggle}>
                             Cancel
                   </Button>

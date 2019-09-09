@@ -339,7 +339,8 @@ class BusinessNetworkDetails extends Component {
                                                                         <div className="form-body">
                                                                             <h4 className="form-section"><Box size={20} color="#212529" /> Basic Details
                                                 {
-                                                                                    this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' ? '' :
+                                                                                    this.state.BusinessNetworkGUID.toUpperCase() == 'NEW' || 
+                                                                                        this.state.ReadOnly == true ? '' :
                                                                                         (
                                                                                             <Row className="float-right">
                                                                                                 <Col md="6">
@@ -452,14 +453,18 @@ class BusinessNetworkDetails extends Component {
                                                                                 }
                                                                             </Row>
 
-                                                                            <div className="form-actions bottom clearfix">
-                                                                                <div className="float-right">
-                                                                                    <Button type="submit" color="primary" {...(this.state.ReadOnly && { disabled: true })}>
-                                                                                        <CheckSquare size={16} color="#FFF" /> Save
-                                                                </Button>
-                                                                                </div>
-                                                                            </div>
-
+                                                                            {
+                                                                                this.state.ReadOnly == true ? '' :
+                                                                                    (
+                                                                                            <div className="form-actions bottom clearfix">
+                                                                                                <div className="float-right">
+                                                                                                    <Button type="submit" color="primary" {...(this.state.ReadOnly && { disabled: true })}>
+                                                                                                        <CheckSquare size={16} color="#FFF" /> Save
+                                                                                                    </Button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                    )
+                                                                            }
                                                                         </div>
                                                                     </Form>
                                                                 )}
@@ -475,6 +480,7 @@ class BusinessNetworkDetails extends Component {
                                                                         HandleFileDeleted={this.reloadPage}
                                                                         BusinessNetworkGUID={this.state.BusinessNetworkGUID}
                                                                         FileList={this.state.businessNetworkData.FileUploadList}
+                                                                        ReadOnly={this.state.ReadOnly}
                                                                     />
                                                                 )
                                                         }
@@ -487,6 +493,7 @@ class BusinessNetworkDetails extends Component {
                                                         <NamespaceTable
                                                             BusinessNetworkGUID={this.state.BusinessNetworkGUID}
                                                             ShowHeader={false}
+                                                            ReadOnly={this.state.ReadOnly}
                                                         />
                                                     </Col>
                                                 </Row>
@@ -498,6 +505,7 @@ class BusinessNetworkDetails extends Component {
                                                             IsGlobal={false}
                                                             OnRoleSelected={this.OnRoleSelected}
                                                             BusinessNetworkGUID={this.state.BusinessNetworkGUID}
+                                                            ReadOnly={this.state.ReadOnly}
                                                         />
                                                     </Col>
                                                     <Col sm="12" md="9" style={this.state.SelectedRoleGUID == null ? { display: 'none' } : {}}>
@@ -506,6 +514,7 @@ class BusinessNetworkDetails extends Component {
                                                             SelectedRoleName={this.state.SelectedRoleName}
                                                             IsGlobal={false}
                                                             BusinessNetworkGUID={this.state.BusinessNetworkGUID}
+                                                            ReadOnly={this.state.ReadOnly}
                                                         />
                                                     </Col>
                                                 </Row>

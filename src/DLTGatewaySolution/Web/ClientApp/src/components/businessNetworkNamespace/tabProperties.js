@@ -17,12 +17,8 @@ export default class TrackedObjectList extends React.Component {
         // Bind the this context to the handler function
         this.handleClickDelete = this.handleClickDelete.bind(this);
         this.onFinishedAddEdit = this.onFinishedAddEdit.bind(this);
-        /*
-        this.state = {
-            activeTab: "1",
-            ObjectDetails: null
-        };
-        */
+        
+
     }
 
     onFinishedAddEdit() {
@@ -60,21 +56,31 @@ export default class TrackedObjectList extends React.Component {
                         </FormGroup>
                     </td>
                     <td width="40px">
-                        <AddEditObjectProperty
-                            ButtonText="Save"
-                            BusinessNetworkObjectGUID={this.props.ObjectDetails.GUID}
-                            Data={dataField}
-                            OnFinishedAction={this.onFinishedAddEdit}
-                            GUID={dataField.GUID}
-                        />
+                        {
+                            this.props.ReadOnly == true ? '' :
+                                (
+                                    <AddEditObjectProperty
+                                        ButtonText="Save"
+                                        BusinessNetworkObjectGUID={this.props.ObjectDetails.GUID}
+                                        Data={dataField}
+                                        OnFinishedAction={this.onFinishedAddEdit}
+                                        GUID={dataField.GUID}
+                                    />
+                                )
+                        }
                     </td>
                     <td width="40px">
-                        <ConfirmDelete
-                            Title={"Delete Property " + dataField.Name + "?"}
-                            Text={"You are about to delete object property " + dataField.Name + ". This field will not be tracked and visible and all associated charts and reports will be affected. Do you want to continue?"}
-                            YesButtonText="Delete"
-                            YesButtonAction={() => this.handleClickDelete(dataField.GUID)}
-                        />
+                        {
+                            this.props.ReadOnly == true ? '' :
+                                (
+                                    <ConfirmDelete
+                                        Title={"Delete Property " + dataField.Name + "?"}
+                                        Text={"You are about to delete object property " + dataField.Name + ". This field will not be tracked and visible and all associated charts and reports will be affected. Do you want to continue?"}
+                                        YesButtonText="Delete"
+                                        YesButtonAction={() => this.handleClickDelete(dataField.GUID)}
+                                    />
+                                )
+                        }
                     </td>
                 </tr>
             )
@@ -115,20 +121,25 @@ export default class TrackedObjectList extends React.Component {
                                 )}
                                 <div className="form-actions">
                                     <div className="float-right">
-                                        <AddEditObjectProperty
-                                            ButtonText="Add New"
-                                            Data={{
-                                                GUID: null,
-                                                BusinessNetworkObjectGUID: this.props.ObjectDetails.GUID,
-                                                Name: '',
-                                                Visible: false,
-                                                Disabled: true,
-                                                PropertyTypeCode: '',
-                                                PropertyTypeName: '',
-                                            }}
-                                            OnFinishedAction={this.onFinishedAddEdit}
-                                            GUID={null}
-                                        />
+                                        {
+                                            this.props.ReadOnly == true ? '' :
+                                                (
+                                                    <AddEditObjectProperty
+                                                        ButtonText="Add New"
+                                                        Data={{
+                                                            GUID: null,
+                                                            BusinessNetworkObjectGUID: this.props.ObjectDetails.GUID,
+                                                            Name: '',
+                                                            Visible: false,
+                                                            Disabled: true,
+                                                            PropertyTypeCode: '',
+                                                            PropertyTypeName: '',
+                                                        }}
+                                                        OnFinishedAction={this.onFinishedAddEdit}
+                                                        GUID={null}
+                                                    />
+                                                )
+                                        }
                                     </div>
                                 </div>
                             </Form>

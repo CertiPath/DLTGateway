@@ -23,7 +23,8 @@ export default class Example extends React.Component {
         
         this.state = {
             NamespaceList: null,
-            BusinessNetworkGUID: props.BusinessNetworkGUID
+            BusinessNetworkGUID: props.BusinessNetworkGUID,
+            ReadOnly: props.ReadOnly
         };
     }
 
@@ -37,11 +38,13 @@ export default class Example extends React.Component {
             if (nextProps.BusinessNetworkGUID.toUpperCase() === 'NEW') {
                 this.setState({
                     NamespaceList: null,
-                    BusinessNetworkGUID: 'NEW'
+                    BusinessNetworkGUID: 'NEW',
+                    ReadOnly: false
                 });
             }
             else {
                 this.state.BusinessNetworkGUID = nextProps.BusinessNetworkGUID;
+                this.state.ReadOnly = nextProps.ReadOnly;
                 this.loadData();
             }
         }
@@ -89,15 +92,21 @@ export default class Example extends React.Component {
                             OnFinishedAction={this.onFinishedAddEdit}
                             GUID={namespace.GUID}
                             BusinessNetworkGUID={namespace.BusinessNetworkGUID}
+                            ReadOnly={this.state.ReadOnly}
                         />
                     </td>
                     <td style={{ paddingLeft: 0, paddingRight: 0, cursor: 'pointer' }} title="Delete Namespace">
-                        <ConfirmDelete
-                            Title={"Delete Namespace " + namespace.Name + "?"}
-                            Text={"You are about to delete namespace " + namespace.Name + ". All associated tracked objects will be deleted with it. Are you sure you want to continue?"}
-                            YesButtonText="Delete"
-                            YesButtonAction={() => this.handleClickDelete(namespace.GUID)}
-                        />
+                        {
+                            this.state.ReadOnly == true ? '' :
+                                (
+                                    <ConfirmDelete
+                                        Title={"Delete Namespace " + namespace.Name + "?"}
+                                        Text={"You are about to delete namespace " + namespace.Name + ". All associated tracked objects will be deleted with it. Are you sure you want to continue?"}
+                                        YesButtonText="Delete"
+                                        YesButtonAction={() => this.handleClickDelete(namespace.GUID)}
+                                    />
+                                )
+                        }
                     </td>
                 </tr>
             )
@@ -138,18 +147,24 @@ export default class Example extends React.Component {
                                             </div>
                                         </Form>
                                     </div>
-                                    <div className="form-actions bottom clearfix">
-                                        <div className="float-right">
-                                            <AddEditNamespace
-                                                NewNamespace={true}
-                                                ButtonText="Add New"
-                                                Name=""
-                                                OnFinishedAction={this.onFinishedAddEdit}
-                                                GUID={null}
-                                                BusinessNetworkGUID={this.props.BusinessNetworkGUID}
-                                            />
-                                        </div>
-                                    </div>
+                                    {
+                                        this.state.ReadOnly == true ? '' :
+                                            (
+                                                <div className="form-actions bottom clearfix">
+                                                    <div className="float-right">
+                                                        <AddEditNamespace
+                                                            NewNamespace={true}
+                                                            ButtonText="Add New"
+                                                            Name=""
+                                                            OnFinishedAction={this.onFinishedAddEdit}
+                                                            GUID={null}
+                                                            BusinessNetworkGUID={this.props.BusinessNetworkGUID}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )
+                                    }
+                                    
                                 </CardBody>
                             </Card>
                         )
@@ -179,18 +194,23 @@ export default class Example extends React.Component {
                                                 </tbody>
                                             </Table>
 
-                                            <div className="form-actions bottom clearfix">
-                                                <div className="float-right">
-                                                    <AddEditNamespace
-                                                        NewNamespace={true}
-                                                        ButtonText="Add New"
-                                                        Name=""
-                                                        OnFinishedAction={this.onFinishedAddEdit}
-                                                        GUID={null}
-                                                        BusinessNetworkGUID={this.props.BusinessNetworkGUID}
-                                                    />
-                                                </div>
-                                            </div>
+                                            {
+                                                this.state.ReadOnly == true ? '' :
+                                                    (
+                                                        <div className="form-actions bottom clearfix">
+                                                            <div className="float-right">
+                                                                <AddEditNamespace
+                                                                    NewNamespace={true}
+                                                                    ButtonText="Add New"
+                                                                    Name=""
+                                                                    OnFinishedAction={this.onFinishedAddEdit}
+                                                                    GUID={null}
+                                                                    BusinessNetworkGUID={this.props.BusinessNetworkGUID}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    )
+                                            }
                                         </div>
                                     </Form>
                                 </div>

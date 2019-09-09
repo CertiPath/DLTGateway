@@ -31,6 +31,10 @@ namespace CertiPath.BlockchainGateway.API.Controllers
 
             CertiPath.BlockchainGateway.Service.BusinessNetworkNamespace bnn = new Service.BusinessNetworkNamespace(DatabaseContext);
             var res = bnn.GetDetails(GUID);
+
+            bool lCanAdmin = CanAdminNetwork(bizNetNamespace.BusinessNetworkGUID);
+            res.ReadOnly = !lCanAdmin;
+
             return res;
         }
 

@@ -74,18 +74,23 @@ export default class TrackedObjectChartList extends React.Component {
             return (
                 <tr>
                     <td>
-                        <AddEditChart
-                            ButtonText="Save"
-                            Data={chart}
+                        {
+                            this.props.ReadOnly == true ? (chart.Name) :
+                                (
+                                    <AddEditChart
+                                        ButtonText="Save"
+                                        Data={chart}
 
-                            CategoryList={this.props.ChartCategoryList}
-                            TypeList={this.props.ChartTypeList}
-                            PropertyList={this.props.PropertyList}
+                                        CategoryList={this.props.ChartCategoryList}
+                                        TypeList={this.props.ChartTypeList}
+                                        PropertyList={this.props.PropertyList}
 
-                            OnFinishedAction={this.onFinishedAddEdit}
-                            GUID={chart.GUID}
-                            DisplayType="NAME"
-                        />
+                                        OnFinishedAction={this.onFinishedAddEdit}
+                                        GUID={chart.GUID}
+                                        DisplayType="NAME"
+                                    />
+                                )
+                        }
                     </td>
                     <td>{chart.ChartCategoryName}</td>
                     <td>{chart.ChartTypeName}</td>
@@ -96,26 +101,37 @@ export default class TrackedObjectChartList extends React.Component {
                             Disabled={chart.Disabled}
                             DisabledText="Click on the enable button to make the chart enabled again."
                             EnabledText={"Disabling chart " + chart.Name + " will exclude it from the object details page. Are you sure you want to continue?"}
+                            ReadOnly={this.props.ReadOnly}
                     />
                     </td>
                     <td width="40px" title="Update chart settings">
-                        <AddEditChart
-                            ButtonText="Save"
-                            Data={chart}
-                            CategoryList={this.props.ChartCategoryList}
-                            TypeList={this.props.ChartTypeList}
-                            OnFinishedAction={this.onFinishedAddEdit}
-                            GUID={chart.GUID}
-                            DisplayType="ICON"
-                        />
+                        {
+                            this.props.ReadOnly == true ? '' :
+                                (
+                                    <AddEditChart
+                                        ButtonText="Save"
+                                        Data={chart}
+                                        CategoryList={this.props.ChartCategoryList}
+                                        TypeList={this.props.ChartTypeList}
+                                        OnFinishedAction={this.onFinishedAddEdit}
+                                        GUID={chart.GUID}
+                                        DisplayType="ICON"
+                                    />
+                                )
+                        }
                     </td>
                     <td width="40px">
-                        <ConfirmDelete
-                            Title={"Delete " + chart.Name + "?"}
-                            Text={"You are about to delete configured chart " + chart.Name + ". Once you delete it all the configuration will be gone. Do you want to continue?"}
-                            YesButtonText="Delete"
-                            YesButtonAction={() => this.handleClickDelete(chart.GUID)}
-                        />
+                        {
+                            this.props.ReadOnly == true ? '' :
+                                (
+                                    <ConfirmDelete
+                                        Title={"Delete " + chart.Name + "?"}
+                                        Text={"You are about to delete configured chart " + chart.Name + ". Once you delete it all the configuration will be gone. Do you want to continue?"}
+                                        YesButtonText="Delete"
+                                        YesButtonAction={() => this.handleClickDelete(chart.GUID)}
+                                    />
+                                )
+                        }
                     </td>
                 </tr>
             )
@@ -151,27 +167,32 @@ export default class TrackedObjectChartList extends React.Component {
                                     )}
                                 <div className="form-actions">
                                     <div className="float-right">
-                                        <AddEditChart
-                                            ButtonText="Add New Chart"
-                                            Data={{
-                                                Name: "",
-                                                Description: "",
-                                                ChartSettings: "{}",
-                                                ChartCategoryGUID: '',
-                                                ChartCategoryName: '',
-                                                ChartCategoryCode: '',
-                                                ChartTypeGUID: '',
-                                                ChartTypeName: ''
-                                            }}
-                                            CategoryList={this.props.ChartCategoryList}
-                                            TypeList={this.props.ChartTypeList}
-                                            PropertyList={this.props.PropertyList}
-                                            BusinessNetworkObjectGUID={this.props.BusinessNetworkObjectGUID}
+                                        {
+                                            this.props.ReadOnly == true ? '' :
+                                                (
+                                                    <AddEditChart
+                                                        ButtonText="Add New Chart"
+                                                        Data={{
+                                                            Name: "",
+                                                            Description: "",
+                                                            ChartSettings: "{}",
+                                                            ChartCategoryGUID: '',
+                                                            ChartCategoryName: '',
+                                                            ChartCategoryCode: '',
+                                                            ChartTypeGUID: '',
+                                                            ChartTypeName: ''
+                                                        }}
+                                                        CategoryList={this.props.ChartCategoryList}
+                                                        TypeList={this.props.ChartTypeList}
+                                                        PropertyList={this.props.PropertyList}
+                                                        BusinessNetworkObjectGUID={this.props.BusinessNetworkObjectGUID}
 
-                                            OnFinishedAction={this.onFinishedAddEdit}
-                                            GUID={null}
-                                            DisplayType="BUTTON"
-                                        />
+                                                        OnFinishedAction={this.onFinishedAddEdit}
+                                                        GUID={null}
+                                                        DisplayType="BUTTON"
+                                                    />
+                                                )
+                                        }
                                     </div>
                                 </div>
                             </Form>

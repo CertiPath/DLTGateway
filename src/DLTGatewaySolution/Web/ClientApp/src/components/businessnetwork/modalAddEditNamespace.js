@@ -8,7 +8,8 @@ import { Button, Card, CardBody, Col, Form, FormGroup, Input, Label, Row, Modal,
 class ModalAddEditNamespace extends Component {
     state = {
         modal: false,
-        name: this.props.Name
+        name: this.props.Name,
+        ReadOnly: this.props.ReadOnly
     };
 
     toggle = () => {
@@ -90,7 +91,7 @@ class ModalAddEditNamespace extends Component {
                                             <Col md="12">
                                                 <FormGroup>
                                                     <Label for="txtName">Name</Label>
-                                                    <Input type="text" id="txtName" defaultValue={this.state.name} onChange={this.nameChange.bind(this)} className="border-primary" name="name" />
+                                                    <Input type="text" id="txtName"  {...(this.state.ReadOnly && { disabled: true })} defaultValue={this.state.name} onChange={this.nameChange.bind(this)} className="border-primary" name="name" />
                                                 </FormGroup>
                                             </Col>
                                         </Row>
@@ -100,11 +101,17 @@ class ModalAddEditNamespace extends Component {
                         </Row>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => {
-                            this.handleButtonClick();
-                        }}>
-                            {this.props.ButtonText}
-                    </Button>{" "}
+                        {
+                            this.state.ReadOnly == true ? '' :
+                                (
+                                    <Button color="primary" onClick={() => {
+                                        this.handleButtonClick();
+                                    }}>
+                                        {this.props.ButtonText}
+                                    </Button>
+                                )
+                        }
+                        {" "}
                         <Button color="secondary" onClick={this.toggle}>
                             Cancel
                   </Button>

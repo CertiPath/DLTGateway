@@ -19,14 +19,16 @@ export default class BusinessNetworkFileList extends React.Component {
         
         this.state = {
             FileList: props.FileList,
-            BusinessNetworkGUID: props.BusinessNetworkGUID
+            BusinessNetworkGUID: props.BusinessNetworkGUID,
+            ReadOnly: props.ReadOnly
         };
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             FileList: nextProps.FileList,
-            BusinessNetworkGUID: nextProps.BusinessNetworkGUID
+            BusinessNetworkGUID: nextProps.BusinessNetworkGUID,
+            ReadOnly: nextProps.ReadOnly
         });
     }
     
@@ -51,12 +53,16 @@ export default class BusinessNetworkFileList extends React.Component {
                     <td>{file.Name}</td>
                     <td>{file.TypeExtension}</td>
                     <td style={{ paddingLeft: 0, paddingRight: 0, cursor: 'pointer' }} title="Delete File">
-                        <ConfirmDelete
-                            Title={"Delete File " + file.Name + "?"}
-                            Text={"You are about to delete file " + file.Name + ". Once deleted you may not be able to connect a blockchain network. Are you sure you want to continue?"}
-                            YesButtonText="Delete"
-                            YesButtonAction={() => this.handleClickDelete(file.GUID)}
-                        />
+                        {
+                            this.state.ReadOnly == true ? ('') : (
+                                <ConfirmDelete
+                                    Title={"Delete File " + file.Name + "?"}
+                                    Text={"You are about to delete file " + file.Name + ". Once deleted you may not be able to connect a blockchain network. Are you sure you want to continue?"}
+                                    YesButtonText="Delete"
+                                    YesButtonAction={() => this.handleClickDelete(file.GUID)}
+                                />
+                            )
+                        }
                     </td>
                 </tr>
             )

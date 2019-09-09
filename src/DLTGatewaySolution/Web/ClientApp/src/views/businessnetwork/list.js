@@ -97,7 +97,7 @@ export default class BusinessNetworkList extends React.Component {
                     <td>{network.BlockchainFrameworkName}</td>
                     <td>{network.ChannelName}</td>
                     <td>
-                        <ConfirmEnableDisable
+                        <ConfirmEnableDisable {...(network.ReadOnly && { disabled: true })}
                             Name={network.Name}
                             YesButtonAction={() => network.Disabled == false ? this.handleDisable(network.GUID) : this.handleEnable(network.GUID)}
                             Disabled={network.Disabled}
@@ -108,12 +108,17 @@ export default class BusinessNetworkList extends React.Component {
                         <Edit size={18} className="mr-2" onClick={() => this.onEditNetworkClick(network.GUID)} />
                     </td>
                     <td style={{ paddingLeft: 0, paddingRight: 0, cursor: 'pointer' }} title="Delete Network">
-                        <ConfirmDelete
-                            Title={"Delete network " + network.Name + "?"}
-                            Text={"You are about to delete network " + network.Name + ". All associated namespaces and tracked objects will be deleted with it. Are you sure you want to continue?"}
-                            YesButtonText="Delete"
-                            YesButtonAction={() => this.handleClickDelete(network.GUID)}
-                        />
+                        {
+                            network.ReadOnly == true ? '' :
+                                (
+                                    <ConfirmDelete
+                                        Title={"Delete network " + network.Name + "?"}
+                                        Text={"You are about to delete network " + network.Name + ". All associated namespaces and tracked objects will be deleted with it. Are you sure you want to continue?"}
+                                        YesButtonText="Delete"
+                                        YesButtonAction={() => this.handleClickDelete(network.GUID)}
+                                    />
+                                )
+                        }
                     </td>
                 </tr>
             )

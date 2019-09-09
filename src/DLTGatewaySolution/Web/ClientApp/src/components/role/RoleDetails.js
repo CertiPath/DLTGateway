@@ -21,7 +21,8 @@ class RoleDetails extends Component {
         this.state = {
             RoleGUID: null,
             UserGroups: null,
-            BusinessNetworkGUID: props.BusinessNetworkGUID
+            BusinessNetworkGUID: props.BusinessNetworkGUID,
+            ReadOnly: props.ReadOnly
         };
     }
 
@@ -81,12 +82,17 @@ class RoleDetails extends Component {
                     <td>{group.UserGroupName}</td>
                     <td >{group.UserGroupSID}</td>
                     <td style={{ paddingLeft: 0, paddingRight: 0, cursor: 'pointer' }} title="Remove Group">
-                        <ConfirmDelete
-                            Title={"Remove group: " + group.UserGroupName + "?"}
-                            Text={"You are about to remove group '" + group.UserGroupName + "' from role '" + group.RoleName + "'. Any users belonging to this group will be removed from the role. Are you sure you want to continue?"}
-                            YesButtonText="Remove"
-                            YesButtonAction={() => this.handleClickDelete(group.GUID)}
-                        />
+                        {
+                            this.state.ReadOnly == true ? '' :
+                                (
+                                    <ConfirmDelete
+                                        Title={"Remove group: " + group.UserGroupName + "?"}
+                                        Text={"You are about to remove group '" + group.UserGroupName + "' from role '" + group.RoleName + "'. Any users belonging to this group will be removed from the role. Are you sure you want to continue?"}
+                                        YesButtonText="Remove"
+                                        YesButtonAction={() => this.handleClickDelete(group.GUID)}
+                                    />
+                                )
+                        }
                     </td>
                 </tr>
             )
@@ -133,12 +139,17 @@ class RoleDetails extends Component {
 
                                         <div className="form-actions">
                                             <div className="float-right">
-                                                <AddADGroup
-                                                    RoleGUID={this.state.RoleGUID}
-                                                    ReloadListAction={this.onFinishedAddGroup}
-                                                    IsGlobal={this.props.IsGlobal}
-                                                    BusinessNetworkGUID={this.state.BusinessNetworkGUID}
-                                                />
+                                                {
+                                                    this.state.ReadOnly == true ? '' :
+                                                        (
+                                                            <AddADGroup
+                                                                RoleGUID={this.state.RoleGUID}
+                                                                ReloadListAction={this.onFinishedAddGroup}
+                                                                IsGlobal={this.props.IsGlobal}
+                                                                BusinessNetworkGUID={this.state.BusinessNetworkGUID}
+                                                            />
+                                                        )
+                                                }
                                             </div>
                                         </div>
                                     </div>

@@ -21,7 +21,8 @@ export default class TrackedObjectList extends React.Component {
             activeTab: "1",
             ObjectDetails: null,
             ChartListLoaded: false,
-            ObjectChartList: null
+            ObjectChartList: null,
+            ReadOnly: props.ReadOnly
         };
     }
     
@@ -44,7 +45,8 @@ export default class TrackedObjectList extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            ObjectGUID: nextProps.SelectedObjectGUID
+            ObjectGUID: nextProps.SelectedObjectGUID,
+            ReadOnly: nextProps.ReadOnly
         });
         this.loadData(nextProps.SelectedObjectGUID);
     }
@@ -129,6 +131,7 @@ export default class TrackedObjectList extends React.Component {
                                                 <TabProperties
                                                     ObjectDetails={this.state.ObjectDetails}
                                                     onFinishedAddEdit={this.onFinishedAddEdit}
+                                                    ReadOnly={this.state.ReadOnly}
                                                 />
                                             </TabPane>
                                             <TabPane tabId="2">
@@ -139,6 +142,7 @@ export default class TrackedObjectList extends React.Component {
                                                     ChartTypeList={this.state.ChartTypeList}
                                                     PropertyList={this.state.ObjectDetails.PropertyList}
                                                     ReloadListAction={() => this.loadCharts(this.state.ObjectGUID)}
+                                                    ReadOnly={this.state.ReadOnly}
                                                 />
                                             </TabPane>
                                         </TabContent>

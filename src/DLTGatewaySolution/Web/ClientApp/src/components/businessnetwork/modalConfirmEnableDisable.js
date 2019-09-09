@@ -80,9 +80,14 @@ class ConfirmDialog extends Component {
                         }
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.handleYesButtonClick} {...(this.state.ReadOnly && { disabled: true })}>
-                            {this.state.modalYesButtonText}
-                        </Button>{" "}
+                        {
+                            this.state.ReadOnly == true ? '' :
+                                (
+                                    <Button color="primary" onClick={this.handleYesButtonClick} {...(this.state.ReadOnly && { disabled: true })}>
+                                        {this.state.modalYesButtonText}
+                                    </Button>
+                                )
+                        }{" "}
                         <Button color="secondary" onClick={this.toggle}>
                             Cancel
                             </Button>

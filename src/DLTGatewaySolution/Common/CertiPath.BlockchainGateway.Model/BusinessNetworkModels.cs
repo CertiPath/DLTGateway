@@ -42,6 +42,12 @@ namespace CertiPath.BlockchainGateway.Model
         public Nullable<int> ObjectCount { get; set; }
     }
 
+    public class BusinessNetworkNamespaceDetailsModel
+    {
+        public List<BusinessNetworkNamespaceViewModel> List { get; set; }
+        public bool ReadOnly { get; set; }
+    }
+
     public class BusinessNetworkNamespaceViewModel
     {
         public System.Guid BusinessNetworkGUID { get; set; }
@@ -92,6 +98,7 @@ namespace CertiPath.BlockchainGateway.Model
         public bool SingleObjectNamespace { get; set; }
 
         public List<BusinessNetworkObjectModel> ObjectList;
+        public bool ReadOnly { get; set; }
     }
 
     public class BusinessNetworkObjectModel

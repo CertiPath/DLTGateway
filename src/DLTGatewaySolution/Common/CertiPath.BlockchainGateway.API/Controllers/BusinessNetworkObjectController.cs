@@ -24,8 +24,7 @@ namespace CertiPath.BlockchainGateway.API.Controllers
         [HttpPost]
         public void Save(BusinessNetworkObjectViewModel obj)
         {
-            var netObj = DatabaseContext.BusinessNetworkObject.Where(w => w.GUID == obj.BusinessNetworkObjectGUID).SingleOrDefault();
-            var bizNetNamespace = DatabaseContext.BusinessNetworkNamespace.Where(w => w.GUID == netObj.BusinessNetworkNamespaceGUID).SingleOrDefault();
+            var bizNetNamespace = DatabaseContext.BusinessNetworkNamespace.Where(w => w.GUID == obj.BusinessNetworkNamespaceGUID).SingleOrDefault();
             if (CanAdminNetwork(bizNetNamespace.BusinessNetworkGUID) == false)
             {
                 throw new Exception(Helper.Contstants.PERMISSION_ACCESS_DENIED);
