@@ -106,7 +106,7 @@ class BusinessNetworkObject extends Component {
             return (
                 <li>
                     <span className="text-bold-500 primary">
-                        <Link to="/pages/useer-profile">{item.Name}</Link>
+                        {item.Name}
                     </span>
                     <span className="display-block overflow-hidden">{item.Value}</span>
                 </li>

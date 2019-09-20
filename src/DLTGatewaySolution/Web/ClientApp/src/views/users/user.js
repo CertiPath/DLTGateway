@@ -53,7 +53,7 @@ class MyProfile extends Component {
                                                 <ul className="no-list-style">
                                                     <li className="mb-2">
                                                         <span className="text-bold-500 primary">
-                                                            <Link to="/pages/useer-profile">First Name:</Link>
+                                                            First Name:
                                                         </span>
                                                         <span className="display-block overflow-hidden">{user.Details.FirstName}</span>
                                                     </li>
@@ -63,7 +63,7 @@ class MyProfile extends Component {
                                                 <ul className="no-list-style">
                                                     <li className="mb-2">
                                                         <span className="text-bold-500 primary">
-                                                            <Link to="/pages/useer-profile">Last Name:</Link>
+                                                            Last Name:
                                                         </span>
                                                         <span className="display-block overflow-hidden">{user.Details.LastName}</span>
                                                     </li>
@@ -73,7 +73,7 @@ class MyProfile extends Component {
                                                 <ul className="no-list-style">
                                                     <li className="mb-2">
                                                         <span className="text-bold-500 primary">
-                                                            <Link to="/pages/useer-profile">Email:</Link>
+                                                            Email
                                                         </span>
                                                         <span className="display-block overflow-hidden">{user.Details.Email}</span>
                                                     </li>

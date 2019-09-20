@@ -63,10 +63,7 @@ class SideMenuContent extends Component {
                           collapsedSidebar={this.props.collapsedSidebar}
                           visible={JSON.stringify(context.Details.IsSuperAdmin) === "false" && JSON.stringify(context.Details.IsGlobalAdmin) === "false" ? false : true}
                       >
-                          <NavLink to="/Settings/System" className="item" activeclassname="active">
-                              <span className="menu-item-text">System</span>
-                          </NavLink>
-
+                          
                           <NavLink to="/Settings/Roles" className="item" activeclassname="active">
                               <span className="menu-item-text">Roles</span>
                           </NavLink>

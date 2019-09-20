@@ -13,9 +13,14 @@ namespace CertiPath.BlockchainGateway.API.Controllers
     {
         public List<Model.SettingTypeModel> GetAllTypes()
         {
+            // we do not need this functionality at the moment
+            throw new NotImplementedException();
+
+            /*
             Service.Settings settingsSrv = new Service.Settings(DatabaseContext);
             var list = settingsSrv.GetAllTypes();
             return list;
+            */
         }
 
         public List<Model.SettingModel> GetAll(Guid SettingTypeGUID)
